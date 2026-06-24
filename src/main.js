@@ -1263,18 +1263,23 @@ function renderHelperStars() {
   positionHelperStars();
 }
 
-/*
- * Constellation coordinate system:
- * - All star positions in content.json are normalized [x, y] values from 0 to 1.
- * - narrativePos keeps discovery stars near the center; finalePos moves them onto the name.
- * - helperStars + chapterStrokes complete the 채영 stroke map.
- */
+function layoutPos(pos, kind = "narrative") {
+  if (!pos) return pos;
+  const scale = kind === "finale" ? 0.78 : kind === "helper" ? 0.8 : 0.9;
+  const anchorY = kind === "finale" ? 0.46 : 0.48;
+  return [
+    0.5 + (pos[0] - 0.5) * scale,
+    anchorY + (pos[1] - anchorY) * scale,
+  ];
+}
+
 function positionStars(useFinale) {
   skyRect = sky.getBoundingClientRect();
   state.data.stars.forEach((star) => {
     const el = starEls[star.id];
     if (!el) return;
-    const pos = useFinale ? star.finalePos : journeyStarPos(star);
+    const raw = useFinale ? star.finalePos : journeyStarPos(star);
+    const pos = layoutPos(raw, useFinale ? "finale" : "narrative");
     el.style.left = `${pos[0] * 100}%`;
     el.style.top = `${pos[1] * 100}%`;
   });
@@ -1285,8 +1290,9 @@ function positionHelperStars() {
   (state.data.helperStars ?? []).forEach((helper) => {
     const el = helperEls[helper.id];
     if (!el) return;
-    el.style.left = `${helper.pos[0] * 100}%`;
-    el.style.top = `${helper.pos[1] * 100}%`;
+    const pos = layoutPos(helper.pos, "helper");
+    el.style.left = `${pos[0] * 100}%`;
+    el.style.top = `${pos[1] * 100}%`;
   });
 }
 
@@ -1407,9 +1413,10 @@ function getPoint(id) {
 
   const helper = (state.data.helperStars ?? []).find((h) => h.id === id);
   if (!helper || !skyRect) return { x: 0, y: 0 };
+  const pos = layoutPos(helper.pos, "helper");
   return {
-    x: helper.pos[0] * skyRect.width,
-    y: helper.pos[1] * skyRect.height,
+    x: pos[0] * skyRect.width,
+    y: pos[1] * skyRect.height,
   };
 }
 
