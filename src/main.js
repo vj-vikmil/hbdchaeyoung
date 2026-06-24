@@ -46,6 +46,7 @@ const voiceBar = $(".voice-bar");
 const dustCanvas = $("#dust");
 const photoCanvas = $("#photo-drift");
 const photoDomHost = $("#photo-drift-dom");
+const photoLightbox = $("#photo-lightbox");
 const bgm = $("#bgm");
 const nightAir = $("#night-air");
 const starChime = $("#star-chime");
@@ -79,6 +80,7 @@ const JOURNEY_COOLDOWN_MS = 800;
 let suppressVoicePauseMix = false;
 let modalTypeTimer = null;
 let voiceRetryArmed = false;
+let lightboxPreviousFocus = null;
 
 const IS_MOBILE = window.matchMedia("(max-width: 680px), (hover: none) and (pointer: coarse)").matches;
 const IS_LOW_POWER = IS_MOBILE || (navigator.hardwareConcurrency || 8) <= 4;
@@ -1060,7 +1062,10 @@ function memoryImagesFor(star) {
 function collectDriftPhotos() {
   const generated = state.photoMetadata?.visibleConstellation;
   if (generated?.length) {
-    return generated.map((photo) => photo.src);
+    return [...new Set([
+      ...generated.map((photo) => photo.src),
+      ...(state.data.driftPhotos ?? []),
+    ])];
   }
 
   const urls = new Set(state.data.driftPhotos ?? []);
@@ -1076,7 +1081,22 @@ function collectDriftPhotos() {
 
 function generatedPhotoEntries() {
   const generated = state.photoMetadata?.visibleConstellation;
-  if (generated?.length) return generated;
+  if (generated?.length) {
+    const bySrc = new Map((state.photoMetadata?.photos ?? []).map((photo) => [photo.src, photo]));
+    const seen = new Set(generated.map((photo) => photo.src));
+    const extra = (state.data.driftPhotos ?? [])
+      .filter((src) => src && !seen.has(src))
+      .map((src) => bySrc.get(src) ?? {
+        id: src,
+        src,
+        layer: "background",
+        chapterId: null,
+        displayDate: null,
+        displayTitle: "MEMORY",
+        placement: null,
+      });
+    return [...generated, ...extra];
+  }
   return collectDriftPhotos().map((src) => ({
     id: src,
     src,
@@ -1238,13 +1258,25 @@ function renderFloatingMemories(visualEl, star) {
     const card = document.createElement("figure");
     card.className = "memory-card";
     card.setAttribute("role", "listitem");
+    card.tabIndex = 0;
+    card.setAttribute("role", "button");
+    card.setAttribute("aria-label", `Enlarge ${star.title.en} photo ${i + 1}`);
 
     const img = document.createElement("img");
-    img.src = imageSrc(src);
+    const fullSrc = imageSrc(src);
+    img.src = fullSrc;
     img.alt = star.title.en;
     img.loading = i === 0 ? "eager" : "lazy";
     img.onerror = () => { card.classList.add("missing"); };
     card.appendChild(img);
+    const open = () => openPhotoLightbox(fullSrc, `${star.title.en}${images.length > 1 ? ` ${i + 1} / ${images.length}` : ""}`);
+    card.addEventListener("click", open);
+    card.addEventListener("keydown", (event) => {
+      if (event.key === "Enter" || event.key === " ") {
+        event.preventDefault();
+        open();
+      }
+    });
 
     if (images.length > 1) {
       const caption = document.createElement("figcaption");
@@ -1277,14 +1309,52 @@ function renderSyncedGallery(visualEl, star) {
   wrap.className = "modal-gallery-sync";
   images.forEach((src, i) => {
     const img = document.createElement("img");
-    img.src = imageSrc(src);
+    const fullSrc = imageSrc(src);
+    img.src = fullSrc;
     img.alt = star.title.en;
     img.loading = i === 0 ? "eager" : "lazy";
     img.onerror = () => { img.style.display = "none"; };
+    img.tabIndex = 0;
+    img.setAttribute("role", "button");
+    img.setAttribute("aria-label", `Enlarge ${star.title.en} photo ${i + 1}`);
+    const open = () => openPhotoLightbox(fullSrc, `${star.title.en}${images.length > 1 ? ` ${i + 1} / ${images.length}` : ""}`);
+    img.addEventListener("click", open);
+    img.addEventListener("keydown", (event) => {
+      if (event.key === "Enter" || event.key === " ") {
+        event.preventDefault();
+        open();
+      }
+    });
     wrap.appendChild(img);
   });
   visualEl.appendChild(wrap);
   resetSyncedGallery();
+}
+
+function openPhotoLightbox(src, caption = "") {
+  if (!photoLightbox || !src) return;
+  lightboxPreviousFocus = document.activeElement;
+  const img = photoLightbox.querySelector("img");
+  const cap = photoLightbox.querySelector("figcaption");
+  img.src = src;
+  img.alt = caption || "Enlarged memory photo";
+  cap.textContent = caption;
+  cap.hidden = !caption;
+  photoLightbox.classList.add("active");
+  photoLightbox.setAttribute("aria-hidden", "false");
+  document.body.classList.add("lightbox-open");
+  photoLightbox.querySelector(".photo-lightbox-close")?.focus({ preventScroll: true });
+}
+
+function closePhotoLightbox() {
+  if (!photoLightbox?.classList.contains("active")) return;
+  photoLightbox.classList.remove("active");
+  photoLightbox.setAttribute("aria-hidden", "true");
+  document.body.classList.remove("lightbox-open");
+  const img = photoLightbox.querySelector("img");
+  if (img) img.removeAttribute("src");
+  lightboxPreviousFocus?.focus?.({ preventScroll: true });
+  lightboxPreviousFocus = null;
 }
 
 function updateSyncedGallery(star, time) {
@@ -1531,7 +1601,7 @@ function layoutPos(pos, kind = "narrative") {
   const anchorY = 0.46;
 
   if (kind === "narrative") {
-    const spread = 1.24;
+    const spread = IS_MOBILE ? 0.82 : 0.96;
     return [
       anchorX + (pos[0] - anchorX) * spread,
       anchorY + (pos[1] - anchorY) * spread,
@@ -1786,6 +1856,16 @@ function restoreLines() {
 function setupModal() {
   $(".modal-close").addEventListener("click", closeModal);
   $(".modal-done").addEventListener("click", closeModal);
+  photoLightbox?.querySelector(".photo-lightbox-close")?.addEventListener("click", closePhotoLightbox);
+  photoLightbox?.addEventListener("click", (event) => {
+    if (event.target === photoLightbox) closePhotoLightbox();
+  });
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape" && photoLightbox?.classList.contains("active")) {
+      event.preventDefault();
+      closePhotoLightbox();
+    }
+  });
   $(".modal-inner").addEventListener("pointerdown", (event) => {
     if (!voiceRetryArmed || !voiceAudio.paused || event.target.closest("button")) return;
     playVoice();
@@ -2211,7 +2291,7 @@ function setupDust(driftImages = []) {
   const useCanvasPhotos = !useDomPhotos && !!photoCtx;
   const usePhotos = driftImages.length > 0 && (useDomPhotos || useCanvasPhotos);
   const starCount = lowPower ? (IS_MOBILE ? 680 : 1100) : IS_MOBILE ? 920 : 1500;
-  const maxPhotoSources = IS_MOBILE ? 12 : 18;
+  const maxPhotoSources = IS_MOBILE ? 14 : 22;
   const memoryCount = usePhotos ? Math.min(driftImages.length, maxPhotoSources) : 0;
   let memorySources = [];
   const pointer = { x: 0, y: 0 };
@@ -2254,6 +2334,18 @@ function setupDust(driftImages = []) {
       label.className = "photo-drift-label";
       el.append(img, label);
       el.style.opacity = "0";
+      el.tabIndex = 0;
+      el.setAttribute("role", "button");
+      el.addEventListener("click", (event) => {
+        event.stopPropagation();
+        openPhotoLightbox(el.dataset.fullSrc, el.dataset.caption || "Memory photo");
+      });
+      el.addEventListener("keydown", (event) => {
+        if (event.key !== "Enter" && event.key !== " ") return;
+        event.preventDefault();
+        event.stopPropagation();
+        openPhotoLightbox(el.dataset.fullSrc, el.dataset.caption || "Memory photo");
+      });
       photoDomHost.appendChild(el);
       domNodes.push(el);
     }
@@ -2338,30 +2430,51 @@ function setupDust(driftImages = []) {
 
   function memorySizeAlpha(z, layer, related) {
     const t = 1 - z;
-    const mobileBoost = IS_MOBILE ? 0.88 : 0.92;
-    const layerScale = layer === "foreground" ? 1.12 : layer === "midground" ? 0.78 : 0.5;
-    const layerAlpha = layer === "foreground" ? 0.94 : layer === "midground" ? 0.58 : 0.24;
-    const h = (22 + t * 34 + t * t * 34) * mobileBoost * layerScale * (related ? 1.08 : 1);
-    const alpha = Math.min(0.98, layerAlpha * (0.72 + t * 0.28) * (related ? 1.22 : 0.86));
-    const blur = layer === "background" ? 0.9 : layer === "midground" ? 0.35 : 0;
-    const saturate = layer === "foreground" || related ? 1 : layer === "midground" ? 0.82 : 0.62;
+    const mobileBoost = IS_MOBILE ? 0.7 : 0.84;
+    const layerScale = layer === "foreground" ? 1.08 : layer === "midground" ? 0.78 : 0.5;
+    const layerAlpha = layer === "foreground" ? 0.94 : layer === "midground" ? 0.62 : 0.3;
+    const h = (22 + t * 30 + t * t * 28) * mobileBoost * layerScale * (related ? 1.08 : 1);
+    const alpha = Math.min(0.95, layerAlpha * (0.66 + t * 0.34) * (related ? 1.16 : 0.9));
+    const blur = layer === "background" ? 1.15 : layer === "midground" ? 0.25 : 0;
+    const saturate = layer === "foreground" || related ? 1.06 : layer === "midground" ? 0.9 : 0.68;
     return { h, alpha, t, blur, saturate };
+  }
+
+  function spreadPlacement(index, meta) {
+    const placement = meta?.placement ?? {};
+    const layer = meta?.layer ?? "midground";
+    const chapterOffset = { s1: 0, s2: 0.9, s3: 1.8, s5: 2.8, s4: 4.1 }[meta?.chapterId] ?? 5.1;
+    const angle = index * 2.399963229728653 + chapterOffset;
+    const band = layer === "foreground" ? 0.36 : layer === "midground" ? 0.48 : 0.6;
+    const ring = band + (index % 5) * 0.035;
+    const generatedX = Math.cos(angle) * ring;
+    const generatedY = Math.sin(angle) * ring * 0.66 + (((index % 3) - 1) * 0.035);
+    const placementWeight = placement.x == null || placement.y == null ? 0 : 0.28;
+    const zBase = layer === "foreground" ? 0.28 : layer === "midground" ? 0.5 : 0.72;
+    const zRange = layer === "foreground" ? 0.16 : layer === "midground" ? 0.16 : 0.18;
+
+    return {
+      x: generatedX * (1 - placementWeight) + (placement.x ?? generatedX) * placementWeight,
+      y: generatedY * (1 - placementWeight) + (placement.y ?? generatedY) * placementWeight,
+      z: placement.z == null ? zBase + Math.random() * zRange : zBase + ((index % 7) / 6) * zRange,
+      rotation: placement.rotation ?? (Math.sin(angle) * 0.14),
+    };
   }
 
   function makeMemoryParticle(index = 0, source = memorySources[index % Math.max(1, memorySources.length)]) {
     if (!memorySources.length) refreshMemorySources();
     const meta = source?.meta ?? {};
-    const placement = meta.placement ?? {};
+    const placement = spreadPlacement(index, meta);
     const particle = {
       kind: "memory",
       source,
-      x: placement.x ?? (Math.random() * 1.02 - 0.51),
-      y: placement.y ?? (Math.random() * 0.8 - 0.4),
-      z: placement.z ?? (Math.random() * 0.38 + 0.34),
+      x: placement.x,
+      y: placement.y,
+      z: placement.z,
       imgIndex: memorySources.length ? index % memorySources.length : 0,
       layer: meta.layer ?? "midground",
       chapterId: meta.chapterId ?? null,
-      rot: placement.rotation ?? (Math.random() * 0.42 - 0.21),
+      rot: placement.rotation,
       rotSpeed: (Math.random() - 0.5) * 0.00005,
       wobble: Math.random() * Math.PI * 2,
       wobbleSpeed: Math.random() * 0.006 + 0.002,
@@ -2433,15 +2546,16 @@ function setupDust(driftImages = []) {
       }
     }
 
-    const depth = 1 / mem.z;
+    const nearness = 1 - mem.z;
+    const depth = 1 + nearness * (mem.layer === "foreground" ? 1.35 : mem.layer === "midground" ? 0.92 : 0.55);
     const x =
       width / 2 +
-      mem.x * width * 0.34 * depth +
+      mem.x * width * 0.36 * depth +
       pointer.x * depth * (mem.layer === "foreground" ? 9 : 4) +
       Math.sin(mem.wobble) * 3 * depth;
     const y =
       height / 2 +
-      mem.y * height * 0.34 * depth +
+      mem.y * height * 0.36 * depth +
       pointer.y * depth * (mem.layer === "foreground" ? 6 : 3) +
       Math.cos(mem.wobble * 0.85) * 2 * depth;
 
@@ -2466,6 +2580,7 @@ function setupDust(driftImages = []) {
       saturate,
       layer: mem.layer,
       related,
+      z: mem.z,
       meta: mem.source?.meta ?? null,
       rot: mem.rot + Math.sin(mem.wobble) * 0.05,
       img: memorySources.length ? memorySources[mem.imgIndex % memorySources.length]?.img : null,
@@ -2488,6 +2603,7 @@ function setupDust(driftImages = []) {
       const lines = [p.meta?.displayDate, p.meta?.displayTitle].filter(Boolean);
       labelEl.textContent = lines.join("\n");
       node.title = lines.join(" - ");
+      node.setAttribute("aria-label", `Enlarge ${lines.join(" ") || "memory photo"}`);
     }
 
     const aspect = p.img.naturalWidth / p.img.naturalHeight || 0.78;
@@ -2505,11 +2621,14 @@ function setupDust(driftImages = []) {
     }
 
     node.className = `photo-drift-item ${p.layer}${p.related ? " active" : ""}`;
+    node.dataset.caption = [p.meta?.displayDate, p.meta?.displayTitle].filter(Boolean).join(" - ");
+    node.dataset.fullSrc = src;
     node.style.width = `${drawW}px`;
     node.style.height = `${drawH}px`;
     node.style.opacity = String(p.alpha);
     node.style.filter = `blur(${p.blur}px) saturate(${p.saturate})`;
-    node.style.transform = `translate3d(${p.x}px, ${p.y}px, 0) translate(-50%, -50%) rotate(${p.rot}rad)`;
+    node.style.zIndex = String(Math.round((1 - p.z) * 100));
+    node.style.transform = `translate3d(${p.x}px, ${p.y}px, ${(1 - p.z) * 120}px) translate(-50%, -50%) rotate(${p.rot}rad)`;
   }
 
   function draw(now) {

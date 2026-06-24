@@ -42,7 +42,7 @@
             <canvas id="dust"></canvas>
           </div>
         </div>
-        <div id="photo-drift-host" class="photo-drift-layer" aria-hidden="true">
+        <div id="photo-drift-host" class="photo-drift-layer">
           <canvas id="photo-drift"></canvas>
           <div id="photo-drift-dom" class="photo-drift-dom"></div>
         </div>
@@ -116,6 +116,14 @@
           </div>
         </div>
       </section>
+
+      <div id="photo-lightbox" class="photo-lightbox" aria-hidden="true" role="dialog" aria-modal="true">
+        <button type="button" class="photo-lightbox-close" aria-label="Close enlarged photo">&times;</button>
+        <figure class="photo-lightbox-frame">
+          <img alt="" />
+          <figcaption></figcaption>
+        </figure>
+      </div>
     </div>
     <audio id="bgm" src="/assets/bgm.mp3" preload="auto" loop muted autoplay playsinline></audio>
     <audio id="night-air" src="/assets/night-air.mp3" preload="auto" loop muted autoplay playsinline></audio>

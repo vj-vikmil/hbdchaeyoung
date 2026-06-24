@@ -346,13 +346,15 @@ button {
 
 .photo-drift-layer {
   inset: 0;
-  opacity: 0.72;
+  opacity: 0.86;
   pointer-events: none;
   position: absolute;
   transition: opacity 0.35s ease;
   width: 100%;
   height: 100%;
-    z-index: 1;
+  z-index: 1;
+  perspective: 760px;
+  transform-style: preserve-3d;
 }
 
 .photo-drift-layer canvas {
@@ -366,6 +368,7 @@ button {
   overflow: hidden;
   pointer-events: none;
   position: absolute;
+  transform-style: preserve-3d;
 }
 
 .photo-drift-item {
@@ -374,9 +377,10 @@ button {
   border: 1px solid rgba(255, 248, 231, 0.78);
   border-radius: 4px;
   box-shadow:
-    0 14px 34px rgba(0, 0, 0, 0.36),
+    0 18px 42px rgba(0, 0, 0, 0.42),
     0 0 22px rgba(232, 215, 173, 0.08),
     inset 0 0 0 1px rgba(255, 255, 255, 0.28);
+  cursor: zoom-in;
   left: 0;
   padding: 3px;
   pointer-events: auto;
@@ -388,6 +392,16 @@ button {
     filter 0.35s ease,
     box-shadow 0.35s ease;
   will-change: transform, opacity, filter;
+}
+
+.photo-drift-item:hover,
+.photo-drift-item:focus-visible {
+  box-shadow:
+    0 22px 52px rgba(0, 0, 0, 0.48),
+    0 0 38px rgba(232, 215, 173, 0.22),
+    0 0 68px rgba(127, 181, 217, 0.14),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.42);
+  outline: none;
 }
 
 .photo-drift-item::after {
@@ -413,8 +427,8 @@ button {
 
 .photo-drift-item.foreground {
   box-shadow:
-    0 18px 42px rgba(0, 0, 0, 0.42),
-    0 0 34px rgba(232, 215, 173, 0.16),
+    0 26px 64px rgba(0, 0, 0, 0.5),
+    0 0 42px rgba(232, 215, 173, 0.2),
     inset 0 0 0 1px rgba(255, 255, 255, 0.36);
 }
 
@@ -424,7 +438,7 @@ button {
 
 .photo-drift-item.background {
   border-color: rgba(190, 205, 225, 0.25);
-  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.32);
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.3);
 }
 
 .photo-drift-item.active {
@@ -1147,8 +1161,8 @@ body.polished .ar-horizon {
 
 .star-btn.next::before {
   animation: pulse-star 1.5s ease-in-out infinite;
-  height: 16px;
-  width: 16px;
+  height: 12px;
+  width: 12px;
   box-shadow:
     0 0 10px 2px rgba(255, 255, 255, 0.82),
     0 0 22px 6px rgba(232, 215, 173, 0.32),
@@ -1157,9 +1171,9 @@ body.polished .ar-horizon {
 
 .star-btn.next::after {
   animation: pulse-ring 1.5s ease-in-out infinite;
-  height: 34px;
+  height: 26px;
   opacity: 0.72;
-  width: 34px;
+  width: 26px;
 }
 
 .star-btn.next {
@@ -1184,18 +1198,18 @@ body.polished .ar-horizon {
   opacity: 1;
   animation: finder-scan 2s ease-in-out infinite;
   border-color: rgba(232, 215, 173, 0.55);
-  height: 58px;
-  width: 58px;
+  height: 42px;
+  width: 42px;
 }
 
 .star-btn.next .finder-ring::before {
   background: rgba(232, 215, 173, 0.48);
-  width: 84px;
+  width: 58px;
 }
 
 .star-btn.next .finder-ring::after {
   background: rgba(232, 215, 173, 0.4);
-  height: 84px;
+  height: 58px;
 }
 
 .star-btn.next .star-label,
@@ -1279,17 +1293,21 @@ body.polished .ar-horizon {
   border: 1px solid rgba(232, 215, 173, 0.28);
   border-radius: 999px;
   color: #e8d7ad;
-  font-size: 0.62rem;
+  font-size: 0.56rem;
   left: 50%;
   margin-top: 0.24rem;
   opacity: 0;
   pointer-events: none;
   position: absolute;
+  line-height: 1.15;
+  max-width: min(12rem, 44vw);
+  overflow: hidden;
   padding: 0.18rem 0.42rem;
   text-shadow: 0 0 10px rgba(0, 0, 0, 0.9);
   top: 100%;
   transform: translateX(-50%);
   transition: opacity 0.3s;
+  text-overflow: ellipsis;
   white-space: nowrap;
 }
 
@@ -1300,8 +1318,8 @@ body.polished .ar-horizon {
     0 0 18px rgba(232, 215, 173, 0.18),
     0 6px 18px rgba(0, 0, 0, 0.32);
   color: #fff2c8;
-  font-size: 0.72rem;
-  padding: 0.24rem 0.55rem;
+  font-size: 0.58rem;
+  padding: 0.2rem 0.5rem;
 }
 
 .star-btn:hover .star-label,
@@ -1799,6 +1817,18 @@ body.polished .ar-horizon {
   scroll-snap-align: center;
   transform: rotate(var(--rot));
   width: min(66vw, 12.8rem);
+  cursor: zoom-in;
+  transition: box-shadow 0.25s ease, transform 0.25s ease;
+}
+
+.memory-card:hover,
+.memory-card:focus-visible {
+  box-shadow:
+    0 20px 54px rgba(0, 0, 0, 0.5),
+    0 0 36px rgba(232, 215, 173, 0.18),
+    0 0 0 1px rgba(255, 255, 255, 0.2);
+  outline: none;
+  transform: translateY(-0.18rem) rotate(var(--rot));
 }
 
 .memory-card:nth-child(2n) {
@@ -1854,6 +1884,7 @@ body.polished .ar-horizon {
 
 .modal-gallery-sync img {
   border-radius: 0.45rem;
+  cursor: zoom-in;
   height: 100%;
   inset: 0;
   object-fit: contain;
@@ -1861,6 +1892,79 @@ body.polished .ar-horizon {
   position: absolute;
   transition: opacity 0.45s ease;
   width: 100%;
+}
+
+.photo-lightbox {
+  align-items: center;
+  background:
+    radial-gradient(circle at 50% 42%, rgba(127, 181, 217, 0.12), transparent 34rem),
+    rgba(0, 2, 7, 0.9);
+  display: none;
+  inset: 0;
+  justify-content: center;
+  opacity: 0;
+  padding: calc(1rem + var(--safe-top)) 1rem calc(1rem + var(--safe-bottom));
+  position: fixed;
+  transition: opacity 0.22s ease;
+  z-index: 80;
+}
+
+.photo-lightbox.active {
+  display: flex;
+  opacity: 1;
+}
+
+.photo-lightbox-frame {
+  margin: 0;
+  max-height: calc(100dvh - var(--safe-top) - var(--safe-bottom) - 2rem);
+  max-width: min(94vw, 68rem);
+  text-align: center;
+}
+
+.photo-lightbox-frame img {
+  border: 1px solid rgba(255, 248, 231, 0.18);
+  border-radius: 0.65rem;
+  box-shadow:
+    0 28px 90px rgba(0, 0, 0, 0.65),
+    0 0 70px rgba(127, 181, 217, 0.18);
+  display: block;
+  max-height: calc(100dvh - var(--safe-top) - var(--safe-bottom) - 5rem);
+  max-width: min(94vw, 68rem);
+  object-fit: contain;
+}
+
+.photo-lightbox-frame figcaption {
+  color: rgba(255, 248, 231, 0.86);
+  font-size: 0.78rem;
+  letter-spacing: 0.08em;
+  margin-top: 0.75rem;
+  text-transform: uppercase;
+}
+
+.photo-lightbox-close {
+  align-items: center;
+  background: rgba(2, 7, 14, 0.72);
+  border: 1px solid rgba(255, 248, 231, 0.18);
+  border-radius: 999px;
+  color: rgba(255, 248, 231, 0.92);
+  cursor: pointer;
+  display: flex;
+  font-size: 1.35rem;
+  height: 48px;
+  justify-content: center;
+  line-height: 1;
+  position: fixed;
+  right: max(1rem, var(--safe-top));
+  top: max(1rem, var(--safe-top));
+  width: 48px;
+  z-index: 1;
+}
+
+.photo-lightbox-close:hover,
+.photo-lightbox-close:focus-visible {
+  background: rgba(255, 255, 255, 0.08);
+  outline: 1px solid rgba(232, 215, 173, 0.38);
+  outline-offset: 0.18rem;
 }
 
 .modal-gallery-sync img.active {
@@ -2362,53 +2466,53 @@ body.lang-ko .finale-text-en {
   }
 
   .star-btn {
-    height: 46px;
-    margin: -23px 0 0 -23px;
-    width: 46px;
+    height: 36px;
+    margin: -18px 0 0 -18px;
+    width: 36px;
   }
 
   .finder-ring {
-    height: 48px;
-    width: 48px;
+    height: 38px;
+    width: 38px;
   }
 
   .star-btn::before {
-    height: 8px;
-    width: 8px;
+    height: 7px;
+    width: 7px;
   }
 
   .star-btn.next::before {
-    height: 20px;
-    width: 20px;
+    height: 12px;
+    width: 12px;
     box-shadow:
-      0 0 12px 3px rgba(255, 255, 255, 0.9),
-      0 0 30px 9px rgba(232, 215, 173, 0.48),
-      0 0 58px 16px rgba(127, 181, 217, 0.24);
+      0 0 8px 2px rgba(255, 255, 255, 0.84),
+      0 0 20px 6px rgba(232, 215, 173, 0.36),
+      0 0 36px 10px rgba(127, 181, 217, 0.16);
   }
 
   .star-label {
-    font-size: 0.64rem;
-    max-width: 8.5rem;
-    white-space: normal;
+    font-size: 0.52rem;
+    max-width: min(9.5rem, 46vw);
+    white-space: nowrap;
   }
 
   .star-btn.next {
-    height: 58px;
-    margin: -29px 0 0 -29px;
-    width: 58px;
+    height: 42px;
+    margin: -21px 0 0 -21px;
+    width: 42px;
   }
 
   .star-btn.next .finder-ring {
-    height: 88px;
-    width: 88px;
+    height: 58px;
+    width: 58px;
   }
 
   .star-btn.next .finder-ring::before {
-    width: 116px;
+    width: 76px;
   }
 
   .star-btn.next .finder-ring::after {
-    height: 116px;
+    height: 76px;
   }
 
   .star-btn.next .star-label,
