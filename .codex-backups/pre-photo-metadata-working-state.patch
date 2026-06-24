@@ -1,0 +1,2447 @@
+diff --git a/index.html b/index.html
+index 663392e..77992f5 100644
+--- a/index.html
++++ b/index.html
+@@ -68,6 +68,7 @@
+         </header>
+ 
+         <div id="hint" class="hint hidden" role="status"></div>
++        <nav id="chapter-rail" class="chapter-rail" aria-label="Memory chapters"></nav>
+ 
+         <div id="memory-reveal" class="memory-reveal" aria-hidden="true" role="dialog" aria-modal="true">
+           <div class="memory-vignette" aria-hidden="true"></div>
+diff --git a/package-lock.json b/package-lock.json
+index be2366c..37f7e8f 100644
+--- a/package-lock.json
++++ b/package-lock.json
+@@ -8,43 +8,548 @@
+       "name": "chaeyoung-constellation",
+       "version": "0.0.0",
+       "devDependencies": {
++        "qrcode": "^1.5.4",
++        "sharp": "^0.35.2",
++        "simple-qrbtf": "^1.5.0",
+         "vite": "^8.1.0"
+       }
+     },
+-    "node_modules/@emnapi/core": {
+-      "version": "1.11.1",
+-      "resolved": "https://registry.npmjs.org/@emnapi/core/-/core-1.11.1.tgz",
+-      "integrity": "sha512-RSvbQmHzdKzNsLYa/wHrbc3KN4sYLKAdPZxqiM2HATqv/SBk2/ENSHpvXGaLOMcsAyz0poEGqkmmKYG3OWiJEQ==",
++    "node_modules/@emnapi/wasi-threads": {
++      "version": "1.2.2",
++      "resolved": "https://registry.npmjs.org/@emnapi/wasi-threads/-/wasi-threads-1.2.2.tgz",
++      "integrity": "sha512-c95qOXkHdydNKhscBTebqEC1CVAZpyqOfVfBzQ1qgzyl3gfeldUjIggDbIZgDKsHLgnsM+igH7TJ/eAasaVuMA==",
++      "dev": true,
++      "license": "MIT",
++      "optional": true,
++      "dependencies": {
++        "tslib": "^2.4.0"
++      }
++    },
++    "node_modules/@img/colour": {
++      "version": "1.1.0",
++      "resolved": "https://registry.npmjs.org/@img/colour/-/colour-1.1.0.tgz",
++      "integrity": "sha512-Td76q7j57o/tLVdgS746cYARfSyxk8iEfRxewL9h4OMzYhbW4TAcppl0mT4eyqXddh6L/jwoM75mo7ixa/pCeQ==",
++      "dev": true,
++      "license": "MIT",
++      "engines": {
++        "node": ">=18"
++      }
++    },
++    "node_modules/@img/sharp-darwin-arm64": {
++      "version": "0.35.2",
++      "resolved": "https://registry.npmjs.org/@img/sharp-darwin-arm64/-/sharp-darwin-arm64-0.35.2.tgz",
++      "integrity": "sha512-eEieHsMksAW4IiO5NzauESRl2D2qz3J/kwUxUrSfV06A93eEaRfMpHXyUb1mAqrR7i8U9A0GRqE9pjn6u1Jjpg==",
++      "cpu": [
++        "arm64"
++      ],
++      "dev": true,
++      "license": "Apache-2.0",
++      "optional": true,
++      "os": [
++        "darwin"
++      ],
++      "engines": {
++        "node": ">=20.9.0"
++      },
++      "funding": {
++        "url": "https://opencollective.com/libvips"
++      },
++      "optionalDependencies": {
++        "@img/sharp-libvips-darwin-arm64": "1.3.1"
++      }
++    },
++    "node_modules/@img/sharp-darwin-x64": {
++      "version": "0.35.2",
++      "resolved": "https://registry.npmjs.org/@img/sharp-darwin-x64/-/sharp-darwin-x64-0.35.2.tgz",
++      "integrity": "sha512-BaktuGPCeHJMARpodR8jK4uKiZrPAy9WrfQW0sdI37clracq8Bp01AYS3SZgi5FS/y5twa9t4+LIuuxQjqRrWw==",
++      "cpu": [
++        "x64"
++      ],
++      "dev": true,
++      "license": "Apache-2.0",
++      "optional": true,
++      "os": [
++        "darwin"
++      ],
++      "engines": {
++        "node": ">=20.9.0"
++      },
++      "funding": {
++        "url": "https://opencollective.com/libvips"
++      },
++      "optionalDependencies": {
++        "@img/sharp-libvips-darwin-x64": "1.3.1"
++      }
++    },
++    "node_modules/@img/sharp-freebsd-wasm32": {
++      "version": "0.35.2",
++      "resolved": "https://registry.npmjs.org/@img/sharp-freebsd-wasm32/-/sharp-freebsd-wasm32-0.35.2.tgz",
++      "integrity": "sha512-YoAxdnd8hPUkvLHd3bWY+YA8nw3xM/RyRopYucNsWHVSan8NLVM3X2volsfoRDcXdUJPg6tXahSd7HXPK7lRnw==",
++      "dev": true,
++      "license": "Apache-2.0",
++      "optional": true,
++      "os": [
++        "freebsd"
++      ],
++      "dependencies": {
++        "@img/sharp-wasm32": "0.35.2"
++      },
++      "engines": {
++        "node": ">=20.9.0"
++      },
++      "funding": {
++        "url": "https://opencollective.com/libvips"
++      }
++    },
++    "node_modules/@img/sharp-libvips-darwin-arm64": {
++      "version": "1.3.1",
++      "resolved": "https://registry.npmjs.org/@img/sharp-libvips-darwin-arm64/-/sharp-libvips-darwin-arm64-1.3.1.tgz",
++      "integrity": "sha512-4V/M3roRMTYjiwZY9IOVQOE8OyeCxFAkYmyZDrZl51uOKjibm3oeEJ4WAmLxutAfzFbC9jqUiPs2gbnGflH+7g==",
++      "cpu": [
++        "arm64"
++      ],
++      "dev": true,
++      "license": "LGPL-3.0-or-later",
++      "optional": true,
++      "os": [
++        "darwin"
++      ],
++      "funding": {
++        "url": "https://opencollective.com/libvips"
++      }
++    },
++    "node_modules/@img/sharp-libvips-darwin-x64": {
++      "version": "1.3.1",
++      "resolved": "https://registry.npmjs.org/@img/sharp-libvips-darwin-x64/-/sharp-libvips-darwin-x64-1.3.1.tgz",
++      "integrity": "sha512-c0/DxItpJv2+dGhgycJBBgotdqruGYDvA79drdh0MD1dFpy7JzJ/PlXwi1H4rFf0eTy8tgbI91aHDnZIceY3jQ==",
++      "cpu": [
++        "x64"
++      ],
++      "dev": true,
++      "license": "LGPL-3.0-or-later",
++      "optional": true,
++      "os": [
++        "darwin"
++      ],
++      "funding": {
++        "url": "https://opencollective.com/libvips"
++      }
++    },
++    "node_modules/@img/sharp-libvips-linux-arm": {
++      "version": "1.3.1",
++      "resolved": "https://registry.npmjs.org/@img/sharp-libvips-linux-arm/-/sharp-libvips-linux-arm-1.3.1.tgz",
++      "integrity": "sha512-aGGy9aWzXgHBG7HNyQPWorZthlp7+x6fDRoPAQbGO3ThcttuTyKIx3NuSHb6zb4gBNq6/yNn9f1cy9nFKS/Vmg==",
++      "cpu": [
++        "arm"
++      ],
++      "dev": true,
++      "license": "LGPL-3.0-or-later",
++      "optional": true,
++      "os": [
++        "linux"
++      ],
++      "funding": {
++        "url": "https://opencollective.com/libvips"
++      }
++    },
++    "node_modules/@img/sharp-libvips-linux-arm64": {
++      "version": "1.3.1",
++      "resolved": "https://registry.npmjs.org/@img/sharp-libvips-linux-arm64/-/sharp-libvips-linux-arm64-1.3.1.tgz",
++      "integrity": "sha512-JznefmcK9j1JKPz8AkQDh89kjojubyfOasWBPKfzMIhPwsgDy9evpE/naJTXXXmghS1iFwR8u/kTwh/I2/+GCw==",
++      "cpu": [
++        "arm64"
++      ],
++      "dev": true,
++      "license": "LGPL-3.0-or-later",
++      "optional": true,
++      "os": [
++        "linux"
++      ],
++      "funding": {
++        "url": "https://opencollective.com/libvips"
++      }
++    },
++    "node_modules/@img/sharp-libvips-linux-ppc64": {
++      "version": "1.3.1",
++      "resolved": "https://registry.npmjs.org/@img/sharp-libvips-linux-ppc64/-/sharp-libvips-linux-ppc64-1.3.1.tgz",
++      "integrity": "sha512-1EkwGNCZk6iWNCMWqrvdJ+r1j0PT1zIz60CNPhYnJlK/zyeWqlsPZIe+ocBVqPF8k/Ssee/NCk+tE9Ryrko6ng==",
++      "cpu": [
++        "ppc64"
++      ],
++      "dev": true,
++      "license": "LGPL-3.0-or-later",
++      "optional": true,
++      "os": [
++        "linux"
++      ],
++      "funding": {
++        "url": "https://opencollective.com/libvips"
++      }
++    },
++    "node_modules/@img/sharp-libvips-linux-riscv64": {
++      "version": "1.3.1",
++      "resolved": "https://registry.npmjs.org/@img/sharp-libvips-linux-riscv64/-/sharp-libvips-linux-riscv64-1.3.1.tgz",
++      "integrity": "sha512-Ilays+w2bXdnxzxtQdmXR62u8o8GYa3eL4+Gr+1KiE4xperMZUslRaVPJwwPkzlHEjGfXAfRVAa/7CYCtSqsBw==",
++      "cpu": [
++        "riscv64"
++      ],
++      "dev": true,
++      "license": "LGPL-3.0-or-later",
++      "optional": true,
++      "os": [
++        "linux"
++      ],
++      "funding": {
++        "url": "https://opencollective.com/libvips"
++      }
++    },
++    "node_modules/@img/sharp-libvips-linux-s390x": {
++      "version": "1.3.1",
++      "resolved": "https://registry.npmjs.org/@img/sharp-libvips-linux-s390x/-/sharp-libvips-linux-s390x-1.3.1.tgz",
++      "integrity": "sha512-VfBwVHQTbRoj4XlpA/KLZ7ltgMpz+4WSejFzQ+GnoImjo1PtEJ59QB2qR1xQEeRPYIkNrPIm2L4cICMvz4C2ew==",
++      "cpu": [
++        "s390x"
++      ],
++      "dev": true,
++      "license": "LGPL-3.0-or-later",
++      "optional": true,
++      "os": [
++        "linux"
++      ],
++      "funding": {
++        "url": "https://opencollective.com/libvips"
++      }
++    },
++    "node_modules/@img/sharp-libvips-linux-x64": {
++      "version": "1.3.1",
++      "resolved": "https://registry.npmjs.org/@img/sharp-libvips-linux-x64/-/sharp-libvips-linux-x64-1.3.1.tgz",
++      "integrity": "sha512-+c8ukgwU62DS54nCAjw7keOfHUkmr0B5QHEdcOqRnodF/MNXJbVI8Eopoj4B/0H8Asr65I+A4Amrn7a85/md6A==",
++      "cpu": [
++        "x64"
++      ],
++      "dev": true,
++      "license": "LGPL-3.0-or-later",
++      "optional": true,
++      "os": [
++        "linux"
++      ],
++      "funding": {
++        "url": "https://opencollective.com/libvips"
++      }
++    },
++    "node_modules/@img/sharp-libvips-linuxmusl-arm64": {
++      "version": "1.3.1",
++      "resolved": "https://registry.npmjs.org/@img/sharp-libvips-linuxmusl-arm64/-/sharp-libvips-linuxmusl-arm64-1.3.1.tgz",
++      "integrity": "sha512-qlKb/pwbkAi1WMsJrYHk7CuDrd12s27U2QnRhFYUoJNrRCmkosMTttuRFat/DDB3IlDm5qE1TJgZ4JDnHX8Ldw==",
++      "cpu": [
++        "arm64"
++      ],
++      "dev": true,
++      "license": "LGPL-3.0-or-later",
++      "optional": true,
++      "os": [
++        "linux"
++      ],
++      "funding": {
++        "url": "https://opencollective.com/libvips"
++      }
++    },
++    "node_modules/@img/sharp-libvips-linuxmusl-x64": {
++      "version": "1.3.1",
++      "resolved": "https://registry.npmjs.org/@img/sharp-libvips-linuxmusl-x64/-/sharp-libvips-linuxmusl-x64-1.3.1.tgz",
++      "integrity": "sha512-yO21HwoUVLN8Qa+/SBjQLMYwBWAVJjeGPNe+hc0OUeMeifEtJqu5a1c4HayE1nNpDih9y3/KkoltfkDodmKAlg==",
++      "cpu": [
++        "x64"
++      ],
++      "dev": true,
++      "license": "LGPL-3.0-or-later",
++      "optional": true,
++      "os": [
++        "linux"
++      ],
++      "funding": {
++        "url": "https://opencollective.com/libvips"
++      }
++    },
++    "node_modules/@img/sharp-linux-arm": {
++      "version": "0.35.2",
++      "resolved": "https://registry.npmjs.org/@img/sharp-linux-arm/-/sharp-linux-arm-0.35.2.tgz",
++      "integrity": "sha512-SE4kzF2mepn6z+6E7L6lsV8FzuLL6IPQdyX8ZiwROAG/G8td+hP/m7FsFPwidtrF19gvajuC9l6TxAVcsA4S7A==",
++      "cpu": [
++        "arm"
++      ],
++      "dev": true,
++      "license": "Apache-2.0",
++      "optional": true,
++      "os": [
++        "linux"
++      ],
++      "engines": {
++        "node": ">=20.9.0"
++      },
++      "funding": {
++        "url": "https://opencollective.com/libvips"
++      },
++      "optionalDependencies": {
++        "@img/sharp-libvips-linux-arm": "1.3.1"
++      }
++    },
++    "node_modules/@img/sharp-linux-arm64": {
++      "version": "0.35.2",
++      "resolved": "https://registry.npmjs.org/@img/sharp-linux-arm64/-/sharp-linux-arm64-0.35.2.tgz",
++      "integrity": "sha512-af12Pnd0ZGu2HfP8NayB0kk6eC/lrfbQE6HlR4jD+34wdJ1Vw9TF6TMn6ZvffT+WgqVsl0hRbmNvz2u/23VmwA==",
++      "cpu": [
++        "arm64"
++      ],
++      "dev": true,
++      "license": "Apache-2.0",
++      "optional": true,
++      "os": [
++        "linux"
++      ],
++      "engines": {
++        "node": ">=20.9.0"
++      },
++      "funding": {
++        "url": "https://opencollective.com/libvips"
++      },
++      "optionalDependencies": {
++        "@img/sharp-libvips-linux-arm64": "1.3.1"
++      }
++    },
++    "node_modules/@img/sharp-linux-ppc64": {
++      "version": "0.35.2",
++      "resolved": "https://registry.npmjs.org/@img/sharp-linux-ppc64/-/sharp-linux-ppc64-0.35.2.tgz",
++      "integrity": "sha512-hYSBm7zcNtDCozCxQHYZJiu63b/bXsgRZuOxCIBZsStMM9Vap47iFHdbX4kCvQsblPB/k+clhELpdQJHQLSHvg==",
++      "cpu": [
++        "ppc64"
++      ],
++      "dev": true,
++      "license": "Apache-2.0",
++      "optional": true,
++      "os": [
++        "linux"
++      ],
++      "engines": {
++        "node": ">=20.9.0"
++      },
++      "funding": {
++        "url": "https://opencollective.com/libvips"
++      },
++      "optionalDependencies": {
++        "@img/sharp-libvips-linux-ppc64": "1.3.1"
++      }
++    },
++    "node_modules/@img/sharp-linux-riscv64": {
++      "version": "0.35.2",
++      "resolved": "https://registry.npmjs.org/@img/sharp-linux-riscv64/-/sharp-linux-riscv64-0.35.2.tgz",
++      "integrity": "sha512-qQt0Kc13+Hoan/Awq/qMSQw3L+RI1NCRPgD5cUJ/1WSSmIoysLOc72jlRM3E0OHN9Yr313jgeQ2T+zW+F03QFA==",
++      "cpu": [
++        "riscv64"
++      ],
++      "dev": true,
++      "license": "Apache-2.0",
++      "optional": true,
++      "os": [
++        "linux"
++      ],
++      "engines": {
++        "node": ">=20.9.0"
++      },
++      "funding": {
++        "url": "https://opencollective.com/libvips"
++      },
++      "optionalDependencies": {
++        "@img/sharp-libvips-linux-riscv64": "1.3.1"
++      }
++    },
++    "node_modules/@img/sharp-linux-s390x": {
++      "version": "0.35.2",
++      "resolved": "https://registry.npmjs.org/@img/sharp-linux-s390x/-/sharp-linux-s390x-0.35.2.tgz",
++      "integrity": "sha512-E4fLLfRPzDLlEeDaTzI98OFLcv++WL5ChLLMwPoVd0CIoZQqupBSNbOisPL5am9XsbQ9T84+iiMpUvbFtkunbA==",
++      "cpu": [
++        "s390x"
++      ],
++      "dev": true,
++      "license": "Apache-2.0",
++      "optional": true,
++      "os": [
++        "linux"
++      ],
++      "engines": {
++        "node": ">=20.9.0"
++      },
++      "funding": {
++        "url": "https://opencollective.com/libvips"
++      },
++      "optionalDependencies": {
++        "@img/sharp-libvips-linux-s390x": "1.3.1"
++      }
++    },
++    "node_modules/@img/sharp-linux-x64": {
++      "version": "0.35.2",
++      "resolved": "https://registry.npmjs.org/@img/sharp-linux-x64/-/sharp-linux-x64-0.35.2.tgz",
++      "integrity": "sha512-gi0zFJJRLswfCZmHtJdikXPOc5u7qamSOS3NHedLqLd4W8Q0NqjdBr6TTRIgsfFjqfTsHFgdfvJ9LwqSgcHiAA==",
++      "cpu": [
++        "x64"
++      ],
++      "dev": true,
++      "license": "Apache-2.0",
++      "optional": true,
++      "os": [
++        "linux"
++      ],
++      "engines": {
++        "node": ">=20.9.0"
++      },
++      "funding": {
++        "url": "https://opencollective.com/libvips"
++      },
++      "optionalDependencies": {
++        "@img/sharp-libvips-linux-x64": "1.3.1"
++      }
++    },
++    "node_modules/@img/sharp-linuxmusl-arm64": {
++      "version": "0.35.2",
++      "resolved": "https://registry.npmjs.org/@img/sharp-linuxmusl-arm64/-/sharp-linuxmusl-arm64-0.35.2.tgz",
++      "integrity": "sha512-siWbOW1u6HFnFLrp0waKyW7VEf7jYvcDWdrXEFa8AkdAQgEvuu5Fz8/Y70w9EeqAdwDtfU012BhEHHaDqvQNzg==",
++      "cpu": [
++        "arm64"
++      ],
++      "dev": true,
++      "license": "Apache-2.0",
++      "optional": true,
++      "os": [
++        "linux"
++      ],
++      "engines": {
++        "node": ">=20.9.0"
++      },
++      "funding": {
++        "url": "https://opencollective.com/libvips"
++      },
++      "optionalDependencies": {
++        "@img/sharp-libvips-linuxmusl-arm64": "1.3.1"
++      }
++    },
++    "node_modules/@img/sharp-linuxmusl-x64": {
++      "version": "0.35.2",
++      "resolved": "https://registry.npmjs.org/@img/sharp-linuxmusl-x64/-/sharp-linuxmusl-x64-0.35.2.tgz",
++      "integrity": "sha512-YBqMMcjDi4QGYiSn4vNOYBhmlC4z5AXqkOUUqI2e0AFA4urNv4ESgOgwNl3K+4etQhha0twXlzeF20bbULm9Yg==",
++      "cpu": [
++        "x64"
++      ],
++      "dev": true,
++      "license": "Apache-2.0",
++      "optional": true,
++      "os": [
++        "linux"
++      ],
++      "engines": {
++        "node": ">=20.9.0"
++      },
++      "funding": {
++        "url": "https://opencollective.com/libvips"
++      },
++      "optionalDependencies": {
++        "@img/sharp-libvips-linuxmusl-x64": "1.3.1"
++      }
++    },
++    "node_modules/@img/sharp-wasm32": {
++      "version": "0.35.2",
++      "resolved": "https://registry.npmjs.org/@img/sharp-wasm32/-/sharp-wasm32-0.35.2.tgz",
++      "integrity": "sha512-Mrv4JQNYVQ94xH+jzZ9r+gowleN8mv2FTgKT+PI6bx5C0G8TdNYndu161pg2i7uoBwxy2ImPMHrJOM2LZef7Bw==",
+       "dev": true,
+-      "license": "MIT",
++      "license": "Apache-2.0 AND LGPL-3.0-or-later AND MIT",
+       "optional": true,
+-      "peer": true,
+       "dependencies": {
+-        "@emnapi/wasi-threads": "1.2.2",
+-        "tslib": "^2.4.0"
++        "@emnapi/runtime": "^1.11.1"
++      },
++      "engines": {
++        "node": ">=20.9.0"
++      },
++      "funding": {
++        "url": "https://opencollective.com/libvips"
+       }
+     },
+-    "node_modules/@emnapi/runtime": {
+-      "version": "1.11.1",
+-      "resolved": "https://registry.npmjs.org/@emnapi/runtime/-/runtime-1.11.1.tgz",
+-      "integrity": "sha512-vgj7R3y3Wgx24IQaGPA/R6YFXLHVMOZ0uVEyIQPaWs+rd1AzfEMXlAC22FYwO1XkKR6NPsq7mUandH8oIRdZFw==",
++    "node_modules/@img/sharp-webcontainers-wasm32": {
++      "version": "0.35.2",
++      "resolved": "https://registry.npmjs.org/@img/sharp-webcontainers-wasm32/-/sharp-webcontainers-wasm32-0.35.2.tgz",
++      "integrity": "sha512-QNV27pxs9wpApEiCfvHM1RDoP1w1+2KrUWWDPEhEwg+latvOrfuhWrHWZKwdSFwU6jh3myjw/yOCRsUIuOft3g==",
++      "cpu": [
++        "wasm32"
++      ],
+       "dev": true,
+-      "license": "MIT",
++      "license": "Apache-2.0",
+       "optional": true,
+-      "peer": true,
+       "dependencies": {
+-        "tslib": "^2.4.0"
++        "@img/sharp-wasm32": "0.35.2"
++      },
++      "engines": {
++        "node": ">=20.9.0"
++      },
++      "funding": {
++        "url": "https://opencollective.com/libvips"
+       }
+     },
+-    "node_modules/@emnapi/wasi-threads": {
+-      "version": "1.2.2",
+-      "resolved": "https://registry.npmjs.org/@emnapi/wasi-threads/-/wasi-threads-1.2.2.tgz",
+-      "integrity": "sha512-c95qOXkHdydNKhscBTebqEC1CVAZpyqOfVfBzQ1qgzyl3gfeldUjIggDbIZgDKsHLgnsM+igH7TJ/eAasaVuMA==",
++    "node_modules/@img/sharp-win32-arm64": {
++      "version": "0.35.2",
++      "resolved": "https://registry.npmjs.org/@img/sharp-win32-arm64/-/sharp-win32-arm64-0.35.2.tgz",
++      "integrity": "sha512-BiVRYc/t6/Vl3e1hBx0hugG4oN9Pydf4fgMSpxTQJmwGUg/YoXTWHiFeRymHfCZzifxu4F4rpk/I67D0LQ20wQ==",
++      "cpu": [
++        "arm64"
++      ],
+       "dev": true,
+-      "license": "MIT",
++      "license": "Apache-2.0 AND LGPL-3.0-or-later",
+       "optional": true,
+-      "dependencies": {
+-        "tslib": "^2.4.0"
++      "os": [
++        "win32"
++      ],
++      "engines": {
++        "node": ">=20.9.0"
++      },
++      "funding": {
++        "url": "https://opencollective.com/libvips"
++      }
++    },
++    "node_modules/@img/sharp-win32-ia32": {
++      "version": "0.35.2",
++      "resolved": "https://registry.npmjs.org/@img/sharp-win32-ia32/-/sharp-win32-ia32-0.35.2.tgz",
++      "integrity": "sha512-YYEhx9PImCC7T0tI8JDMi4DB9LwLCXCU5OWNYEXAxh5Q1ShKkyC6byxzoBJ3gEFDnH2lQckWuDe70G7mB2XJog==",
++      "cpu": [
++        "ia32"
++      ],
++      "dev": true,
++      "license": "Apache-2.0 AND LGPL-3.0-or-later",
++      "optional": true,
++      "os": [
++        "win32"
++      ],
++      "engines": {
++        "node": "^20.9.0"
++      },
++      "funding": {
++        "url": "https://opencollective.com/libvips"
++      }
++    },
++    "node_modules/@img/sharp-win32-x64": {
++      "version": "0.35.2",
++      "resolved": "https://registry.npmjs.org/@img/sharp-win32-x64/-/sharp-win32-x64-0.35.2.tgz",
++      "integrity": "sha512-imoOyBcoM/iiUr4J6VPpCNjPnjvP/Gks95898yB8YqoGGYmHYbOyCuNv9FMhFgtaiHFGbHW8bxKqRV6VjtXThQ==",
++      "cpu": [
++        "x64"
++      ],
++      "dev": true,
++      "license": "Apache-2.0 AND LGPL-3.0-or-later",
++      "optional": true,
++      "os": [
++        "win32"
++      ],
++      "engines": {
++        "node": ">=20.9.0"
++      },
++      "funding": {
++        "url": "https://opencollective.com/libvips"
+       }
+     },
+     "node_modules/@napi-rs/wasm-runtime": {
+@@ -351,6 +856,84 @@
+         "tslib": "^2.4.0"
+       }
+     },
++    "node_modules/ansi-regex": {
++      "version": "5.0.1",
++      "resolved": "https://registry.npmjs.org/ansi-regex/-/ansi-regex-5.0.1.tgz",
++      "integrity": "sha512-quJQXlTSUGL2LH9SUXo8VwsY4soanhgo6LNSm84E1LBcE8s3O0wpdiRzyR9z/ZZJMlMWv37qOOb9pdJlMUEKFQ==",
++      "dev": true,
++      "license": "MIT",
++      "engines": {
++        "node": ">=8"
++      }
++    },
++    "node_modules/ansi-styles": {
++      "version": "4.3.0",
++      "resolved": "https://registry.npmjs.org/ansi-styles/-/ansi-styles-4.3.0.tgz",
++      "integrity": "sha512-zbB9rCJAT1rbjiVDb2hqKFHNYLxgtk8NURxZ3IZwD3F6NtxbXZQCnnSi1Lkx+IDohdPlFp222wVALIheZJQSEg==",
++      "dev": true,
++      "license": "MIT",
++      "dependencies": {
++        "color-convert": "^2.0.1"
++      },
++      "engines": {
++        "node": ">=8"
++      },
++      "funding": {
++        "url": "https://github.com/chalk/ansi-styles?sponsor=1"
++      }
++    },
++    "node_modules/camelcase": {
++      "version": "5.3.1",
++      "resolved": "https://registry.npmjs.org/camelcase/-/camelcase-5.3.1.tgz",
++      "integrity": "sha512-L28STB170nwWS63UjtlEOE3dldQApaJXZkOI1uMFfzf3rRuPegHaHesyee+YxQ+W6SvRDQV6UrdOdRiR153wJg==",
++      "dev": true,
++      "license": "MIT",
++      "engines": {
++        "node": ">=6"
++      }
++    },
++    "node_modules/cliui": {
++      "version": "6.0.0",
++      "resolved": "https://registry.npmjs.org/cliui/-/cliui-6.0.0.tgz",
++      "integrity": "sha512-t6wbgtoCXvAzst7QgXxJYqPt0usEfbgQdftEPbLL/cvv6HPE5VgvqCuAIDR0NgU52ds6rFwqrgakNLrHEjCbrQ==",
++      "dev": true,
++      "license": "ISC",
++      "dependencies": {
++        "string-width": "^4.2.0",
++        "strip-ansi": "^6.0.0",
++        "wrap-ansi": "^6.2.0"
++      }
++    },
++    "node_modules/color-convert": {
++      "version": "2.0.1",
++      "resolved": "https://registry.npmjs.org/color-convert/-/color-convert-2.0.1.tgz",
++      "integrity": "sha512-RRECPsj7iu/xb5oKYcsFHSppFNnsj/52OVTRKb4zP5onXwVF3zVmmToNcOfGC+CRDpfK/U584fMg38ZHCaElKQ==",
++      "dev": true,
++      "license": "MIT",
++      "dependencies": {
++        "color-name": "~1.1.4"
++      },
++      "engines": {
++        "node": ">=7.0.0"
++      }
++    },
++    "node_modules/color-name": {
++      "version": "1.1.4",
++      "resolved": "https://registry.npmjs.org/color-name/-/color-name-1.1.4.tgz",
++      "integrity": "sha512-dOy+3AuW3a2wNbZHIuMZpTcgjGuLU/uBL/ubcZF9OXbDo8ff4O8yVp5Bf0efS8uEoYo5q4Fx7dY9OgQGXgAsQA==",
++      "dev": true,
++      "license": "MIT"
++    },
++    "node_modules/decamelize": {
++      "version": "1.2.0",
++      "resolved": "https://registry.npmjs.org/decamelize/-/decamelize-1.2.0.tgz",
++      "integrity": "sha512-z2S+W9X73hAUUki+N+9Za2lBlun89zigOyGrsax+KUQ6wKW4ZoWpEYBkGhQjwAjjDCkWxhY0VKEhk8wzY7F5cA==",
++      "dev": true,
++      "license": "MIT",
++      "engines": {
++        "node": ">=0.10.0"
++      }
++    },
+     "node_modules/detect-libc": {
+       "version": "2.1.2",
+       "resolved": "https://registry.npmjs.org/detect-libc/-/detect-libc-2.1.2.tgz",
+@@ -361,6 +944,20 @@
+         "node": ">=8"
+       }
+     },
++    "node_modules/dijkstrajs": {
++      "version": "1.0.3",
++      "resolved": "https://registry.npmjs.org/dijkstrajs/-/dijkstrajs-1.0.3.tgz",
++      "integrity": "sha512-qiSlmBq9+BCdCA/L46dw8Uy93mloxsPSbwnm5yrKn2vMPiy8KyAskTF6zuV/j5BMsmOGZDPs7KjU+mjb670kfA==",
++      "dev": true,
++      "license": "MIT"
++    },
++    "node_modules/emoji-regex": {
++      "version": "8.0.0",
++      "resolved": "https://registry.npmjs.org/emoji-regex/-/emoji-regex-8.0.0.tgz",
++      "integrity": "sha512-MSjYzcWNOA0ewAHpz0MxpYFvwg6yjy1NG3xteoqz644VCo/RPgnr1/GGt+ic3iJTzQ8Eu3TdM14SawnVUmGE6A==",
++      "dev": true,
++      "license": "MIT"
++    },
+     "node_modules/fdir": {
+       "version": "6.5.0",
+       "resolved": "https://registry.npmjs.org/fdir/-/fdir-6.5.0.tgz",
+@@ -379,6 +976,20 @@
+         }
+       }
+     },
++    "node_modules/find-up": {
++      "version": "4.1.0",
++      "resolved": "https://registry.npmjs.org/find-up/-/find-up-4.1.0.tgz",
++      "integrity": "sha512-PpOwAdQ/YlXQ2vj8a3h8IipDuYRi3wceVQQGYWxNINccq40Anw7BlsEXCMbt1Zt+OLA6Fq9suIpIWD0OsnISlw==",
++      "dev": true,
++      "license": "MIT",
++      "dependencies": {
++        "locate-path": "^5.0.0",
++        "path-exists": "^4.0.0"
++      },
++      "engines": {
++        "node": ">=8"
++      }
++    },
+     "node_modules/fsevents": {
+       "version": "2.3.3",
+       "resolved": "https://registry.npmjs.org/fsevents/-/fsevents-2.3.3.tgz",
+@@ -394,6 +1005,26 @@
+         "node": "^8.16.0 || ^10.6.0 || >=11.0.0"
+       }
+     },
++    "node_modules/get-caller-file": {
++      "version": "2.0.5",
++      "resolved": "https://registry.npmjs.org/get-caller-file/-/get-caller-file-2.0.5.tgz",
++      "integrity": "sha512-DyFP3BM/3YHTQOCUL/w0OZHR0lpKeGrxotcHWcqNEdnltqFwXVfhEBQ94eIo34AfQpo0rGki4cyIiftY06h2Fg==",
++      "dev": true,
++      "license": "ISC",
++      "engines": {
++        "node": "6.* || 8.* || >= 10.*"
++      }
++    },
++    "node_modules/is-fullwidth-code-point": {
++      "version": "3.0.0",
++      "resolved": "https://registry.npmjs.org/is-fullwidth-code-point/-/is-fullwidth-code-point-3.0.0.tgz",
++      "integrity": "sha512-zymm5+u+sCsSWyD9qNaejV3DFvhCKclKdizYaJUuHA83RLjb7nSuGnddCHGv0hk+KY7BMAlsWeK4Ueg6EV6XQg==",
++      "dev": true,
++      "license": "MIT",
++      "engines": {
++        "node": ">=8"
++      }
++    },
+     "node_modules/lightningcss": {
+       "version": "1.32.0",
+       "resolved": "https://registry.npmjs.org/lightningcss/-/lightningcss-1.32.0.tgz",
+@@ -655,6 +1286,19 @@
+         "url": "https://opencollective.com/parcel"
+       }
+     },
++    "node_modules/locate-path": {
++      "version": "5.0.0",
++      "resolved": "https://registry.npmjs.org/locate-path/-/locate-path-5.0.0.tgz",
++      "integrity": "sha512-t7hw9pI+WvuwNJXwk5zVHpyhIqzg2qTlklJOf0mVxGSbe3Fp2VieZcduNYjaLDoy6p9uGpQEGWG87WpMKlNq8g==",
++      "dev": true,
++      "license": "MIT",
++      "dependencies": {
++        "p-locate": "^4.1.0"
++      },
++      "engines": {
++        "node": ">=8"
++      }
++    },
+     "node_modules/nanoid": {
+       "version": "3.3.15",
+       "resolved": "https://registry.npmjs.org/nanoid/-/nanoid-3.3.15.tgz",
+@@ -674,6 +1318,55 @@
+         "node": "^10 || ^12 || ^13.7 || ^14 || >=15.0.1"
+       }
+     },
++    "node_modules/p-limit": {
++      "version": "2.3.0",
++      "resolved": "https://registry.npmjs.org/p-limit/-/p-limit-2.3.0.tgz",
++      "integrity": "sha512-//88mFWSJx8lxCzwdAABTJL2MyWB12+eIY7MDL2SqLmAkeKU9qxRvWuSyTjm3FUmpBEMuFfckAIqEaVGUDxb6w==",
++      "dev": true,
++      "license": "MIT",
++      "dependencies": {
++        "p-try": "^2.0.0"
++      },
++      "engines": {
++        "node": ">=6"
++      },
++      "funding": {
++        "url": "https://github.com/sponsors/sindresorhus"
++      }
++    },
++    "node_modules/p-locate": {
++      "version": "4.1.0",
++      "resolved": "https://registry.npmjs.org/p-locate/-/p-locate-4.1.0.tgz",
++      "integrity": "sha512-R79ZZ/0wAxKGu3oYMlz8jy/kbhsNrS7SKZ7PxEHBgJ5+F2mtFW2fK2cOtBh1cHYkQsbzFV7I+EoRKe6Yt0oK7A==",
++      "dev": true,
++      "license": "MIT",
++      "dependencies": {
++        "p-limit": "^2.2.0"
++      },
++      "engines": {
++        "node": ">=8"
++      }
++    },
++    "node_modules/p-try": {
++      "version": "2.2.0",
++      "resolved": "https://registry.npmjs.org/p-try/-/p-try-2.2.0.tgz",
++      "integrity": "sha512-R4nPAVTAU0B9D35/Gk3uJf/7XYbQcyohSKdvAxIRSNghFl4e71hVoGnBNQz9cWaXxO2I10KTC+3jMdvvoKw6dQ==",
++      "dev": true,
++      "license": "MIT",
++      "engines": {
++        "node": ">=6"
++      }
++    },
++    "node_modules/path-exists": {
++      "version": "4.0.0",
++      "resolved": "https://registry.npmjs.org/path-exists/-/path-exists-4.0.0.tgz",
++      "integrity": "sha512-ak9Qy5Q7jYb2Wwcey5Fpvg2KoAc/ZIhLSLOSBmRmygPsGwkVVt0fZa0qrtMz+m6tJTAHfZQ8FnmB4MG4LWy7/w==",
++      "dev": true,
++      "license": "MIT",
++      "engines": {
++        "node": ">=8"
++      }
++    },
+     "node_modules/picocolors": {
+       "version": "1.1.1",
+       "resolved": "https://registry.npmjs.org/picocolors/-/picocolors-1.1.1.tgz",
+@@ -695,6 +1388,16 @@
+         "url": "https://github.com/sponsors/jonschlinkert"
+       }
+     },
++    "node_modules/pngjs": {
++      "version": "5.0.0",
++      "resolved": "https://registry.npmjs.org/pngjs/-/pngjs-5.0.0.tgz",
++      "integrity": "sha512-40QW5YalBNfQo5yRYmiw7Yz6TKKVr3h6970B2YE+3fQpsWcrbj1PzJgxeJ19DRQjhMbKPIuMY8rFaXc8moolVw==",
++      "dev": true,
++      "license": "MIT",
++      "engines": {
++        "node": ">=10.13.0"
++      }
++    },
+     "node_modules/postcss": {
+       "version": "8.5.15",
+       "resolved": "https://registry.npmjs.org/postcss/-/postcss-8.5.15.tgz",
+@@ -724,6 +1427,41 @@
+         "node": "^10 || ^12 || >=14"
+       }
+     },
++    "node_modules/qrcode": {
++      "version": "1.5.4",
++      "resolved": "https://registry.npmjs.org/qrcode/-/qrcode-1.5.4.tgz",
++      "integrity": "sha512-1ca71Zgiu6ORjHqFBDpnSMTR2ReToX4l1Au1VFLyVeBTFavzQnv5JxMFr3ukHVKpSrSA2MCk0lNJSykjUfz7Zg==",
++      "dev": true,
++      "license": "MIT",
++      "dependencies": {
++        "dijkstrajs": "^1.0.1",
++        "pngjs": "^5.0.0",
++        "yargs": "^15.3.1"
++      },
++      "bin": {
++        "qrcode": "bin/qrcode"
++      },
++      "engines": {
++        "node": ">=10.13.0"
++      }
++    },
++    "node_modules/require-directory": {
++      "version": "2.1.1",
++      "resolved": "https://registry.npmjs.org/require-directory/-/require-directory-2.1.1.tgz",
++      "integrity": "sha512-fGxEI7+wsG9xrvdjsrlmL22OMTTiHRwAMroiEeMgq8gzoLC/PQr7RsRDSTLUg/bZAZtF+TVIkHc6/4RIKrui+Q==",
++      "dev": true,
++      "license": "MIT",
++      "engines": {
++        "node": ">=0.10.0"
++      }
++    },
++    "node_modules/require-main-filename": {
++      "version": "2.0.0",
++      "resolved": "https://registry.npmjs.org/require-main-filename/-/require-main-filename-2.0.0.tgz",
++      "integrity": "sha512-NKN5kMDylKuldxYLSUfrbo5Tuzh4hd+2E8NPPX02mZtn1VuREQToYe/ZdlJy+J3uCpfaiGF05e7B8W0iXbQHmg==",
++      "dev": true,
++      "license": "ISC"
++    },
+     "node_modules/rolldown": {
+       "version": "1.1.2",
+       "resolved": "https://registry.npmjs.org/rolldown/-/rolldown-1.1.2.tgz",
+@@ -758,6 +1496,78 @@
+         "@rolldown/binding-win32-x64-msvc": "1.1.2"
+       }
+     },
++    "node_modules/semver": {
++      "version": "7.8.5",
++      "resolved": "https://registry.npmjs.org/semver/-/semver-7.8.5.tgz",
++      "integrity": "sha512-Y7/KDsb8LjooZpwaqGyulO6DQlksgCncchHGk+sZIY4SBvUocMBEFH5Ur1fI4dV+Jvl0w6cjvucaIi40puRioA==",
++      "dev": true,
++      "license": "ISC",
++      "bin": {
++        "semver": "bin/semver.js"
++      },
++      "engines": {
++        "node": ">=10"
++      }
++    },
++    "node_modules/set-blocking": {
++      "version": "2.0.0",
++      "resolved": "https://registry.npmjs.org/set-blocking/-/set-blocking-2.0.0.tgz",
++      "integrity": "sha512-KiKBS8AnWGEyLzofFfmvKwpdPzqiy16LvQfK3yv/fVH7Bj13/wl3JSR1J+rfgRE9q7xUJK4qvgS8raSOeLUehw==",
++      "dev": true,
++      "license": "ISC"
++    },
++    "node_modules/sharp": {
++      "version": "0.35.2",
++      "resolved": "https://registry.npmjs.org/sharp/-/sharp-0.35.2.tgz",
++      "integrity": "sha512-FVtFjtBCMiJS6yb5CX7Sop45WFMpeGw6oRKuJnXYgf/f1ms/D7LE/ZUSNxnW7rZ/dbslQWYkoqFHGPaDBtaK4w==",
++      "dev": true,
++      "license": "Apache-2.0",
++      "dependencies": {
++        "@img/colour": "^1.1.0",
++        "detect-libc": "^2.1.2",
++        "semver": "^7.8.4"
++      },
++      "engines": {
++        "node": ">=20.9.0"
++      },
++      "funding": {
++        "url": "https://opencollective.com/libvips"
++      },
++      "optionalDependencies": {
++        "@img/sharp-darwin-arm64": "0.35.2",
++        "@img/sharp-darwin-x64": "0.35.2",
++        "@img/sharp-freebsd-wasm32": "0.35.2",
++        "@img/sharp-libvips-darwin-arm64": "1.3.1",
++        "@img/sharp-libvips-darwin-x64": "1.3.1",
++        "@img/sharp-libvips-linux-arm": "1.3.1",
++        "@img/sharp-libvips-linux-arm64": "1.3.1",
++        "@img/sharp-libvips-linux-ppc64": "1.3.1",
++        "@img/sharp-libvips-linux-riscv64": "1.3.1",
++        "@img/sharp-libvips-linux-s390x": "1.3.1",
++        "@img/sharp-libvips-linux-x64": "1.3.1",
++        "@img/sharp-libvips-linuxmusl-arm64": "1.3.1",
++        "@img/sharp-libvips-linuxmusl-x64": "1.3.1",
++        "@img/sharp-linux-arm": "0.35.2",
++        "@img/sharp-linux-arm64": "0.35.2",
++        "@img/sharp-linux-ppc64": "0.35.2",
++        "@img/sharp-linux-riscv64": "0.35.2",
++        "@img/sharp-linux-s390x": "0.35.2",
++        "@img/sharp-linux-x64": "0.35.2",
++        "@img/sharp-linuxmusl-arm64": "0.35.2",
++        "@img/sharp-linuxmusl-x64": "0.35.2",
++        "@img/sharp-webcontainers-wasm32": "0.35.2",
++        "@img/sharp-win32-arm64": "0.35.2",
++        "@img/sharp-win32-ia32": "0.35.2",
++        "@img/sharp-win32-x64": "0.35.2"
++      }
++    },
++    "node_modules/simple-qrbtf": {
++      "version": "1.5.0",
++      "resolved": "https://registry.npmjs.org/simple-qrbtf/-/simple-qrbtf-1.5.0.tgz",
++      "integrity": "sha512-/oa/YZkZKqAbKtdSHlSV2S2E3Dr77AmHCdEIycMm3qXdCUkHGLc3DLyr2TRDRnYLSl0Y8roxfWb08fOANTCd4Q==",
++      "dev": true,
++      "license": "MIT"
++    },
+     "node_modules/source-map-js": {
+       "version": "1.2.1",
+       "resolved": "https://registry.npmjs.org/source-map-js/-/source-map-js-1.2.1.tgz",
+@@ -768,6 +1578,34 @@
+         "node": ">=0.10.0"
+       }
+     },
++    "node_modules/string-width": {
++      "version": "4.2.3",
++      "resolved": "https://registry.npmjs.org/string-width/-/string-width-4.2.3.tgz",
++      "integrity": "sha512-wKyQRQpjJ0sIp62ErSZdGsjMJWsap5oRNihHhu6G7JVO/9jIB6UyevL+tXuOqrng8j/cxKTWyWUwvSTriiZz/g==",
++      "dev": true,
++      "license": "MIT",
++      "dependencies": {
++        "emoji-regex": "^8.0.0",
++        "is-fullwidth-code-point": "^3.0.0",
++        "strip-ansi": "^6.0.1"
++      },
++      "engines": {
++        "node": ">=8"
++      }
++    },
++    "node_modules/strip-ansi": {
++      "version": "6.0.1",
++      "resolved": "https://registry.npmjs.org/strip-ansi/-/strip-ansi-6.0.1.tgz",
++      "integrity": "sha512-Y38VPSHcqkFrCpFnQ9vuSXmquuv5oXOKpGeT6aGrr3o3Gc9AlVa6JBfUSOCnbxGGZF+/0ooI7KrPuUSztUdU5A==",
++      "dev": true,
++      "license": "MIT",
++      "dependencies": {
++        "ansi-regex": "^5.0.1"
++      },
++      "engines": {
++        "node": ">=8"
++      }
++    },
+     "node_modules/tinyglobby": {
+       "version": "0.2.17",
+       "resolved": "https://registry.npmjs.org/tinyglobby/-/tinyglobby-0.2.17.tgz",
+@@ -870,6 +1708,72 @@
+           "optional": true
+         }
+       }
++    },
++    "node_modules/which-module": {
++      "version": "2.0.1",
++      "resolved": "https://registry.npmjs.org/which-module/-/which-module-2.0.1.tgz",
++      "integrity": "sha512-iBdZ57RDvnOR9AGBhML2vFZf7h8vmBjhoaZqODJBFWHVtKkDmKuHai3cx5PgVMrX5YDNp27AofYbAwctSS+vhQ==",
++      "dev": true,
++      "license": "ISC"
++    },
++    "node_modules/wrap-ansi": {
++      "version": "6.2.0",
++      "resolved": "https://registry.npmjs.org/wrap-ansi/-/wrap-ansi-6.2.0.tgz",
++      "integrity": "sha512-r6lPcBGxZXlIcymEu7InxDMhdW0KDxpLgoFLcguasxCaJ/SOIZwINatK9KY/tf+ZrlywOKU0UDj3ATXUBfxJXA==",
++      "dev": true,
++      "license": "MIT",
++      "dependencies": {
++        "ansi-styles": "^4.0.0",
++        "string-width": "^4.1.0",
++        "strip-ansi": "^6.0.0"
++      },
++      "engines": {
++        "node": ">=8"
++      }
++    },
++    "node_modules/y18n": {
++      "version": "4.0.3",
++      "resolved": "https://registry.npmjs.org/y18n/-/y18n-4.0.3.tgz",
++      "integrity": "sha512-JKhqTOwSrqNA1NY5lSztJ1GrBiUodLMmIZuLiDaMRJ+itFd+ABVE8XBjOvIWL+rSqNDC74LCSFmlb/U4UZ4hJQ==",
++      "dev": true,
++      "license": "ISC"
++    },
++    "node_modules/yargs": {
++      "version": "15.4.1",
++      "resolved": "https://registry.npmjs.org/yargs/-/yargs-15.4.1.tgz",
++      "integrity": "sha512-aePbxDmcYW++PaqBsJ+HYUFwCdv4LVvdnhBy78E57PIor8/OVvhMrADFFEDh8DHDFRv/O9i3lPhsENjO7QX0+A==",
++      "dev": true,
++      "license": "MIT",
++      "dependencies": {
++        "cliui": "^6.0.0",
++        "decamelize": "^1.2.0",
++        "find-up": "^4.1.0",
++        "get-caller-file": "^2.0.1",
++        "require-directory": "^2.1.1",
++        "require-main-filename": "^2.0.0",
++        "set-blocking": "^2.0.0",
++        "string-width": "^4.2.0",
++        "which-module": "^2.0.0",
++        "y18n": "^4.0.0",
++        "yargs-parser": "^18.1.2"
++      },
++      "engines": {
++        "node": ">=8"
++      }
++    },
++    "node_modules/yargs-parser": {
++      "version": "18.1.3",
++      "resolved": "https://registry.npmjs.org/yargs-parser/-/yargs-parser-18.1.3.tgz",
++      "integrity": "sha512-o50j0JeToy/4K6OZcaQmW6lyXXKhq7csREXcDwk2omFPJEwUNOVtJKvmDr9EI1fAJZUyZcRF7kxGBWmRXudrCQ==",
++      "dev": true,
++      "license": "ISC",
++      "dependencies": {
++        "camelcase": "^5.0.0",
++        "decamelize": "^1.2.0"
++      },
++      "engines": {
++        "node": ">=6"
++      }
+     }
+   }
+ }
+diff --git a/package.json b/package.json
+index 06887df..e56f024 100644
+--- a/package.json
++++ b/package.json
+@@ -8,9 +8,14 @@
+     "dev:vite": "vite",
+     "dev:host": "node dev-server.mjs",
+     "build": "vite build",
+-    "preview": "vite preview"
++    "preview": "vite preview",
++    "generate-qr": "py scripts/generate-qr.py",
++    "generate-qr:line": "node scripts/generate-qr.mjs"
+   },
+   "devDependencies": {
++    "qrcode": "^1.5.4",
++    "sharp": "^0.35.2",
++    "simple-qrbtf": "^1.5.0",
+     "vite": "^8.1.0"
+   }
+ }
+diff --git a/public/audio/transcripts.json b/public/audio/transcripts.json
+index 8234411..13ceb3a 100644
+--- a/public/audio/transcripts.json
++++ b/public/audio/transcripts.json
+@@ -87,75 +87,6 @@
+     ],
+     "full": "한국에 같이 가서 좋았어.\n\n네 가족을 만나서 좋았어.\n\n네가 자란 곳을 봐서 좋았어.\n\n특별한 기억이야."
+   },
+-  "/audio/chapter-06.mp3": {
+-    "language": "ko",
+-    "duration": 16.42,
+-    "segments": [
+-      {
+-        "start": 0.0,
+-        "end": 2.45,
+-        "text": "우리는 많이 달라."
+-      },
+-      {
+-        "start": 2.45,
+-        "end": 8.24,
+-        "text": "그래도 넌 항상 나를 이해하려고 했어."
+-      },
+-      {
+-        "start": 8.24,
+-        "end": 14.53,
+-        "text": "항상 내 이야기를 들어줬어.\n\n항상 내 편이었어."
+-      },
+-      {
+-        "start": 14.53,
+-        "end": 16.42,
+-        "text": "고마워."
+-      }
+-    ],
+-    "full": "우리는 많이 달라.\n\n그래도 넌 항상 나를 이해하려고 했어.\n\n항상 내 이야기를 들어줬어.\n\n항상 내 편이었어.\n\n고마워."
+-  },
+-  "/audio/chapter-07.mp3": {
+-    "language": "ko",
+-    "duration": 43.27,
+-    "segments": [
+-      {
+-        "start": 0.0,
+-        "end": 7.3,
+-        "text": "우리 이야기가 앞으로 어떻게 될지는 모르겠어."
+-      },
+-      {
+-        "start": 7.3,
+-        "end": 13.3,
+-        "text": "우리는 좋은 날도 있었어.\n\n어려운 날도 있었어."
+-      },
+-      {
+-        "start": 13.3,
+-        "end": 17.25,
+-        "text": "그래도 후회는 없어."
+-      },
+-      {
+-        "start": 17.25,
+-        "end": 28.92,
+-        "text": "너를 만난 것을.\n\n너를 알게 된 것을.\n\n우리의 모든 추억을."
+-      },
+-      {
+-        "start": 28.92,
+-        "end": 36.73,
+-        "text": "하지만 한 가지는 확실해.\n\n넌 내 삶에 중요한 사람이야."
+-      },
+-      {
+-        "start": 36.73,
+-        "end": 38.97,
+-        "text": "그건 변하지 않아."
+-      },
+-      {
+-        "start": 38.97,
+-        "end": 43.27,
+-        "text": "생일 축하해, 채영아."
+-      }
+-    ],
+-    "full": "우리 이야기가 앞으로 어떻게 될지는 모르겠어.\n\n우리는 좋은 날도 있었어.\n\n어려운 날도 있었어.\n\n그래도 후회는 없어.\n\n너를 만난 것을.\n\n너를 알게 된 것을.\n\n우리의 모든 추억을.\n\n하지만 한 가지는 확실해.\n\n넌 내 삶에 중요한 사람이야.\n\n그건 변하지 않아.\n\n생일 축하해, 채영아."
+-  },
+   "/audio/why-i-like-you.mp3": {
+     "language": "en",
+     "duration": 98.71,
+@@ -173,7 +104,7 @@
+       {
+         "start": 6.65,
+         "end": 11.56,
+-        "text": "You had a bangy job in Korea, a comfy life and you even published a book."
++        "text": "You had a banging job in Korea, a comfy life, and you even published a book."
+       },
+       {
+         "start": 11.56,
+@@ -188,7 +119,7 @@
+       {
+         "start": 15.61,
+         "end": 19.02,
+-        "text": "But somehow you decided to live all of that behind"
++        "text": "But somehow you decided to leave all of that behind"
+       },
+       {
+         "start": 19.02,
+@@ -208,7 +139,7 @@
+       {
+         "start": 30.34,
+         "end": 35.88,
+-        "text": "From studying, to doodoo-roo, to becoming a marketing on operations lead,"
++        "text": "From studying, to Dooroo, to becoming a marketing and operations lead,"
+       },
+       {
+         "start": 35.88,
+@@ -301,6 +232,6 @@
+         "text": "And I'm really glad I did."
+       }
+     ],
+-    "full": "You know, one thing I've always found really impressive about you. Before I even met you, you'd already done loads. You had a bangy job in Korea, a comfy life and you even published a book. Most people would have looked at that and thought, yeah, that'll do. But somehow you decided to live all of that behind and move to another country, take a massive risk, get a loan, do a master's degree, build a whole new life from scratch. And somehow you just keep smashing it. From studying, to doodoo-roo, to becoming a marketing on operations lead, you don't really do things halfway. When you decide you're going to do something, you just do it. Whether that's work, boxing, losing weight, or sticking to a strict diet. To be honest, we're quite different in that sense. There's definitely been times where I've had absolutely no clue what I'm doing. Times where I've been stressed, insecure, overthinking everything. I'm just trying to figure out my life. But somehow, you've always had patience to support me anyway. You don't always understand why I do things the way I do them. And to be fair, sometimes I don't understand either. You don't always agree with me. But you've always respected that my way is still my way. I think that's actually quite rare. And I think that's one of the things I admire most about you. Out of everything we've shared together, one of my favorite things wasn't a trip, or a date, or a specific memory. It was just getting to know you, the real you. And I'm really glad I did."
++    "full": "You know, one thing I've always found really impressive about you. Before I even met you, you'd already done loads. You had a banging job in Korea, a comfy life, and you even published a book. Most people would have looked at that and thought, yeah, that'll do. But somehow you decided to leave all of that behind and move to another country, take a massive risk, get a loan, do a master's degree, build a whole new life from scratch. And somehow you just keep smashing it. From studying, to Dooroo, to becoming a marketing and operations lead, you don't really do things halfway. When you decide you're going to do something, you just do it. Whether that's work, boxing, losing weight, or sticking to a strict diet. To be honest, we're quite different in that sense. There's definitely been times where I've had absolutely no clue what I'm doing. Times where I've been stressed, insecure, overthinking everything. I'm just trying to figure out my life. But somehow, you've always had patience to support me anyway. You don't always understand why I do things the way I do them. And to be fair, sometimes I don't understand either. You don't always agree with me. But you've always respected that my way is still my way. I think that's actually quite rare. And I think that's one of the things I admire most about you. Out of everything we've shared together, one of my favorite things wasn't a trip, or a date, or a specific memory. It was just getting to know you, the real you. And I'm really glad I did."
+   }
+-}
+\ No newline at end of file
++}
+diff --git a/public/content.json b/public/content.json
+index 2103144..efb56ce 100644
+--- a/public/content.json
++++ b/public/content.json
+@@ -5,10 +5,10 @@
+     "ko": "하늘을 봐. 우리 이야기 다섯 개의 챕터로 만든 별자리야."
+   },
+   "ui": {
+-    "startHint": { "en": "Scroll to fly into the first memory", "ko": "스크롤해서 첫 번째 기억으로 들어가 봐" },
+-    "scrollHint": { "en": "Scroll to continue through the sky", "ko": "스크롤해서 하늘을 계속 날아가 봐" },
++    "startHint": { "en": "Tap the glowing star to open the first memory", "ko": "빛나는 별을 눌러 첫 번째 기억을 열어 봐" },
++    "scrollHint": { "en": "Close the memory, then tap the next glowing star", "ko": "기억을 닫고 다음 빛나는 별을 눌러 계속해 봐" },
+     "finaleTapHint": { "en": "Tap any star to revisit a memory", "ko": "별을 터치해서 기억을 다시 들어봐" },
+-    "wrongOrder": { "en": "Keep scrolling forward through the story", "ko": "이야기를 따라 스크롤해서 앞으로 가 봐" },
++    "wrongOrder": { "en": "Follow the glowing star in order", "ko": "빛나는 별을 순서대로 따라가 봐" },
+     "progress": { "en": "{n} of 5 chapters discovered", "ko": "5개 중 {n}개의 챕터를 찾았어" },
+     "starFinalUnlock": { "en": "One last chapter remains", "ko": "마지막 챕터가 남았어" },
+     "tapToBegin": { "en": "Tap to begin", "ko": "터치해서 시작" },
+@@ -35,45 +35,47 @@
+     "/assets/album-0880.jpg"
+   ],
+   "helperStars": [
+-    { "id": "h1", "pos": [0.245, 0.29] },
+-    { "id": "h2", "pos": [0.358, 0.29] },
+-    { "id": "h3", "pos": [0.301, 0.38] },
+-    { "id": "h4", "pos": [0.358, 0.515] },
+-    { "id": "h5", "pos": [0.41, 0.65] },
+-    { "id": "h6", "pos": [0.463, 0.305] },
+-    { "id": "h7", "pos": [0.463, 0.65] },
+-    { "id": "h8", "pos": [0.41, 0.44] },
+-    { "id": "h9", "pos": [0.463, 0.44] },
+-    { "id": "h10", "pos": [0.41, 0.545] },
+-    { "id": "h11", "pos": [0.463, 0.545] },
+-    { "id": "h12", "pos": [0.59, 0.283] },
+-    { "id": "h13", "pos": [0.71, 0.358] },
+-    { "id": "h14", "pos": [0.665, 0.433] },
+-    { "id": "h15", "pos": [0.59, 0.433] },
+-    { "id": "h16", "pos": [0.545, 0.358] },
+-    { "id": "h17", "pos": [0.755, 0.583] },
+-    { "id": "h18", "pos": [0.673, 0.38] },
+-    { "id": "h19", "pos": [0.673, 0.478] },
+-    { "id": "h20", "pos": [0.755, 0.478] },
+-    { "id": "h21", "pos": [0.59, 0.59] },
+-    { "id": "h22", "pos": [0.665, 0.59] },
+-    { "id": "h23", "pos": [0.665, 0.74] },
+-    { "id": "h24", "pos": [0.59, 0.74] },
+-    { "id": "h25", "pos": [0.545, 0.665] }
++    { "id": "ch_top_l", "pos": [0.22, 0.28] },
++    { "id": "ch_top_r", "pos": [0.33, 0.28] },
++    { "id": "ch_mid_l", "pos": [0.22, 0.42] },
++    { "id": "ch_mid_r", "pos": [0.35, 0.42] },
++    { "id": "ae_left_top", "pos": [0.40, 0.31] },
++    { "id": "ae_left_mid", "pos": [0.40, 0.44] },
++    { "id": "ae_left_bot", "pos": [0.40, 0.66] },
++    { "id": "ae_right_mid", "pos": [0.47, 0.44] },
++    { "id": "ae_right_bot", "pos": [0.47, 0.66] },
++    { "id": "yeong_top_l", "pos": [0.56, 0.36] },
++    { "id": "yeong_top_r", "pos": [0.68, 0.36] },
++    { "id": "yeong_top_b", "pos": [0.62, 0.44] },
++    { "id": "yeo_v_top", "pos": [0.74, 0.31] },
++    { "id": "yeo_v_upper", "pos": [0.74, 0.38] },
++    { "id": "yeo_v_bot", "pos": [0.74, 0.55] },
++    { "id": "yeo_h_upper", "pos": [0.68, 0.38] },
++    { "id": "yeo_h_lower", "pos": [0.68, 0.48] },
++    { "id": "final_ng_top", "pos": [0.63, 0.56] },
++    { "id": "final_ng_r", "pos": [0.70, 0.64] },
++    { "id": "final_ng_l", "pos": [0.56, 0.64] }
++  ],
++  "ambientStars": [
++    [0.26, 0.36], [0.28, 0.48], [0.32, 0.36], [0.34, 0.42],
++    [0.38, 0.38], [0.40, 0.46], [0.44, 0.32], [0.48, 0.40],
++    [0.60, 0.34], [0.64, 0.42], [0.58, 0.44], [0.66, 0.36],
++    [0.70, 0.44], [0.72, 0.48], [0.60, 0.64], [0.64, 0.68],
++    [0.58, 0.66], [0.62, 0.62], [0.50, 0.48], [0.52, 0.56]
+   ],
+   "chapterStrokes": {
+-    "s1": [["h1", "h2"], ["h1", "h3"], ["h3", "s1"], ["h3", "h4"]],
+-    "s2": [["s2", "h5"], ["h6", "h7"], ["h8", "h9"], ["h10", "h11"]],
+-    "s3": [["h12", "s3"], ["s3", "h13"], ["h13", "h14"], ["h14", "h15"], ["h15", "h16"], ["h16", "h12"]],
+-    "s5": [["s5", "h17"], ["h18", "s5"], ["h19", "h20"]],
+-    "s4": [["h21", "h22"], ["h22", "s4"], ["s4", "h23"], ["h23", "h24"], ["h24", "h25"], ["h25", "h21"]]
++    "s1": [["ch_top_l", "ch_top_r"], ["ch_mid_l", "ch_mid_r"], ["ch_mid_l", "s1"], ["ch_mid_r", "s1"]],
++    "s2": [["ae_left_top", "ae_left_mid"], ["ae_left_mid", "ae_left_bot"], ["ae_left_mid", "ae_right_mid"], ["s2", "ae_right_mid"], ["ae_right_mid", "ae_right_bot"]],
++    "s3": [["s3", "yeong_top_r"], ["yeong_top_r", "yeong_top_b"], ["yeong_top_b", "yeong_top_l"], ["yeong_top_l", "s3"]],
++    "s5": [["yeo_v_top", "yeo_v_upper"], ["yeo_v_upper", "s5"], ["s5", "yeo_v_bot"], ["yeo_h_upper", "yeo_v_upper"], ["yeo_h_lower", "s5"]],
++    "s4": [["final_ng_top", "final_ng_r"], ["final_ng_r", "s4"], ["s4", "final_ng_l"], ["final_ng_l", "final_ng_top"]]
+   },
+   "finaleSegments": [
+-    ["h1", "h2"], ["h1", "h3"], ["h3", "s1"], ["h3", "h4"],
+-    ["s2", "h5"], ["h6", "h7"], ["h8", "h9"], ["h10", "h11"],
+-    ["h12", "s3"], ["s3", "h13"], ["h13", "h14"], ["h14", "h15"], ["h15", "h16"], ["h16", "h12"],
+-    ["s5", "h17"], ["h18", "s5"], ["h19", "h20"],
+-    ["h21", "h22"], ["h22", "s4"], ["s4", "h23"], ["h23", "h24"], ["h24", "h25"], ["h25", "h21"]
++    ["ch_top_l", "ch_top_r"], ["ch_mid_l", "ch_mid_r"], ["ch_mid_l", "s1"], ["ch_mid_r", "s1"],
++    ["ae_left_top", "ae_left_mid"], ["ae_left_mid", "ae_left_bot"], ["ae_left_mid", "ae_right_mid"], ["s2", "ae_right_mid"], ["ae_right_mid", "ae_right_bot"],
++    ["s3", "yeong_top_r"], ["yeong_top_r", "yeong_top_b"], ["yeong_top_b", "yeong_top_l"], ["yeong_top_l", "s3"],
++    ["yeo_v_top", "yeo_v_upper"], ["yeo_v_upper", "s5"], ["s5", "yeo_v_bot"], ["yeo_h_upper", "yeo_v_upper"], ["yeo_h_lower", "s5"],
++    ["final_ng_top", "final_ng_r"], ["final_ng_r", "s4"], ["s4", "final_ng_l"], ["final_ng_l", "final_ng_top"]
+   ],
+   "guideSegments": [],
+   "stars": [
+@@ -88,8 +90,8 @@
+         "ko": "그냥 평범했던 밤이, 이후 모든 것의 첫 페이지가 됐어."
+       },
+       "visualStyle": "normal",
+-      "narrativePos": [0.22, 0.74],
+-      "finalePos": [0.245, 0.515]
++      "narrativePos": [0.36, 0.62],
++      "finalePos": [0.28, 0.54]
+     },
+     {
+       "id": "s2",
+@@ -102,8 +104,8 @@
+         "ko": "우연을 조용히 시작으로 바꿔준 메시지."
+       },
+       "visualStyle": "normal",
+-      "narrativePos": [0.26, 0.24],
+-      "finalePos": [0.41, 0.29]
++      "narrativePos": [0.43, 0.34],
++      "finalePos": [0.47, 0.31]
+     },
+     {
+       "id": "s3",
+@@ -123,8 +125,8 @@
+         "ko": "그냥 남으로 남을 뻔했어. 그렇지 않아서 다행이야."
+       },
+       "visualStyle": "reconnect",
+-      "narrativePos": [0.76, 0.22],
+-      "finalePos": [0.665, 0.283]
++      "narrativePos": [0.58, 0.31],
++      "finalePos": [0.62, 0.28]
+     },
+     {
+       "id": "s5",
+@@ -144,8 +146,8 @@
+         "ko": "네 세상이 덜 멀어졌어. 이제 내 안에 함께 있는 곳."
+       },
+       "visualStyle": "normal",
+-      "narrativePos": [0.74, 0.52],
+-      "finalePos": [0.755, 0.305]
++      "narrativePos": [0.66, 0.52],
++      "finalePos": [0.74, 0.48]
+     },
+     {
+       "id": "s4",
+@@ -167,8 +169,8 @@
+         "ko": "한 가지 이유가 아니라 전부. 연기하지 않을 때의 너. 애쓰지 않아도 나오는 말들."
+       },
+       "visualStyle": "featured",
+-      "narrativePos": [0.5, 0.8],
+-      "finalePos": [0.71, 0.665]
++      "narrativePos": [0.52, 0.72],
++      "finalePos": [0.63, 0.72]
+     }
+   ],
+   "finale": {
+diff --git a/src/main.js b/src/main.js
+index 23172aa..c04db23 100644
+--- a/src/main.js
++++ b/src/main.js
+@@ -1,5 +1,6 @@
+ const STORAGE_KEY = "chaeyoung-constellation-v12";
+-const BASE = (typeof import.meta !== "undefined" && import.meta.env?.BASE_URL) || "/hbdchaeyoung/";
++const BASE = (typeof import.meta !== "undefined" && import.meta.env?.BASE_URL) ||
++  (/localhost|127\.0\.0\.1|192\.168\.|10\.\d+\.|172\.(1[6-9]|2\d|3[01])\./.test(location.hostname) ? "/" : "/hbdchaeyoung/");
+ 
+ function cacheBust() {
+   return document.querySelector('meta[name="build"]')?.content || String(Date.now());
+@@ -37,6 +38,7 @@ const finale = $("#finale");
+ const starsLayer = $("#stars");
+ const linesLayer = $("#lines");
+ const hint = $("#hint");
++const chapterRail = $("#chapter-rail");
+ const voiceAudio = $("#voice-audio");
+ const voiceStatus = $("#voice-status");
+ const voiceBar = $(".voice-bar");
+@@ -49,9 +51,11 @@ const starChime = $("#star-chime");
+ 
+ let starEls = {};
+ let helperEls = {};
++let ambientEls = [];
+ let skyRect = null;
+ let hintTimer = null;
+ let currentStar = null;
++let currentPendingDiscoveryId = null;
+ let bgmStarted = false;
+ let voiceFadeRaf = null;
+ let postSpeechTimer = null;
+@@ -71,6 +75,7 @@ const JOURNEY_SCROLL_THRESHOLD = 16;
+ const JOURNEY_TOUCH_THRESHOLD = 14;
+ const JOURNEY_COOLDOWN_MS = 800;
+ let suppressVoicePauseMix = false;
++let modalTypeTimer = null;
+ 
+ const IS_MOBILE = window.matchMedia("(max-width: 680px), (hover: none) and (pointer: coarse)").matches;
+ const IS_LOW_POWER = IS_MOBILE || (navigator.hardwareConcurrency || 8) <= 4;
+@@ -174,6 +179,7 @@ async function init() {
+     setupNightAir();
+     renderStars();
+     renderHelperStars();
++    renderAmbientStars();
+     updateHud();
+     await warmupSky();
+ 
+@@ -428,12 +434,13 @@ async function beginExperience() {
+ }
+ 
+ function beginJourneyMode() {
+-  sky.classList.add("sky-journey");
+-  startJourneyCruise();
+-  setupJourneyScroll();
++  sky.classList.remove("sky-journey", "memory-dive", "journey-cruising");
++  resetSkyCamera();
+   updateStarStates();
+   if (!state.viewed.size && !sky.classList.contains("finale-map")) {
+     showHint(state.data.ui.startHint);
++  } else if (expectedStarId() && !sky.classList.contains("finale-map")) {
++    showHint(state.data.ui.scrollHint);
+   }
+ }
+ 
+@@ -447,26 +454,7 @@ function canAdvanceJourney() {
+ }
+ 
+ function revealChapter(id) {
+-  const star = getStar(id);
+-  if (!star) return;
+-
+-  journeyAdvanceLock = true;
+-  journeyAdvanceCooldown = performance.now();
+-  journeyTouchAccum = 0;
+-  const firstDiscovery = !state.viewed.has(id);
+-
+-  unlockBgm();
+-  playStarChime();
+-  hideHint();
+-  openModal(star, true);
+-
+-  if (firstDiscovery) {
+-    state.viewed.add(id);
+-    state.pathIndex = state.viewed.size;
+-    setTimeout(() => drawChapterStrokes(id), DIVE_MS + 420);
+-    saveProgress();
+-    updateStarStates();
+-  }
++  onStarClick(id);
+ }
+ 
+ function advanceJourneyChapter() {
+@@ -1368,12 +1356,65 @@ function renderStars() {
+     label.textContent = state.lang === "ko" ? star.title.ko : star.title.en;
+     btn.appendChild(label);
+ 
++    btn.addEventListener("pointerdown", (event) => {
++      if (event.button && event.button !== 0) return;
++      event.preventDefault();
++      onStarClick(star.id);
++    });
+     btn.addEventListener("click", () => onStarClick(star.id));
+     starsLayer.appendChild(btn);
+     starEls[star.id] = btn;
+   });
+ 
+   positionStars(false);
++  renderChapterRail();
++}
++
++function renderChapterRail() {
++  if (!chapterRail) return;
++  chapterRail.innerHTML = "";
++  state.data.path.forEach((id, index) => {
++    const star = getStar(id);
++    const btn = document.createElement("button");
++    btn.type = "button";
++    btn.className = "chapter-dot";
++    btn.dataset.id = id;
++    btn.setAttribute("aria-label", `Chapter ${index + 1}: ${star.title.en}`);
++
++    const number = document.createElement("span");
++    number.className = "chapter-dot-number";
++    number.textContent = String(index + 1);
++    btn.appendChild(number);
++
++    const label = document.createElement("span");
++    label.className = "chapter-dot-label";
++    label.textContent = star.title.en;
++    btn.appendChild(label);
++
++    btn.addEventListener("pointerdown", (event) => {
++      if (event.button && event.button !== 0) return;
++      event.preventDefault();
++      onStarClick(id);
++    });
++    btn.addEventListener("click", () => onStarClick(id));
++    chapterRail.appendChild(btn);
++  });
++  updateChapterRail();
++}
++
++function updateChapterRail() {
++  if (!chapterRail) return;
++  const expected = expectedStarId();
++  chapterRail.querySelectorAll(".chapter-dot").forEach((btn) => {
++    const id = btn.dataset.id;
++    const viewed = state.viewed.has(id);
++    const active = id === expected && !state.morphing;
++    const enabled = sky.classList.contains("finale-map") ? viewed : viewed || active;
++    btn.classList.toggle("viewed", viewed);
++    btn.classList.toggle("next", active);
++    btn.disabled = !enabled;
++    btn.setAttribute("aria-disabled", String(!enabled));
++  });
+ }
+ 
+ function renderHelperStars() {
+@@ -1388,10 +1429,32 @@ function renderHelperStars() {
+   positionHelperStars();
+ }
+ 
++function renderAmbientStars() {
++  ambientEls.forEach(({ el }) => el.remove());
++  ambientEls = [];
++  (state.data.ambientStars ?? []).forEach((pos, i) => {
++    const dot = document.createElement("span");
++    dot.className = "ambient-star";
++    dot.setAttribute("aria-hidden", "true");
++    dot.style.setProperty("--twinkle-delay", `${(i % 8) * 0.4}s`);
++    starsLayer.appendChild(dot);
++    ambientEls.push({ el: dot, pos });
++  });
++  positionAmbientStars();
++}
++
++function positionAmbientStars() {
++  ambientEls.forEach(({ el, pos }) => {
++    const p = layoutPos(pos, "finale");
++    el.style.left = `${p[0] * 100}%`;
++    el.style.top = `${p[1] * 100}%`;
++  });
++}
++
+ function layoutPos(pos, kind = "narrative") {
+   if (!pos) return pos;
+   const anchorX = 0.5;
+-  const anchorY = 0.48;
++  const anchorY = 0.46;
+ 
+   if (kind === "narrative") {
+     const spread = 1.24;
+@@ -1401,10 +1464,10 @@ function layoutPos(pos, kind = "narrative") {
+     ];
+   }
+ 
+-  const scale = 0.58;
+-  const spreadX = 1.18;
++  // Finale positions are pre-laid for 채영 — avoid over-shrinking into a knot
++  const scale = 0.94;
+   return [
+-    anchorX + (pos[0] - anchorX) * scale * spreadX,
++    anchorX + (pos[0] - anchorX) * scale,
+     anchorY + (pos[1] - anchorY) * scale,
+   ];
+ }
+@@ -1430,6 +1493,7 @@ function positionHelperStars() {
+     el.style.left = `${pos[0] * 100}%`;
+     el.style.top = `${pos[1] * 100}%`;
+   });
++  positionAmbientStars();
+ }
+ 
+ function updateHud() {
+@@ -1448,21 +1512,29 @@ function updateStarStates() {
+ 
+   Object.entries(starEls).forEach(([id, el]) => {
+     el.classList.remove("next", "wrong", "locked", "journey-current", "finale-tappable");
+-    el.classList.toggle("viewed", state.viewed.has(id));
++    const viewed = state.viewed.has(id);
++    const active = id === expected && !state.morphing;
++    el.classList.toggle("viewed", viewed);
++    const star = getStar(id);
++    const label = el.querySelector(".star-label");
++    if (label) label.textContent = state.lang === "ko" ? star.title.ko : star.title.en;
+ 
+     if (finale) {
+-      el.classList.toggle("finale-tappable", state.viewed.has(id));
++      el.classList.toggle("finale-tappable", viewed);
++      el.disabled = !viewed;
++      el.setAttribute("aria-disabled", String(!viewed));
+       return;
+     }
+ 
+-    el.classList.toggle("journey-current", id === expected && !state.morphing);
++    el.classList.toggle("next", active);
++    el.classList.toggle("journey-current", active);
++    el.classList.toggle("locked", !viewed && !active);
++    el.disabled = !viewed && !active;
++    el.setAttribute("aria-disabled", String(el.disabled));
+     if (id === lastStarId()) {
+-      el.classList.toggle("unlocked", state.pathIndex >= state.data.path.length - 1 || state.viewed.has(id));
++      el.classList.toggle("unlocked", state.pathIndex >= state.data.path.length - 1 || viewed);
+     }
+ 
+-    const star = getStar(id);
+-    const label = el.querySelector(".star-label");
+-    if (label) label.textContent = state.lang === "ko" ? star.title.ko : star.title.en;
+   });
+ 
+   if (finale) {
+@@ -1474,6 +1546,7 @@ function updateStarStates() {
+   }
+ 
+   updateHud();
++  updateChapterRail();
+ }
+ 
+ function showHint(textObj) {
+@@ -1491,13 +1564,33 @@ function hideHint() {
+ }
+ 
+ function onStarClick(id) {
+-  if (!sky.classList.contains("finale-map")) return;
+   if (state.morphing || sky.classList.contains("memory-revealed")) return;
+-  if (!state.viewed.has(id)) return;
++  const star = getStar(id);
++  if (!star) return;
++
++  if (sky.classList.contains("finale-map")) {
++    if (!state.viewed.has(id)) return;
++    unlockBgm();
++    playStarChime();
++    openModal(star, true);
++    return;
++  }
++
++  const firstDiscovery = !state.viewed.has(id);
++  const expected = expectedStarId();
++  if (firstDiscovery && id !== expected) {
++    const el = starEls[id];
++    el?.classList.add("wrong");
++    setTimeout(() => el?.classList.remove("wrong"), 450);
++    showHint(state.data.ui.wrongOrder);
++    return;
++  }
+ 
+   unlockBgm();
+   playStarChime();
+-  openModal(getStar(id), true);
++  hideHint();
++  if (firstDiscovery) currentPendingDiscoveryId = id;
++  openModal(star, true);
+ }
+ 
+ function activateStrokeNode(id) {
+@@ -1670,7 +1763,7 @@ function prepareMemoryContent(star) {
+   renderModalText(star, star.visual?.type === "video");
+ }
+ 
+-function beginMemoryDive(star) {
++function beginMemoryDive(star, onRevealed) {
+   ensureAudioReactive();
+   stopSkyCamera();
+ 
+@@ -1707,6 +1800,7 @@ function beginMemoryDive(star) {
+   memoryDiveTimer = setTimeout(() => {
+     sky.classList.add("memory-revealed");
+     memoryReveal.setAttribute("aria-hidden", "false");
++    onRevealed?.();
+   }, DIVE_MS);
+ }
+ 
+@@ -1719,8 +1813,9 @@ function endMemoryDive(onDone) {
+   focusedStarId = null;
+   state.morphing = false;
+   document.body.classList.remove("modal-open");
++  sky.classList.remove("memory-dive", "sky-journey", "journey-cruising");
++  resetSkyCamera();
+   updateStarStates();
+-  startJourneyCruise();
+   onDone?.();
+ }
+ 
+@@ -1731,7 +1826,9 @@ function openModal(star, autoplay = false) {
+   enterMemoryBed(star);
+   prepareMemoryContent(star);
+   if (autoplay) playVoice();
+-  beginMemoryDive(star);
++  beginMemoryDive(star, () => {
++    if (autoplay && voiceAudio.paused && !voiceAudio.error) playVoice();
++  });
+ 
+   const inner = $(".modal-inner");
+   inner.classList.add("modal-pulse");
+@@ -1917,6 +2014,8 @@ function playVoice() {
+ function closeModal() {
+   clearPostSpeechHold();
+   const profile = memoryProfile ?? getMemoryProfile(currentStar);
++  const pendingId = currentPendingDiscoveryId;
++  currentPendingDiscoveryId = null;
+   suppressVoicePauseMix = true;
+   voiceAudio.pause();
+   fadeVoiceVolume(0, Math.min(500, profile.voiceFadeOutMs), () => {
+@@ -1925,11 +2024,24 @@ function closeModal() {
+   });
+   clearTypewriter();
+ 
+-  const shouldReveal = currentStar?.id === lastStarId() && state.viewed.size === state.data.path.length;
+   currentStar = null;
+ 
+   endMemoryDive(() => {
+     journeyAdvanceLock = false;
++    let completedId = null;
++    if (pendingId && !state.viewed.has(pendingId)) {
++      completedId = pendingId;
++      state.viewed.add(pendingId);
++      state.pathIndex = state.viewed.size;
++      drawChapterStrokes(pendingId);
++      saveProgress();
++      updateStarStates();
++    }
++
++    const shouldReveal =
++      completedId === lastStarId() &&
++      state.viewed.size === state.data.path.length;
++
+     if (shouldReveal) {
+       triggerFinale();
+       return;
+@@ -2013,7 +2125,7 @@ function setupDust(driftImages = []) {
+   const useDomPhotos = IS_MOBILE && !!photoDomHost;
+   const useCanvasPhotos = !useDomPhotos && !!photoCtx;
+   const usePhotos = driftImages.length > 0 && (useDomPhotos || useCanvasPhotos);
+-  const starCount = lowPower ? (IS_MOBILE ? 560 : 920) : IS_MOBILE ? 780 : 1280;
++  const starCount = lowPower ? (IS_MOBILE ? 680 : 1100) : IS_MOBILE ? 920 : 1500;
+   const memoryCount = usePhotos ? (IS_MOBILE ? 42 : 58) : 0;
+   const maxPhotoSources = IS_MOBILE ? 14 : 10;
+   let memorySources = [];
+diff --git a/src/style.css b/src/style.css
+index acc218e..d0e3a07 100644
+--- a/src/style.css
++++ b/src/style.css
+@@ -47,7 +47,7 @@ body {
+ 
+ body.modal-open {
+   overflow: hidden;
+-  touch-action: none;
++  touch-action: pan-y;
+ }
+ 
+ #app {
+@@ -300,7 +300,7 @@ button {
+   opacity: 0.55;
+   pointer-events: none;
+   position: absolute;
+-  z-index: 0;
++    z-index: 0;
+   background:
+     conic-gradient(
+       from 205deg at 48% 50%,
+@@ -319,7 +319,7 @@ button {
+   inset: -10%;
+   opacity: 0;
+   pointer-events: none;
+-  position: absolute;
++    position: absolute;
+   z-index: 6;
+   background:
+     radial-gradient(circle at var(--flight-origin-x) var(--flight-origin-y), transparent 0 15%, rgba(255, 255, 255, 0.1) 15.4%, transparent 16%),
+@@ -352,7 +352,7 @@ button {
+   transition: opacity 0.35s ease;
+   width: 100%;
+   height: 100%;
+-  z-index: 1;
++    z-index: 1;
+ }
+ 
+ .photo-drift-layer canvas {
+@@ -403,8 +403,7 @@ button {
+ }
+ 
+ #sky.sky-journey:not(.finale-map) .stars-layer .star-btn {
+-  pointer-events: none !important;
+-  cursor: default;
++  pointer-events: auto;
+ }
+ 
+ #sky.sky-journey:not(.finale-map) .star-btn.journey-current {
+@@ -607,7 +606,7 @@ button {
+ }
+ 
+ #sky.sky-journey:not(.finale-map) .stars-layer {
+-  pointer-events: none;
++  pointer-events: auto;
+ }
+ 
+ #sky.finale-map .stars-layer {
+@@ -761,7 +760,7 @@ button {
+   background: rgba(7, 14, 28, 0.88);
+   border: 1.5px solid rgba(180, 200, 230, 0.35);
+   border-radius: 999px;
+-  bottom: calc(1.6rem + var(--safe-bottom));
++  bottom: calc(5.1rem + var(--safe-bottom));
+   box-shadow:
+     0 0 24px rgba(127, 181, 217, 0.18),
+     0 8px 32px rgba(0, 0, 0, 0.4);
+@@ -775,7 +774,7 @@ button {
+   min-width: 16rem;
+   padding: 0.85rem 1.4rem;
+   position: absolute;
+-  text-align: center;
++    text-align: center;
+   transform: translateX(-50%) translateY(0);
+   transition:
+     opacity 0.35s ease,
+@@ -798,6 +797,105 @@ button {
+   transform: translateX(-50%) translateY(12px);
+ }
+ 
++.chapter-rail {
++  align-items: center;
++  backdrop-filter: blur(18px);
++  background: rgba(3, 9, 17, 0.68);
++  border: 1px solid rgba(185, 205, 225, 0.16);
++  border-radius: 999px;
++  bottom: calc(0.85rem + var(--safe-bottom));
++  box-shadow:
++    0 12px 34px rgba(0, 0, 0, 0.34),
++    inset 0 1px 0 rgba(255, 255, 255, 0.05);
++  display: flex;
++  gap: 0.28rem;
++  left: 50%;
++  max-width: calc(100vw - 1.25rem);
++  padding: 0.32rem;
++  pointer-events: auto;
++  position: absolute;
++  transform: translateX(-50%);
++  z-index: 12;
++}
++
++.chapter-dot {
++  align-items: center;
++  background: rgba(255, 255, 255, 0.03);
++  border: 1px solid rgba(185, 205, 225, 0.12);
++  border-radius: 999px;
++  color: rgba(185, 205, 225, 0.65);
++  cursor: pointer;
++  display: inline-flex;
++  gap: 0.42rem;
++  min-height: 42px;
++  min-width: 42px;
++  overflow: hidden;
++  padding: 0.35rem 0.48rem;
++  transition:
++    background 0.25s ease,
++    border-color 0.25s ease,
++    box-shadow 0.25s ease,
++    color 0.25s ease,
++    max-width 0.3s ease,
++    opacity 0.25s ease;
++  max-width: 42px;
++}
++
++.chapter-dot:disabled {
++  cursor: default;
++  opacity: 0.44;
++}
++
++.chapter-dot-number {
++  align-items: center;
++  background: rgba(255, 255, 255, 0.05);
++  border-radius: 50%;
++  display: inline-flex;
++  flex: 0 0 auto;
++  font-family: var(--font-display);
++  height: 1.75rem;
++  justify-content: center;
++  width: 1.75rem;
++}
++
++.chapter-dot-label {
++  font-size: 0.68rem;
++  max-width: 8.4rem;
++  opacity: 0;
++  overflow: hidden;
++  text-overflow: ellipsis;
++  transition: opacity 0.25s ease;
++  white-space: nowrap;
++}
++
++.chapter-dot.viewed {
++  border-color: rgba(232, 215, 173, 0.2);
++  color: rgba(232, 215, 173, 0.86);
++  opacity: 0.92;
++}
++
++.chapter-dot.next {
++  background: rgba(232, 215, 173, 0.13);
++  border-color: rgba(232, 215, 173, 0.52);
++  box-shadow:
++    0 0 18px rgba(232, 215, 173, 0.22),
++    0 0 34px rgba(127, 181, 217, 0.12);
++  color: #fff5d6;
++  max-width: min(12rem, 42vw);
++  opacity: 1;
++}
++
++.chapter-dot.next .chapter-dot-label,
++.chapter-dot:focus-visible .chapter-dot-label {
++  opacity: 1;
++}
++
++#sky.memory-dive .chapter-rail,
++#sky.finale-map .chapter-rail {
++  opacity: 0;
++  pointer-events: none;
++}
++
+ @keyframes hint-glow {
+   0%, 100% {
+     box-shadow:
+@@ -814,13 +912,16 @@ button {
+ }
+ 
+ .star-btn {
+-  background: transparent;
+-  border: 0;
++  background:
++    radial-gradient(circle, rgba(255, 255, 255, 0.95) 0 10%, rgba(255, 247, 223, 0.55) 13% 24%, rgba(129, 172, 216, 0.14) 36%, transparent 62%);
++  border: 1px solid rgba(232, 215, 173, 0.1);
+   border-radius: 50%;
+-  box-shadow: none;
++  box-shadow:
++    0 0 10px rgba(238, 244, 251, 0.18),
++    0 0 28px rgba(127, 181, 217, 0.08);
+   cursor: pointer;
+-  height: 24px;
+-  margin: -12px 0 0 -12px;
++  height: 34px;
++  margin: -17px 0 0 -17px;
+   position: absolute;
+   transition:
+     left 1.9s cubic-bezier(0.4, 0, 0.2, 1),
+@@ -828,7 +929,7 @@ button {
+     transform 0.25s,
+     opacity 0.3s;
+   transform-style: preserve-3d;
+-  width: 24px;
++  width: 34px;
+   z-index: 5;
+   outline: none;
+ }
+@@ -847,14 +948,14 @@ button {
+ .finder-ring {
+   border: 1px solid rgba(232, 215, 173, 0.12);
+   border-radius: 50%;
+-  height: 26px;
++  height: 34px;
+   left: 50%;
+   opacity: 0;
+   pointer-events: none;
+   position: absolute;
+   top: 50%;
+   transform: translate(-50%, -50%);
+-  width: 26px;
++  width: 34px;
+ }
+ 
+ .finder-ring::before,
+@@ -869,11 +970,11 @@ button {
+ 
+ .finder-ring::before {
+   height: 1px;
+-  width: 44px;
++  width: 54px;
+ }
+ 
+ .finder-ring::after {
+-  height: 44px;
++  height: 54px;
+   width: 1px;
+ }
+ 
+@@ -904,7 +1005,7 @@ button {
+ }
+ 
+ .star-btn:not(.viewed):not(.next) {
+-  opacity: 0.72;
++  opacity: 0.52;
+   cursor: default;
+   pointer-events: none;
+ }
+@@ -935,8 +1036,8 @@ button {
+ 
+ .star-btn.next::before {
+   animation: pulse-star 1.5s ease-in-out infinite;
+-  height: 12px;
+-  width: 12px;
++  height: 16px;
++  width: 16px;
+   box-shadow:
+     0 0 10px 2px rgba(255, 255, 255, 0.82),
+     0 0 22px 6px rgba(232, 215, 173, 0.32),
+@@ -945,23 +1046,45 @@ button {
+ 
+ .star-btn.next::after {
+   animation: pulse-ring 1.5s ease-in-out infinite;
+-  height: 24px;
+-  opacity: 0.65;
+-  width: 24px;
++  height: 34px;
++  opacity: 0.72;
++  width: 34px;
+ }
+ 
+ .star-btn.next {
+-  background: transparent;
+-  border: 0;
+-  box-shadow: none;
++  background:
++    radial-gradient(circle, #fff 0 13%, #fff4d5 16% 32%, rgba(232, 215, 173, 0.22) 45%, transparent 70%);
++  border-color: rgba(232, 215, 173, 0.55);
++  box-shadow:
++    0 0 16px rgba(255, 255, 255, 0.45),
++    0 0 42px rgba(232, 215, 173, 0.22),
++    0 0 70px rgba(127, 181, 217, 0.12);
+   opacity: 1;
+   animation: next-bob 2s ease-in-out infinite;
+   z-index: 12;
+ }
+ 
++#sky .star-btn.next {
++  opacity: 1 !important;
++  pointer-events: auto !important;
++}
++
+ .star-btn.next .finder-ring {
+   opacity: 1;
+   animation: finder-scan 2s ease-in-out infinite;
++  border-color: rgba(232, 215, 173, 0.55);
++  height: 58px;
++  width: 58px;
++}
++
++.star-btn.next .finder-ring::before {
++  background: rgba(232, 215, 173, 0.48);
++  width: 84px;
++}
++
++.star-btn.next .finder-ring::after {
++  background: rgba(232, 215, 173, 0.4);
++  height: 84px;
+ }
+ 
+ .star-btn.next .star-label,
+@@ -1041,8 +1164,8 @@ button {
+ }
+ 
+ .star-label {
+-  background: rgba(1, 4, 10, 0.76);
+-  border: 1px solid rgba(232, 215, 173, 0.2);
++  background: rgba(1, 6, 14, 0.86);
++  border: 1px solid rgba(232, 215, 173, 0.28);
+   border-radius: 999px;
+   color: #e8d7ad;
+   font-size: 0.62rem;
+@@ -1059,6 +1182,17 @@ button {
+   white-space: nowrap;
+ }
+ 
++.star-btn.next .star-label {
++  background: rgba(5, 12, 24, 0.92);
++  border-color: rgba(232, 215, 173, 0.48);
++  box-shadow:
++    0 0 18px rgba(232, 215, 173, 0.18),
++    0 6px 18px rgba(0, 0, 0, 0.32);
++  color: #fff2c8;
++  font-size: 0.72rem;
++  padding: 0.24rem 0.55rem;
++}
++
+ .star-btn:hover .star-label,
+ .star-btn:focus-visible .star-label {
+   opacity: 1;
+@@ -1094,8 +1228,38 @@ button {
+   opacity: 0.42;
+ }
+ 
++.ambient-star {
++  background: rgba(255, 248, 231, 0.55);
++  border-radius: 50%;
++  box-shadow: 0 0 5px rgba(200, 180, 255, 0.28);
++  height: 2px;
++  margin: -1px 0 0 -1px;
++  opacity: 0;
++  pointer-events: none;
++  position: absolute;
++  width: 2px;
++  z-index: 3;
++}
++
++#sky.finale-map .ambient-star {
++  animation: ambient-twinkle 3.2s ease-in-out infinite;
++  animation-delay: var(--twinkle-delay, 0s);
++  opacity: 0.48;
++}
++
++@keyframes ambient-twinkle {
++  0%, 100% { opacity: 0.32; transform: scale(1); }
++  50% { opacity: 0.62; transform: scale(1.35); }
++}
++
+ #sky.finale-map .helper-star {
+-  opacity: 0.52;
++  height: 4px;
++  margin: -2px 0 0 -2px;
++  opacity: 0.86;
++  width: 4px;
++  box-shadow:
++    0 0 5px rgba(255, 248, 231, 0.58),
++    0 0 14px rgba(232, 215, 173, 0.24);
+ }
+ 
+ .constellation-line {
+@@ -1104,8 +1268,8 @@ button {
+ }
+ 
+ .constellation-line.trail {
+-  stroke: rgba(255, 248, 231, 0.28);
+-  stroke-width: 0.75;
++  stroke: rgba(255, 248, 231, 0.46);
++  stroke-width: 0.95;
+ }
+ 
+ #sky.finale-map .star-label,
+@@ -1121,13 +1285,16 @@ button {
+ 
+ #sky.finale-map .stars-layer,
+ #sky.finale-map .lines-layer {
+-  transform: scale(0.82);
+-  transform-origin: 50% 44%;
++  transform: scale(0.88);
++  transform-origin: 50% 46%;
+ }
+ 
+ .constellation-line.finale {
+-  stroke: rgba(255, 248, 231, 0.62);
+-  stroke-width: 0.9;
++  stroke: rgba(255, 248, 231, 0.84);
++  stroke-width: 1.25;
++  filter:
++    drop-shadow(0 0 3px rgba(255, 248, 231, 0.5))
++    drop-shadow(0 0 10px rgba(127, 181, 217, 0.18));
+ }
+ 
+ .constellation-line.guide {
+@@ -1311,7 +1478,7 @@ button {
+   background:
+     radial-gradient(circle, #ffffff 0 22%, #f0e6cb 23% 40%, rgba(127, 181, 217, 0.22) 58%, transparent 72%);
+   border-radius: 50%;
+-  display: flex;
++    display: flex;
+   grid-row: 1 / span 2;
+   height: 2.2rem;
+   justify-content: center;
+@@ -1482,7 +1649,7 @@ button {
+ }
+ 
+ .floating-memories {
+-  align-items: center;
++    align-items: center;
+   display: flex;
+   justify-content: center;
+   margin: 0 auto;
+@@ -1586,7 +1753,7 @@ button {
+   flex-direction: column;
+   font-size: 0.78rem;
+   gap: 0.42rem;
+-  justify-content: center;
++    justify-content: center;
+ }
+ 
+ /* --- Headline (the standout quote) --- */
+@@ -1689,7 +1856,7 @@ button {
+   letter-spacing: 0.08em;
+   margin-top: 2rem;
+   padding: 0.9rem 0;
+-  width: 100%;
++      width: 100%;
+   min-height: 56px;
+   touch-action: manipulation;
+   text-align: center;
+@@ -1752,7 +1919,7 @@ body.lang-ko .finale-text-en {
+   background:
+     radial-gradient(circle at 50% 42%, rgba(1, 4, 10, 0.02), rgba(1, 4, 10, 0.18) 72%),
+     linear-gradient(180deg, rgba(1, 4, 10, 0), rgba(1, 4, 10, 0.38));
+-  justify-content: center;
++      justify-content: center;
+   padding: calc(4rem + var(--safe-top)) 1.25rem calc(1.2rem + var(--safe-bottom));
+   pointer-events: none;
+   text-align: center;
+@@ -1837,7 +2004,7 @@ body.lang-ko .finale-text-en {
+   cursor: pointer;
+   height: 44px;
+   line-height: 1;
+-  position: absolute;
++    position: absolute;
+   right: 0.85rem;
+   top: 0.8rem;
+   width: 44px;
+@@ -1923,7 +2090,7 @@ body.lang-ko .finale-text-en {
+ 
+ #sky.finale-zoomed .stars-layer,
+ #sky.finale-zoomed .lines-layer {
+-  transform: scale(0.88);
++  transform: scale(0.9);
+   transform-origin: 50% 46%;
+   transition: transform 1.2s ease;
+ }
+@@ -2053,28 +2220,28 @@ body.lang-ko .finale-text-en {
+   }
+ 
+   .star-btn {
+-    height: 28px;
+-    margin: -14px 0 0 -14px;
+-    width: 28px;
++    height: 42px;
++    margin: -21px 0 0 -21px;
++    width: 42px;
+   }
+ 
+   .finder-ring {
+-    height: 30px;
+-    width: 30px;
++    height: 48px;
++    width: 48px;
+   }
+ 
+   .star-btn::before {
+-    height: 6px;
+-    width: 6px;
++    height: 8px;
++    width: 8px;
+   }
+ 
+   .star-btn.next::before {
+-    height: 9px;
+-    width: 9px;
++    height: 15px;
++    width: 15px;
+   }
+ 
+   .star-label {
+-    font-size: 0.56rem;
++    font-size: 0.64rem;
+     max-width: 8.5rem;
+     white-space: normal;
+   }
+@@ -2176,12 +2343,33 @@ body.lang-ko .finale-text-en {
+ 
+   .hint {
+     font-size: 0.82rem;
+-    bottom: calc(1.2rem + var(--safe-bottom));
++    bottom: calc(5rem + var(--safe-bottom));
+     padding: 0.7rem 1rem;
+     max-width: min(95%, 21rem);
+     min-width: 0;
+   }
+ 
++  .chapter-rail {
++    bottom: calc(0.55rem + var(--safe-bottom));
++    max-width: calc(100vw - 0.75rem);
++  }
++
++  .chapter-dot {
++    min-height: 40px;
++    min-width: 40px;
++    max-width: 40px;
++    padding: 0.28rem 0.4rem;
++  }
++
++  .chapter-dot-number {
++    height: 1.62rem;
++    width: 1.62rem;
++  }
++
++  .chapter-dot.next {
++    max-width: min(11rem, 58vw);
++  }
++
+   #sky.finale-map .photo-drift-layer {
+     opacity: 0;
+   }
+@@ -2196,7 +2384,7 @@ body.lang-ko .finale-text-en {
+ 
+   #sky.finale-zoomed .stars-layer,
+   #sky.finale-zoomed .lines-layer {
+-    transform: scale(0.86);
++    transform: scale(0.84);
+     transform-origin: 50% 46%;
+   }
+ 
+@@ -2205,7 +2393,7 @@ body.lang-ko .finale-text-en {
+   }
+ 
+   .constellation-line.finale {
+-    stroke-width: 0.8;
++    stroke-width: 1.15;
+   }
+ }
+ 
+diff --git a/tools/transcribe_voice.py b/tools/transcribe_voice.py
+index 3eabbaf..fd00b64 100644
+--- a/tools/transcribe_voice.py
++++ b/tools/transcribe_voice.py
+@@ -1,4 +1,10 @@
+-"""Transcribe chapter voice notes with faster-whisper. Output: public/audio/transcripts.json"""
++"""Transcribe voice notes. Korean: re-segment via Whisper + keep manual review.
++English: Whisper small. Output: public/audio/transcripts.json
++
++Usage:
++  py tools/transcribe_voice.py          # English only (safe)
++  py tools/transcribe_voice.py all      # all files — Korean needs manual fix after
++"""
+ import json
+ import sys
+ from pathlib import Path
+@@ -7,17 +13,52 @@ ROOT = Path(__file__).resolve().parent.parent
+ AUDIO = ROOT / "public" / "audio"
+ OUT = AUDIO / "transcripts.json"
+ 
+-FILES = {
++KO_FILES = {
+     "chapter-01.mp3": "ko",
+     "chapter-02.mp3": "ko",
+     "chapter-03.mp3": "ko",
+     "chapter-05.mp3": "ko",
+-    "chapter-06.mp3": "ko",
+-    "chapter-07.mp3": "ko",
++}
++
++EN_FILES = {
+     "why-i-like-you.mp3": "en",
+ }
+ 
+ 
++def load_existing():
++    if OUT.exists():
++        return json.loads(OUT.read_text(encoding="utf-8"))
++    return {}
++
++
++def transcribe_file(model, path: Path, lang: str):
++    segments_iter, info = model.transcribe(
++        str(path),
++        language=lang,
++        beam_size=5,
++        vad_filter=True,
++        vad_parameters={"min_silence_duration_ms": 350},
++    )
++    segments = []
++    parts = []
++    for seg in segments_iter:
++        text = seg.text.strip()
++        if not text:
++            continue
++        segments.append({
++            "start": round(seg.start, 2),
++            "end": round(seg.end, 2),
++            "text": text,
++        })
++        parts.append(text)
++    return {
++        "language": info.language,
++        "duration": round(info.duration, 2),
++        "segments": segments,
++        "full": "\n\n".join(parts),
++    }
++
++
+ def main():
+     try:
+         from faster_whisper import WhisperModel
+@@ -25,47 +66,34 @@ def main():
+         print("Run: py -m pip install faster-whisper", file=sys.stderr)
+         sys.exit(1)
+ 
+-    print("Loading whisper model (small)...")
+-    model = WhisperModel("small", device="cpu", compute_type="int8")
++    mode = sys.argv[1] if len(sys.argv) > 1 else "en"
++    model_name = "small"
++    if len(sys.argv) > 2:
++        model_name = sys.argv[2]
++
++    targets = dict(EN_FILES)
++    if mode == "all":
++        targets = {**KO_FILES, **EN_FILES}
+ 
+-    result = {}
+-    for name, lang in FILES.items():
++    print(f"Loading whisper ({model_name}), mode={mode}...")
++    model = WhisperModel(model_name, device="cpu", compute_type="int8")
++
++    result = load_existing() if mode == "en" else {}
++    for name, lang in targets.items():
+         path = AUDIO / name
+         if not path.exists():
+             print(f"skip missing {name}")
+             continue
+-
+         key = f"/audio/{name}"
+         print(f"transcribing {name} ({lang})...")
+-        segments_iter, info = model.transcribe(
+-            str(path),
+-            language=lang,
+-            beam_size=5,
+-            vad_filter=True,
+-        )
+-        segments = []
+-        parts = []
+-        for seg in segments_iter:
+-            text = seg.text.strip()
+-            if not text:
+-                continue
+-            segments.append({
+-                "start": round(seg.start, 2),
+-                "end": round(seg.end, 2),
+-                "text": text,
+-            })
+-            parts.append(text)
+-
+-        result[key] = {
+-            "language": info.language,
+-            "duration": round(info.duration, 2),
+-            "segments": segments,
+-            "full": " ".join(parts),
+-        }
+-        print(f"  lang={info.language} segs={len(segments)} dur={info.duration:.1f}s")
++        entry = transcribe_file(model, path, lang)
++        result[key] = entry
++        print(f"  segs={len(entry['segments'])} dur={entry['duration']}s")
+ 
+     OUT.write_text(json.dumps(result, ensure_ascii=False, indent=2), encoding="utf-8")
+     print(f"wrote {OUT}")
++    if mode == "all":
++        print("NOTE: Korean Whisper output is often wrong — review transcripts.json manually.")
+ 
+ 
+ if __name__ == "__main__":

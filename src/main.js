@@ -1,5 +1,6 @@
 const STORAGE_KEY = "chaeyoung-constellation-v12";
-const BASE = (typeof import.meta !== "undefined" && import.meta.env?.BASE_URL) || "/hbdchaeyoung/";
+const BASE = (typeof import.meta !== "undefined" && import.meta.env?.BASE_URL) ||
+  (/localhost|127\.0\.0\.1|192\.168\.|10\.\d+\.|172\.(1[6-9]|2\d|3[01])\./.test(location.hostname) ? "/" : "/hbdchaeyoung/");
 
 function cacheBust() {
   return document.querySelector('meta[name="build"]')?.content || String(Date.now());
@@ -15,6 +16,7 @@ function assetUrl(path) {
 
 const state = {
   data: null,
+  photoMetadata: null,
   lang: "both",
   pathIndex: 0,
   viewed: new Set(),
@@ -37,6 +39,7 @@ const finale = $("#finale");
 const starsLayer = $("#stars");
 const linesLayer = $("#lines");
 const hint = $("#hint");
+const chapterRail = $("#chapter-rail");
 const voiceAudio = $("#voice-audio");
 const voiceStatus = $("#voice-status");
 const voiceBar = $(".voice-bar");
@@ -49,9 +52,11 @@ const starChime = $("#star-chime");
 
 let starEls = {};
 let helperEls = {};
+let ambientEls = [];
 let skyRect = null;
 let hintTimer = null;
 let currentStar = null;
+let currentPendingDiscoveryId = null;
 let bgmStarted = false;
 let voiceFadeRaf = null;
 let postSpeechTimer = null;
@@ -71,6 +76,7 @@ const JOURNEY_SCROLL_THRESHOLD = 16;
 const JOURNEY_TOUCH_THRESHOLD = 14;
 const JOURNEY_COOLDOWN_MS = 800;
 let suppressVoicePauseMix = false;
+let modalTypeTimer = null;
 
 const IS_MOBILE = window.matchMedia("(max-width: 680px), (hover: none) and (pointer: coarse)").matches;
 const IS_LOW_POWER = IS_MOBILE || (navigator.hardwareConcurrency || 8) <= 4;
@@ -151,13 +157,15 @@ async function init() {
   let introStarted = false;
 
   try {
-    const [contentRes, transcriptRes] = await Promise.all([
+    const [contentRes, transcriptRes, photoMetadataRes] = await Promise.all([
       fetch(`${BASE}content.json?v=${Date.now()}`),
       fetch(`${BASE}audio/transcripts.json?v=${Date.now()}`),
+      fetch(`${BASE}data/photoMetadata.public.json?v=${Date.now()}`).catch(() => null),
     ]);
     if (!contentRes.ok) throw new Error("content.json failed");
     state.data = await contentRes.json();
     if (transcriptRes.ok) state.transcripts = await transcriptRes.json();
+    if (photoMetadataRes?.ok) state.photoMetadata = await photoMetadataRes.json();
     resetProgress();
 
     const preview = applyPreviewMode();
@@ -174,6 +182,7 @@ async function init() {
     setupNightAir();
     renderStars();
     renderHelperStars();
+    renderAmbientStars();
     updateHud();
     await warmupSky();
 
@@ -428,12 +437,13 @@ async function beginExperience() {
 }
 
 function beginJourneyMode() {
-  sky.classList.add("sky-journey");
-  startJourneyCruise();
-  setupJourneyScroll();
+  sky.classList.remove("sky-journey", "memory-dive", "journey-cruising");
+  resetSkyCamera();
   updateStarStates();
   if (!state.viewed.size && !sky.classList.contains("finale-map")) {
     showHint(state.data.ui.startHint);
+  } else if (expectedStarId() && !sky.classList.contains("finale-map")) {
+    showHint(state.data.ui.scrollHint);
   }
 }
 
@@ -447,26 +457,7 @@ function canAdvanceJourney() {
 }
 
 function revealChapter(id) {
-  const star = getStar(id);
-  if (!star) return;
-
-  journeyAdvanceLock = true;
-  journeyAdvanceCooldown = performance.now();
-  journeyTouchAccum = 0;
-  const firstDiscovery = !state.viewed.has(id);
-
-  unlockBgm();
-  playStarChime();
-  hideHint();
-  openModal(star, true);
-
-  if (firstDiscovery) {
-    state.viewed.add(id);
-    state.pathIndex = state.viewed.size;
-    setTimeout(() => drawChapterStrokes(id), DIVE_MS + 420);
-    saveProgress();
-    updateStarStates();
-  }
+  onStarClick(id);
 }
 
 function advanceJourneyChapter() {
@@ -1019,6 +1010,11 @@ function memoryImagesFor(star) {
 }
 
 function collectDriftPhotos() {
+  const generated = state.photoMetadata?.visibleConstellation;
+  if (generated?.length) {
+    return generated.map((photo) => photo.src);
+  }
+
   const urls = new Set(state.data.driftPhotos ?? []);
   for (const star of state.data.stars ?? []) {
     const v = star.visual;
@@ -1028,6 +1024,20 @@ function collectDriftPhotos() {
     memoryImagesFor(star).forEach((src) => urls.add(src));
   }
   return [...urls];
+}
+
+function generatedPhotoEntries() {
+  const generated = state.photoMetadata?.visibleConstellation;
+  if (generated?.length) return generated;
+  return collectDriftPhotos().map((src) => ({
+    id: src,
+    src,
+    layer: "midground",
+    chapterId: null,
+    displayDate: null,
+    displayTitle: "MEMORY",
+    placement: null,
+  }));
 }
 
 function collectAllAssets() {
@@ -1128,9 +1138,9 @@ function imageSrc(path) {
 }
 
 function driftImagesFromCache() {
-  return collectDriftPhotos()
-    .map((path) => assetCache.images.get(path))
-    .filter(Boolean);
+  return generatedPhotoEntries()
+    .map((meta) => ({ meta, img: assetCache.images.get(meta.src) }))
+    .filter(({ img }) => img?.complete && img.naturalWidth > 0);
 }
 
 async function preloadAllAssets() {
@@ -1141,7 +1151,7 @@ async function preloadAllAssets() {
     .filter(Boolean);
   const otherAudio = audio.filter((p) => !priorityVoice.includes(p));
   const driftPhotos = collectDriftPhotos();
-  const priorityImages = IS_MOBILE ? driftPhotos : driftPhotos.slice(0, 5);
+  const priorityImages = driftPhotos.slice(0, IS_MOBILE ? 12 : 18);
 
   await withTimeout(
     Promise.all([
@@ -1368,12 +1378,65 @@ function renderStars() {
     label.textContent = state.lang === "ko" ? star.title.ko : star.title.en;
     btn.appendChild(label);
 
+    btn.addEventListener("pointerdown", (event) => {
+      if (event.button && event.button !== 0) return;
+      event.preventDefault();
+      onStarClick(star.id);
+    });
     btn.addEventListener("click", () => onStarClick(star.id));
     starsLayer.appendChild(btn);
     starEls[star.id] = btn;
   });
 
   positionStars(false);
+  renderChapterRail();
+}
+
+function renderChapterRail() {
+  if (!chapterRail) return;
+  chapterRail.innerHTML = "";
+  state.data.path.forEach((id, index) => {
+    const star = getStar(id);
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "chapter-dot";
+    btn.dataset.id = id;
+    btn.setAttribute("aria-label", `Chapter ${index + 1}: ${star.title.en}`);
+
+    const number = document.createElement("span");
+    number.className = "chapter-dot-number";
+    number.textContent = String(index + 1);
+    btn.appendChild(number);
+
+    const label = document.createElement("span");
+    label.className = "chapter-dot-label";
+    label.textContent = star.title.en;
+    btn.appendChild(label);
+
+    btn.addEventListener("pointerdown", (event) => {
+      if (event.button && event.button !== 0) return;
+      event.preventDefault();
+      onStarClick(id);
+    });
+    btn.addEventListener("click", () => onStarClick(id));
+    chapterRail.appendChild(btn);
+  });
+  updateChapterRail();
+}
+
+function updateChapterRail() {
+  if (!chapterRail) return;
+  const expected = expectedStarId();
+  chapterRail.querySelectorAll(".chapter-dot").forEach((btn) => {
+    const id = btn.dataset.id;
+    const viewed = state.viewed.has(id);
+    const active = id === expected && !state.morphing;
+    const enabled = sky.classList.contains("finale-map") ? viewed : viewed || active;
+    btn.classList.toggle("viewed", viewed);
+    btn.classList.toggle("next", active);
+    btn.disabled = !enabled;
+    btn.setAttribute("aria-disabled", String(!enabled));
+  });
 }
 
 function renderHelperStars() {
@@ -1388,10 +1451,32 @@ function renderHelperStars() {
   positionHelperStars();
 }
 
+function renderAmbientStars() {
+  ambientEls.forEach(({ el }) => el.remove());
+  ambientEls = [];
+  (state.data.ambientStars ?? []).forEach((pos, i) => {
+    const dot = document.createElement("span");
+    dot.className = "ambient-star";
+    dot.setAttribute("aria-hidden", "true");
+    dot.style.setProperty("--twinkle-delay", `${(i % 8) * 0.4}s`);
+    starsLayer.appendChild(dot);
+    ambientEls.push({ el: dot, pos });
+  });
+  positionAmbientStars();
+}
+
+function positionAmbientStars() {
+  ambientEls.forEach(({ el, pos }) => {
+    const p = layoutPos(pos, "finale");
+    el.style.left = `${p[0] * 100}%`;
+    el.style.top = `${p[1] * 100}%`;
+  });
+}
+
 function layoutPos(pos, kind = "narrative") {
   if (!pos) return pos;
   const anchorX = 0.5;
-  const anchorY = 0.48;
+  const anchorY = 0.46;
 
   if (kind === "narrative") {
     const spread = 1.24;
@@ -1401,10 +1486,10 @@ function layoutPos(pos, kind = "narrative") {
     ];
   }
 
-  const scale = 0.58;
-  const spreadX = 1.18;
+  // Finale positions are pre-laid for 채영 — avoid over-shrinking into a knot
+  const scale = 0.94;
   return [
-    anchorX + (pos[0] - anchorX) * scale * spreadX,
+    anchorX + (pos[0] - anchorX) * scale,
     anchorY + (pos[1] - anchorY) * scale,
   ];
 }
@@ -1430,6 +1515,7 @@ function positionHelperStars() {
     el.style.left = `${pos[0] * 100}%`;
     el.style.top = `${pos[1] * 100}%`;
   });
+  positionAmbientStars();
 }
 
 function updateHud() {
@@ -1448,21 +1534,29 @@ function updateStarStates() {
 
   Object.entries(starEls).forEach(([id, el]) => {
     el.classList.remove("next", "wrong", "locked", "journey-current", "finale-tappable");
-    el.classList.toggle("viewed", state.viewed.has(id));
-
-    if (finale) {
-      el.classList.toggle("finale-tappable", state.viewed.has(id));
-      return;
-    }
-
-    el.classList.toggle("journey-current", id === expected && !state.morphing);
-    if (id === lastStarId()) {
-      el.classList.toggle("unlocked", state.pathIndex >= state.data.path.length - 1 || state.viewed.has(id));
-    }
-
+    const viewed = state.viewed.has(id);
+    const active = id === expected && !state.morphing;
+    el.classList.toggle("viewed", viewed);
     const star = getStar(id);
     const label = el.querySelector(".star-label");
     if (label) label.textContent = state.lang === "ko" ? star.title.ko : star.title.en;
+
+    if (finale) {
+      el.classList.toggle("finale-tappable", viewed);
+      el.disabled = !viewed;
+      el.setAttribute("aria-disabled", String(!viewed));
+      return;
+    }
+
+    el.classList.toggle("next", active);
+    el.classList.toggle("journey-current", active);
+    el.classList.toggle("locked", !viewed && !active);
+    el.disabled = !viewed && !active;
+    el.setAttribute("aria-disabled", String(el.disabled));
+    if (id === lastStarId()) {
+      el.classList.toggle("unlocked", state.pathIndex >= state.data.path.length - 1 || viewed);
+    }
+
   });
 
   if (finale) {
@@ -1474,6 +1568,7 @@ function updateStarStates() {
   }
 
   updateHud();
+  updateChapterRail();
 }
 
 function showHint(textObj) {
@@ -1491,13 +1586,33 @@ function hideHint() {
 }
 
 function onStarClick(id) {
-  if (!sky.classList.contains("finale-map")) return;
   if (state.morphing || sky.classList.contains("memory-revealed")) return;
-  if (!state.viewed.has(id)) return;
+  const star = getStar(id);
+  if (!star) return;
+
+  if (sky.classList.contains("finale-map")) {
+    if (!state.viewed.has(id)) return;
+    unlockBgm();
+    playStarChime();
+    openModal(star, true);
+    return;
+  }
+
+  const firstDiscovery = !state.viewed.has(id);
+  const expected = expectedStarId();
+  if (firstDiscovery && id !== expected) {
+    const el = starEls[id];
+    el?.classList.add("wrong");
+    setTimeout(() => el?.classList.remove("wrong"), 450);
+    showHint(state.data.ui.wrongOrder);
+    return;
+  }
 
   unlockBgm();
   playStarChime();
-  openModal(getStar(id), true);
+  hideHint();
+  if (firstDiscovery) currentPendingDiscoveryId = id;
+  openModal(star, true);
 }
 
 function activateStrokeNode(id) {
@@ -1670,7 +1785,7 @@ function prepareMemoryContent(star) {
   renderModalText(star, star.visual?.type === "video");
 }
 
-function beginMemoryDive(star) {
+function beginMemoryDive(star, onRevealed) {
   ensureAudioReactive();
   stopSkyCamera();
 
@@ -1707,6 +1822,7 @@ function beginMemoryDive(star) {
   memoryDiveTimer = setTimeout(() => {
     sky.classList.add("memory-revealed");
     memoryReveal.setAttribute("aria-hidden", "false");
+    onRevealed?.();
   }, DIVE_MS);
 }
 
@@ -1719,8 +1835,9 @@ function endMemoryDive(onDone) {
   focusedStarId = null;
   state.morphing = false;
   document.body.classList.remove("modal-open");
+  sky.classList.remove("memory-dive", "sky-journey", "journey-cruising");
+  resetSkyCamera();
   updateStarStates();
-  startJourneyCruise();
   onDone?.();
 }
 
@@ -1731,7 +1848,9 @@ function openModal(star, autoplay = false) {
   enterMemoryBed(star);
   prepareMemoryContent(star);
   if (autoplay) playVoice();
-  beginMemoryDive(star);
+  beginMemoryDive(star, () => {
+    if (autoplay && voiceAudio.paused && !voiceAudio.error) playVoice();
+  });
 
   const inner = $(".modal-inner");
   inner.classList.add("modal-pulse");
@@ -1917,6 +2036,8 @@ function playVoice() {
 function closeModal() {
   clearPostSpeechHold();
   const profile = memoryProfile ?? getMemoryProfile(currentStar);
+  const pendingId = currentPendingDiscoveryId;
+  currentPendingDiscoveryId = null;
   suppressVoicePauseMix = true;
   voiceAudio.pause();
   fadeVoiceVolume(0, Math.min(500, profile.voiceFadeOutMs), () => {
@@ -1925,11 +2046,24 @@ function closeModal() {
   });
   clearTypewriter();
 
-  const shouldReveal = currentStar?.id === lastStarId() && state.viewed.size === state.data.path.length;
   currentStar = null;
 
   endMemoryDive(() => {
     journeyAdvanceLock = false;
+    let completedId = null;
+    if (pendingId && !state.viewed.has(pendingId)) {
+      completedId = pendingId;
+      state.viewed.add(pendingId);
+      state.pathIndex = state.viewed.size;
+      drawChapterStrokes(pendingId);
+      saveProgress();
+      updateStarStates();
+    }
+
+    const shouldReveal =
+      completedId === lastStarId() &&
+      state.viewed.size === state.data.path.length;
+
     if (shouldReveal) {
       triggerFinale();
       return;
@@ -2010,12 +2144,12 @@ function setupDust(driftImages = []) {
   const ctx = dustCanvas.getContext("2d", { alpha: true, desynchronized: !IS_MOBILE });
   const photoCtx = photoCanvas?.getContext("2d", { alpha: true, desynchronized: !IS_MOBILE });
   const lowPower = IS_LOW_POWER;
-  const useDomPhotos = IS_MOBILE && !!photoDomHost;
+  const useDomPhotos = !!photoDomHost;
   const useCanvasPhotos = !useDomPhotos && !!photoCtx;
   const usePhotos = driftImages.length > 0 && (useDomPhotos || useCanvasPhotos);
-  const starCount = lowPower ? (IS_MOBILE ? 560 : 920) : IS_MOBILE ? 780 : 1280;
-  const memoryCount = usePhotos ? (IS_MOBILE ? 42 : 58) : 0;
-  const maxPhotoSources = IS_MOBILE ? 14 : 10;
+  const starCount = lowPower ? (IS_MOBILE ? 680 : 1100) : IS_MOBILE ? 920 : 1500;
+  const maxPhotoSources = IS_MOBILE ? 12 : 18;
+  const memoryCount = usePhotos ? Math.min(driftImages.length, maxPhotoSources) : 0;
   let memorySources = [];
   const pointer = { x: 0, y: 0 };
   let dustActive = false;
@@ -2032,13 +2166,13 @@ function setupDust(driftImages = []) {
 
   function refreshMemorySources() {
     memorySources = driftImages
-      .filter((img) => img?.complete && img.naturalWidth > 0)
+      .filter(({ img }) => img?.complete && img.naturalWidth > 0)
       .slice(0, maxPhotoSources);
     return memorySources.length > 0;
   }
 
   refreshMemorySources();
-  driftImages.forEach((img) => {
+  driftImages.forEach(({ img }) => {
     if (!img || img.complete) return;
     img.addEventListener("load", refreshMemorySources, { once: true });
   });
@@ -2046,12 +2180,16 @@ function setupDust(driftImages = []) {
   if (useDomPhotos) {
     photoCanvas.style.display = "none";
     for (let i = 0; i < memoryCount; i += 1) {
-      const el = document.createElement("img");
+      const el = document.createElement("div");
       el.className = "photo-drift-item";
-      el.alt = "";
-      el.decoding = "async";
-      el.loading = "eager";
-      el.draggable = false;
+      const img = document.createElement("img");
+      img.alt = "";
+      img.decoding = "async";
+      img.loading = "lazy";
+      img.draggable = false;
+      const label = document.createElement("span");
+      label.className = "photo-drift-label";
+      el.append(img, label);
       el.style.opacity = "0";
       photoDomHost.appendChild(el);
       domNodes.push(el);
@@ -2101,7 +2239,7 @@ function setupDust(driftImages = []) {
   }
 
   function respawnMemory(mem, depth = "far") {
-    const fresh = makeMemoryParticle();
+    const fresh = makeMemoryParticle(mem.imgIndex, mem.source);
     Object.assign(mem, fresh);
     if (depth === "near-mid") mem.z = 0.2 + Math.random() * 0.22;
     else if (depth === "mid") mem.z = 0.38 + Math.random() * 0.36;
@@ -2131,26 +2269,39 @@ function setupDust(driftImages = []) {
     }
   }
 
-  function memorySizeAlpha(z) {
-    const t = 1 - z;
-    const mobileBoost = IS_MOBILE ? 1.05 : 1;
-    const h = (22 + t * 38 + t * t * 42) * mobileBoost;
-    const alpha = Math.min(0.82, (0.38 + t * 0.22 + t * t * 0.1) * (IS_MOBILE ? 1.1 : 1));
-    return { h, alpha, t };
+  function activeChapterId() {
+    return currentStar?.id ?? expectedStarId();
   }
 
-  function makeMemoryParticle() {
+  function memorySizeAlpha(z, layer, related) {
+    const t = 1 - z;
+    const mobileBoost = IS_MOBILE ? 1.05 : 1;
+    const layerScale = layer === "foreground" ? 1.28 : layer === "midground" ? 0.92 : 0.58;
+    const layerAlpha = layer === "foreground" ? 0.94 : layer === "midground" ? 0.58 : 0.24;
+    const h = (24 + t * 40 + t * t * 44) * mobileBoost * layerScale * (related ? 1.12 : 1);
+    const alpha = Math.min(0.98, layerAlpha * (0.72 + t * 0.28) * (related ? 1.22 : 0.86));
+    const blur = layer === "background" ? 0.9 : layer === "midground" ? 0.35 : 0;
+    const saturate = layer === "foreground" || related ? 1 : layer === "midground" ? 0.82 : 0.62;
+    return { h, alpha, t, blur, saturate };
+  }
+
+  function makeMemoryParticle(index = 0, source = memorySources[index % Math.max(1, memorySources.length)]) {
     if (!memorySources.length) refreshMemorySources();
+    const meta = source?.meta ?? {};
+    const placement = meta.placement ?? {};
     const particle = {
       kind: "memory",
-      x: Math.random() * 1.18 - 0.59,
-      y: Math.random() * 1.1 - 0.55,
-      z: Math.random() * 0.38 + 0.34,
-      imgIndex: memorySources.length ? Math.floor(Math.random() * memorySources.length) : 0,
-      rot: Math.random() * 0.9 - 0.45,
-      rotSpeed: (Math.random() - 0.5) * 0.00012,
+      source,
+      x: placement.x ?? (Math.random() * 1.02 - 0.51),
+      y: placement.y ?? (Math.random() * 0.8 - 0.4),
+      z: placement.z ?? (Math.random() * 0.38 + 0.34),
+      imgIndex: memorySources.length ? index % memorySources.length : 0,
+      layer: meta.layer ?? "midground",
+      chapterId: meta.chapterId ?? null,
+      rot: placement.rotation ?? (Math.random() * 0.42 - 0.21),
+      rotSpeed: (Math.random() - 0.5) * 0.00005,
       wobble: Math.random() * Math.PI * 2,
-      wobbleSpeed: Math.random() * 0.018 + 0.006,
+      wobbleSpeed: Math.random() * 0.006 + 0.002,
     };
     if (journeyFlying() && Math.random() > 0.28) {
       particle.z = 0.34 + Math.random() * 0.48;
@@ -2159,7 +2310,7 @@ function setupDust(driftImages = []) {
   }
 
   const stars = Array.from({ length: starCount }, makeSpaceStar);
-  const memories = Array.from({ length: memoryCount }, makeMemoryParticle);
+  const memories = Array.from({ length: memoryCount }, (_, i) => makeMemoryParticle(i));
 
   function resize() {
     const w = sky.clientWidth;
@@ -2222,16 +2373,17 @@ function setupDust(driftImages = []) {
     const depth = 1 / mem.z;
     const x =
       width / 2 +
-      mem.x * width * 0.3 * depth +
-      pointer.x * depth * 6 +
-      Math.sin(mem.wobble) * 4 * depth;
+      mem.x * width * 0.34 * depth +
+      pointer.x * depth * (mem.layer === "foreground" ? 9 : 4) +
+      Math.sin(mem.wobble) * 3 * depth;
     const y =
       height / 2 +
-      mem.y * height * 0.3 * depth +
-      pointer.y * depth * 4 +
-      Math.cos(mem.wobble * 0.85) * 3 * depth;
+      mem.y * height * 0.34 * depth +
+      pointer.y * depth * (mem.layer === "foreground" ? 6 : 3) +
+      Math.cos(mem.wobble * 0.85) * 2 * depth;
 
-    const { h: baseH, alpha: baseAlpha } = memorySizeAlpha(mem.z);
+    const related = Boolean(mem.chapterId && mem.chapterId === activeChapterId());
+    const { h: baseH, alpha: baseAlpha, blur, saturate } = memorySizeAlpha(mem.z, mem.layer, related);
     const h = baseH * (1 + audioReactive.level * 0.08);
     if (h < 4) return null;
 
@@ -2247,8 +2399,13 @@ function setupDust(driftImages = []) {
       w: h * 0.86,
       h,
       alpha: baseAlpha,
+      blur,
+      saturate,
+      layer: mem.layer,
+      related,
+      meta: mem.source?.meta ?? null,
       rot: mem.rot + Math.sin(mem.wobble) * 0.05,
-      img: memorySources.length ? memorySources[mem.imgIndex % memorySources.length] : null,
+      img: memorySources.length ? memorySources[mem.imgIndex % memorySources.length]?.img : null,
     };
   }
 
@@ -2258,10 +2415,16 @@ function setupDust(driftImages = []) {
       return;
     }
 
+    const imgEl = node.querySelector("img");
+    const labelEl = node.querySelector(".photo-drift-label");
     const src = p.img.currentSrc || p.img.src;
     if (node.dataset.src !== src) {
       node.dataset.src = src;
-      node.src = src;
+      imgEl.src = src;
+      imgEl.alt = p.meta?.displayTitle ? `${p.meta.displayTitle} memory` : "Memory photo";
+      const lines = [p.meta?.displayDate, p.meta?.displayTitle].filter(Boolean);
+      labelEl.textContent = lines.join("\n");
+      node.title = lines.join(" - ");
     }
 
     const aspect = p.img.naturalWidth / p.img.naturalHeight || 0.78;
@@ -2278,9 +2441,11 @@ function setupDust(driftImages = []) {
       drawW = drawH * aspect;
     }
 
+    node.className = `photo-drift-item ${p.layer}${p.related ? " active" : ""}`;
     node.style.width = `${drawW}px`;
     node.style.height = `${drawH}px`;
     node.style.opacity = String(p.alpha);
+    node.style.filter = `blur(${p.blur}px) saturate(${p.saturate})`;
     node.style.transform = `translate3d(${p.x}px, ${p.y}px, 0) translate(-50%, -50%) rotate(${p.rot}rad)`;
   }
 

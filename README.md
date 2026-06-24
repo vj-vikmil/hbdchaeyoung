@@ -33,6 +33,27 @@ Deploy the `dist/` folder to Netlify, Vercel, or GitHub Pages.
 
 ## Add your content
 
+### Photo metadata pipeline
+
+Add memory photos under `public/assets/` using `.jpg`, `.jpeg`, `.png`, `.webp`, or `.heic` if the local Sharp runtime can read it. Then regenerate the photo map:
+
+```bash
+npm run photos:metadata
+```
+
+If npm is unavailable on this machine, the same command is:
+
+```bash
+node scripts/generate-photo-metadata.mjs
+```
+
+The script scans supported images, reads EXIF dates/camera/dimensions/GPS when present, detects exact and likely duplicate files, assigns photos to chapters from existing `public/content.json` mappings first, then filename/date/GPS-region clues. It writes:
+
+- `src/data/photoMetadata.json`: private raw metadata, including exact GPS if present.
+- `public/data/photoMetadata.public.json`: sanitized data used by the website. Exact GPS coordinates are removed.
+
+Manual chapter assignments are preserved by listing images in each chapter's `visual` block inside `public/content.json`. Duplicate files are never deleted; the generated JSON marks a `duplicateGroup` and chooses one `isPrimary` image for the main constellation.
+
 ### Voice notes (required — 12 files)
 
 Record in Korean and save as:

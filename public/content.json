@@ -5,10 +5,10 @@
     "ko": "하늘을 봐. 우리 이야기 다섯 개의 챕터로 만든 별자리야."
   },
   "ui": {
-    "startHint": { "en": "Scroll to fly into the first memory", "ko": "스크롤해서 첫 번째 기억으로 들어가 봐" },
-    "scrollHint": { "en": "Scroll to continue through the sky", "ko": "스크롤해서 하늘을 계속 날아가 봐" },
+    "startHint": { "en": "Tap the glowing star to open the first memory", "ko": "빛나는 별을 눌러 첫 번째 기억을 열어 봐" },
+    "scrollHint": { "en": "Close the memory, then tap the next glowing star", "ko": "기억을 닫고 다음 빛나는 별을 눌러 계속해 봐" },
     "finaleTapHint": { "en": "Tap any star to revisit a memory", "ko": "별을 터치해서 기억을 다시 들어봐" },
-    "wrongOrder": { "en": "Keep scrolling forward through the story", "ko": "이야기를 따라 스크롤해서 앞으로 가 봐" },
+    "wrongOrder": { "en": "Follow the glowing star in order", "ko": "빛나는 별을 순서대로 따라가 봐" },
     "progress": { "en": "{n} of 5 chapters discovered", "ko": "5개 중 {n}개의 챕터를 찾았어" },
     "starFinalUnlock": { "en": "One last chapter remains", "ko": "마지막 챕터가 남았어" },
     "tapToBegin": { "en": "Tap to begin", "ko": "터치해서 시작" },
@@ -35,45 +35,47 @@
     "/assets/album-0880.jpg"
   ],
   "helperStars": [
-    { "id": "h1", "pos": [0.245, 0.29] },
-    { "id": "h2", "pos": [0.358, 0.29] },
-    { "id": "h3", "pos": [0.301, 0.38] },
-    { "id": "h4", "pos": [0.358, 0.515] },
-    { "id": "h5", "pos": [0.41, 0.65] },
-    { "id": "h6", "pos": [0.463, 0.305] },
-    { "id": "h7", "pos": [0.463, 0.65] },
-    { "id": "h8", "pos": [0.41, 0.44] },
-    { "id": "h9", "pos": [0.463, 0.44] },
-    { "id": "h10", "pos": [0.41, 0.545] },
-    { "id": "h11", "pos": [0.463, 0.545] },
-    { "id": "h12", "pos": [0.59, 0.283] },
-    { "id": "h13", "pos": [0.71, 0.358] },
-    { "id": "h14", "pos": [0.665, 0.433] },
-    { "id": "h15", "pos": [0.59, 0.433] },
-    { "id": "h16", "pos": [0.545, 0.358] },
-    { "id": "h17", "pos": [0.755, 0.583] },
-    { "id": "h18", "pos": [0.673, 0.38] },
-    { "id": "h19", "pos": [0.673, 0.478] },
-    { "id": "h20", "pos": [0.755, 0.478] },
-    { "id": "h21", "pos": [0.59, 0.59] },
-    { "id": "h22", "pos": [0.665, 0.59] },
-    { "id": "h23", "pos": [0.665, 0.74] },
-    { "id": "h24", "pos": [0.59, 0.74] },
-    { "id": "h25", "pos": [0.545, 0.665] }
+    { "id": "ch_top_l", "pos": [0.22, 0.28] },
+    { "id": "ch_top_r", "pos": [0.33, 0.28] },
+    { "id": "ch_mid_l", "pos": [0.22, 0.42] },
+    { "id": "ch_mid_r", "pos": [0.35, 0.42] },
+    { "id": "ae_left_top", "pos": [0.40, 0.31] },
+    { "id": "ae_left_mid", "pos": [0.40, 0.44] },
+    { "id": "ae_left_bot", "pos": [0.40, 0.66] },
+    { "id": "ae_right_mid", "pos": [0.47, 0.44] },
+    { "id": "ae_right_bot", "pos": [0.47, 0.66] },
+    { "id": "yeong_top_l", "pos": [0.56, 0.36] },
+    { "id": "yeong_top_r", "pos": [0.68, 0.36] },
+    { "id": "yeong_top_b", "pos": [0.62, 0.44] },
+    { "id": "yeo_v_top", "pos": [0.74, 0.31] },
+    { "id": "yeo_v_upper", "pos": [0.74, 0.38] },
+    { "id": "yeo_v_bot", "pos": [0.74, 0.55] },
+    { "id": "yeo_h_upper", "pos": [0.68, 0.38] },
+    { "id": "yeo_h_lower", "pos": [0.68, 0.48] },
+    { "id": "final_ng_top", "pos": [0.63, 0.56] },
+    { "id": "final_ng_r", "pos": [0.70, 0.64] },
+    { "id": "final_ng_l", "pos": [0.56, 0.64] }
+  ],
+  "ambientStars": [
+    [0.26, 0.36], [0.28, 0.48], [0.32, 0.36], [0.34, 0.42],
+    [0.38, 0.38], [0.40, 0.46], [0.44, 0.32], [0.48, 0.40],
+    [0.60, 0.34], [0.64, 0.42], [0.58, 0.44], [0.66, 0.36],
+    [0.70, 0.44], [0.72, 0.48], [0.60, 0.64], [0.64, 0.68],
+    [0.58, 0.66], [0.62, 0.62], [0.50, 0.48], [0.52, 0.56]
   ],
   "chapterStrokes": {
-    "s1": [["h1", "h2"], ["h1", "h3"], ["h3", "s1"], ["h3", "h4"]],
-    "s2": [["s2", "h5"], ["h6", "h7"], ["h8", "h9"], ["h10", "h11"]],
-    "s3": [["h12", "s3"], ["s3", "h13"], ["h13", "h14"], ["h14", "h15"], ["h15", "h16"], ["h16", "h12"]],
-    "s5": [["s5", "h17"], ["h18", "s5"], ["h19", "h20"]],
-    "s4": [["h21", "h22"], ["h22", "s4"], ["s4", "h23"], ["h23", "h24"], ["h24", "h25"], ["h25", "h21"]]
+    "s1": [["ch_top_l", "ch_top_r"], ["ch_mid_l", "ch_mid_r"], ["ch_mid_l", "s1"], ["ch_mid_r", "s1"]],
+    "s2": [["ae_left_top", "ae_left_mid"], ["ae_left_mid", "ae_left_bot"], ["ae_left_mid", "ae_right_mid"], ["s2", "ae_right_mid"], ["ae_right_mid", "ae_right_bot"]],
+    "s3": [["s3", "yeong_top_r"], ["yeong_top_r", "yeong_top_b"], ["yeong_top_b", "yeong_top_l"], ["yeong_top_l", "s3"]],
+    "s5": [["yeo_v_top", "yeo_v_upper"], ["yeo_v_upper", "s5"], ["s5", "yeo_v_bot"], ["yeo_h_upper", "yeo_v_upper"], ["yeo_h_lower", "s5"]],
+    "s4": [["final_ng_top", "final_ng_r"], ["final_ng_r", "s4"], ["s4", "final_ng_l"], ["final_ng_l", "final_ng_top"]]
   },
   "finaleSegments": [
-    ["h1", "h2"], ["h1", "h3"], ["h3", "s1"], ["h3", "h4"],
-    ["s2", "h5"], ["h6", "h7"], ["h8", "h9"], ["h10", "h11"],
-    ["h12", "s3"], ["s3", "h13"], ["h13", "h14"], ["h14", "h15"], ["h15", "h16"], ["h16", "h12"],
-    ["s5", "h17"], ["h18", "s5"], ["h19", "h20"],
-    ["h21", "h22"], ["h22", "s4"], ["s4", "h23"], ["h23", "h24"], ["h24", "h25"], ["h25", "h21"]
+    ["ch_top_l", "ch_top_r"], ["ch_mid_l", "ch_mid_r"], ["ch_mid_l", "s1"], ["ch_mid_r", "s1"],
+    ["ae_left_top", "ae_left_mid"], ["ae_left_mid", "ae_left_bot"], ["ae_left_mid", "ae_right_mid"], ["s2", "ae_right_mid"], ["ae_right_mid", "ae_right_bot"],
+    ["s3", "yeong_top_r"], ["yeong_top_r", "yeong_top_b"], ["yeong_top_b", "yeong_top_l"], ["yeong_top_l", "s3"],
+    ["yeo_v_top", "yeo_v_upper"], ["yeo_v_upper", "s5"], ["s5", "yeo_v_bot"], ["yeo_h_upper", "yeo_v_upper"], ["yeo_h_lower", "s5"],
+    ["final_ng_top", "final_ng_r"], ["final_ng_r", "s4"], ["s4", "final_ng_l"], ["final_ng_l", "final_ng_top"]
   ],
   "guideSegments": [],
   "stars": [
@@ -88,8 +90,8 @@
         "ko": "그냥 평범했던 밤이, 이후 모든 것의 첫 페이지가 됐어."
       },
       "visualStyle": "normal",
-      "narrativePos": [0.22, 0.74],
-      "finalePos": [0.245, 0.515]
+      "narrativePos": [0.36, 0.62],
+      "finalePos": [0.28, 0.54]
     },
     {
       "id": "s2",
@@ -102,8 +104,8 @@
         "ko": "우연을 조용히 시작으로 바꿔준 메시지."
       },
       "visualStyle": "normal",
-      "narrativePos": [0.26, 0.24],
-      "finalePos": [0.41, 0.29]
+      "narrativePos": [0.43, 0.34],
+      "finalePos": [0.47, 0.31]
     },
     {
       "id": "s3",
@@ -123,8 +125,8 @@
         "ko": "그냥 남으로 남을 뻔했어. 그렇지 않아서 다행이야."
       },
       "visualStyle": "reconnect",
-      "narrativePos": [0.76, 0.22],
-      "finalePos": [0.665, 0.283]
+      "narrativePos": [0.58, 0.31],
+      "finalePos": [0.62, 0.28]
     },
     {
       "id": "s5",
@@ -144,8 +146,8 @@
         "ko": "네 세상이 덜 멀어졌어. 이제 내 안에 함께 있는 곳."
       },
       "visualStyle": "normal",
-      "narrativePos": [0.74, 0.52],
-      "finalePos": [0.755, 0.305]
+      "narrativePos": [0.66, 0.52],
+      "finalePos": [0.74, 0.48]
     },
     {
       "id": "s4",
@@ -167,8 +169,8 @@
         "ko": "한 가지 이유가 아니라 전부. 연기하지 않을 때의 너. 애쓰지 않아도 나오는 말들."
       },
       "visualStyle": "featured",
-      "narrativePos": [0.5, 0.8],
-      "finalePos": [0.71, 0.665]
+      "narrativePos": [0.52, 0.72],
+      "finalePos": [0.63, 0.72]
     }
   ],
   "finale": {

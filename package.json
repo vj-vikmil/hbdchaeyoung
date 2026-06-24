@@ -7,10 +7,17 @@
     "dev": "node dev-server.mjs",
     "dev:vite": "vite",
     "dev:host": "node dev-server.mjs",
+    "photos:metadata": "node scripts/generate-photo-metadata.mjs",
+    "prebuild": "node scripts/generate-photo-metadata.mjs",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "generate-qr": "py scripts/generate-qr.py",
+    "generate-qr:line": "node scripts/generate-qr.mjs"
   },
   "devDependencies": {
+    "qrcode": "^1.5.4",
+    "sharp": "^0.35.2",
+    "simple-qrbtf": "^1.5.0",
     "vite": "^8.1.0"
   }
 }
