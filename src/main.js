@@ -2338,10 +2338,10 @@ function setupDust(driftImages = []) {
 
   function memorySizeAlpha(z, layer, related) {
     const t = 1 - z;
-    const mobileBoost = IS_MOBILE ? 1.05 : 1;
-    const layerScale = layer === "foreground" ? 1.28 : layer === "midground" ? 0.92 : 0.58;
+    const mobileBoost = IS_MOBILE ? 0.88 : 0.92;
+    const layerScale = layer === "foreground" ? 1.12 : layer === "midground" ? 0.78 : 0.5;
     const layerAlpha = layer === "foreground" ? 0.94 : layer === "midground" ? 0.58 : 0.24;
-    const h = (24 + t * 40 + t * t * 44) * mobileBoost * layerScale * (related ? 1.12 : 1);
+    const h = (22 + t * 34 + t * t * 34) * mobileBoost * layerScale * (related ? 1.08 : 1);
     const alpha = Math.min(0.98, layerAlpha * (0.72 + t * 0.28) * (related ? 1.22 : 0.86));
     const blur = layer === "background" ? 0.9 : layer === "midground" ? 0.35 : 0;
     const saturate = layer === "foreground" || related ? 1 : layer === "midground" ? 0.82 : 0.62;
