@@ -42,6 +42,7 @@ const voiceStatus = $("#voice-status");
 const voiceBar = $(".voice-bar");
 const dustCanvas = $("#dust");
 const photoCanvas = $("#photo-drift");
+const photoDomHost = $("#photo-drift-dom");
 const bgm = $("#bgm");
 const nightAir = $("#night-air");
 const starChime = $("#star-chime");
@@ -55,6 +56,7 @@ let bgmStarted = false;
 let voiceFadeRaf = null;
 let postSpeechTimer = null;
 let voiceTargetVolume = 0.88;
+let voiceLevel = 0;
 let dustDiveBoost = 1;
 let memoryDiveTimer = null;
 let focusedStarId = null;
@@ -65,6 +67,7 @@ let suppressVoicePauseMix = false;
 
 const IS_MOBILE = window.matchMedia("(max-width: 680px), (hover: none) and (pointer: coarse)").matches;
 const IS_LOW_POWER = IS_MOBILE || (navigator.hardwareConcurrency || 8) <= 4;
+const VOICE_MOBILE_BOOST = 2.75;
 
 const audioReactive = {
   ctx: null,
@@ -121,13 +124,13 @@ function getMemoryProfile(star) {
     intimate,
     bgmMemory: BGM_NORMAL * dbToGain(-1.5),
     ambientMemory: AMBIENT_NORMAL * dbToGain(-0.5),
-    bgmDucked: BGM_NORMAL * dbToGain(-bgmDuckDb),
-    ambientDucked: AMBIENT_NORMAL * dbToGain(-ambientDuckDb),
+    bgmDucked: BGM_NORMAL * dbToGain(-(bgmDuckDb + (IS_MOBILE ? 5 : 0))),
+    ambientDucked: AMBIENT_NORMAL * dbToGain(-(ambientDuckDb + (IS_MOBILE ? 6 : 0))),
     bedDuckMs: intimate ? 1200 : 1000,
     bedRestoreMs: intimate ? 3400 : 2600,
     memoryEnterMs: intimate ? 1100 : 900,
     memoryLeaveMs: intimate ? 3000 : 2400,
-    voiceVolume: intimate ? 0.74 : 0.78,
+    voiceVolume: IS_MOBILE ? 1 : intimate ? 0.74 : 0.78,
     voiceFadeInMs: intimate ? 520 : 400,
     voiceFadeOutMs: intimate ? 1200 : 900,
     postSpeechHoldMs: intimate ? 5200 : 0,
@@ -472,6 +475,21 @@ function setAudioVol(el, v) {
   }
 }
 
+function setVoiceVol(v) {
+  const clamped = Math.max(0, Math.min(1, v));
+  voiceLevel = clamped;
+  if (!IS_MOBILE) {
+    setAudioVol(voiceAudio, clamped);
+    return;
+  }
+
+  voiceAudio.volume = 1;
+  if (voiceAudio._audioGain && audioReactive.ctx) {
+    const boosted = clamped * VOICE_MOBILE_BOOST;
+    voiceAudio._audioGain.gain.setTargetAtTime(boosted, audioReactive.ctx.currentTime, 0.018);
+  }
+}
+
 function ensureAudioReactive() {
   if (audioReactive.ctx) {
     if (audioReactive.ctx.state === "suspended") audioReactive.ctx.resume().catch(() => {});
@@ -507,6 +525,9 @@ function ensureAudioReactive() {
   hook(bgm);
   hook(nightAir);
   if (starChime) hook(starChime);
+  if (IS_MOBILE && voiceAudio._audioGain) {
+    voiceAudio._audioGain.gain.value = 0;
+  }
 }
 
 function sampleAudioLevel() {
@@ -695,16 +716,16 @@ function fadeVoiceVolume(target, durationMs, done) {
   if (voiceFadeRaf) cancelAnimationFrame(voiceFadeRaf);
   const clamped = Math.max(0, Math.min(1, target));
   if (durationMs <= 0) {
-    setAudioVol(voiceAudio, clamped);
+    setVoiceVol(clamped);
     done?.();
     return;
   }
-  const startVol = voiceAudio.volume;
+  const startVol = voiceLevel;
   const delta = clamped - startVol;
   const t0 = performance.now();
   const tick = (now) => {
     const p = smoothstep(Math.min(1, (now - t0) / durationMs));
-    setAudioVol(voiceAudio, startVol + delta * p);
+    setVoiceVol(startVol + delta * p);
     if (p < 1) voiceFadeRaf = requestAnimationFrame(tick);
     else {
       voiceFadeRaf = null;
@@ -786,7 +807,7 @@ function handleVoiceFadeOut() {
   const tailSec = profile.voiceFadeOutMs / 1000;
   const remaining = voiceAudio.duration - voiceAudio.currentTime;
   if (remaining <= tailSec) {
-    setAudioVol(voiceAudio, voiceTargetVolume * Math.max(0, remaining / tailSec));
+    setVoiceVol(voiceTargetVolume * Math.max(0, remaining / tailSec));
   }
 }
 
@@ -994,7 +1015,8 @@ async function preloadAllAssets() {
     .map((id) => state.data.stars.find((s) => s.id === id)?.voiceNote)
     .filter(Boolean);
   const otherAudio = audio.filter((p) => !priorityVoice.includes(p));
-  const priorityImages = collectDriftPhotos().slice(0, IS_MOBILE ? 3 : 5);
+  const driftPhotos = collectDriftPhotos();
+  const priorityImages = IS_MOBILE ? driftPhotos : driftPhotos.slice(0, 5);
 
   await withTimeout(
     Promise.all([
@@ -1003,7 +1025,7 @@ async function preloadAllAssets() {
       ...otherAudio.slice(0, IS_MOBILE ? 2 : 4).map((path) => preloadAudioBlob(path)),
       ...videos.slice(0, 1).map((path) => preloadVideo(path)),
     ]),
-    12000,
+    IS_MOBILE ? 20000 : 12000,
     "preload",
   ).catch((err) => {
     console.warn(err);
@@ -1011,7 +1033,7 @@ async function preloadAllAssets() {
 
   images
     .filter((path) => !priorityImages.includes(path))
-    .slice(0, IS_MOBILE ? 4 : 8)
+    .slice(0, IS_MOBILE ? 8 : 8)
     .forEach((path) => preloadImage(path));
   otherAudio.slice(IS_MOBILE ? 2 : 4).forEach((path) => preloadAudioBlob(path));
 
@@ -1455,7 +1477,7 @@ function setupModal() {
     if (e.target === memoryReveal || e.target.classList.contains("memory-vignette")) closeModal();
   });
 
-  setAudioVol(voiceAudio, 0);
+  setVoiceVol(0);
 
   voiceAudio.addEventListener("play", () => {
     setVoicePlaying(true);
@@ -1735,7 +1757,7 @@ function playVoice() {
   const profile = memoryProfile ?? getMemoryProfile(currentStar);
   memoryProfile = profile;
   voiceTargetVolume = profile.voiceVolume;
-  setAudioVol(voiceAudio, 0);
+  setVoiceVol(0);
   unlockBgm();
 
   if (voiceAudio.error) {
@@ -1751,7 +1773,7 @@ function playVoice() {
   }
 
   duckBed(profile);
-  setAudioVol(voiceAudio, 0);
+  setVoiceVol(0);
   voiceAudio.play().then(() => {
     fadeVoiceVolume(voiceTargetVolume, profile.voiceFadeInMs);
     setVoicePlaying(true);
@@ -1847,13 +1869,16 @@ async function drawGuideLines(animated) {
 }
 
 function setupDust(driftImages = []) {
-  const ctx = dustCanvas.getContext("2d", { alpha: true, desynchronized: true });
-  const photoCtx = photoCanvas?.getContext("2d", { alpha: true, desynchronized: true });
+  const ctx = dustCanvas.getContext("2d", { alpha: true, desynchronized: !IS_MOBILE });
+  const photoCtx = photoCanvas?.getContext("2d", { alpha: true, desynchronized: !IS_MOBILE });
   const lowPower = IS_LOW_POWER;
-  const usePhotos = driftImages.length > 0 && photoCtx;
+  const useDomPhotos = IS_MOBILE && !!photoDomHost;
+  const useCanvasPhotos = !useDomPhotos && !!photoCtx;
+  const usePhotos = driftImages.length > 0 && (useDomPhotos || useCanvasPhotos);
   const starCount = lowPower ? 420 : 760;
-  const memoryCount = usePhotos ? (lowPower ? 18 : 36) : 0;
-  const memorySources = usePhotos ? driftImages.filter((img) => img?.naturalWidth).slice(0, lowPower ? 5 : 7) : [];
+  const memoryCount = usePhotos ? (IS_MOBILE ? 26 : 36) : 0;
+  const maxPhotoSources = IS_MOBILE ? 12 : 7;
+  let memorySources = [];
   const pointer = { x: 0, y: 0 };
   let dustActive = false;
   let sortTick = 0;
@@ -1864,7 +1889,36 @@ function setupDust(driftImages = []) {
   const sortEvery = lowPower ? 16 : 10;
   const skipGlow = lowPower;
   const starDpr = lowPower ? 1 : Math.min(window.devicePixelRatio || 1, 1.25);
-  const photoDpr = 1;
+  const photoDpr = IS_MOBILE ? 1 : Math.min(window.devicePixelRatio || 1, 1.15);
+  const domNodes = [];
+
+  function refreshMemorySources() {
+    memorySources = driftImages
+      .filter((img) => img?.complete && img.naturalWidth > 0)
+      .slice(0, maxPhotoSources);
+    return memorySources.length > 0;
+  }
+
+  refreshMemorySources();
+  driftImages.forEach((img) => {
+    if (!img || img.complete) return;
+    img.addEventListener("load", refreshMemorySources, { once: true });
+  });
+
+  if (useDomPhotos) {
+    photoCanvas.style.display = "none";
+    for (let i = 0; i < memoryCount; i += 1) {
+      const el = document.createElement("img");
+      el.className = "photo-drift-item";
+      el.alt = "";
+      el.decoding = "async";
+      el.loading = "eager";
+      el.draggable = false;
+      el.style.opacity = "0";
+      photoDomHost.appendChild(el);
+      domNodes.push(el);
+    }
+  }
 
   function makeSpaceStar() {
     const warm = Math.random() > 0.86;
@@ -1912,7 +1966,7 @@ function setupDust(driftImages = []) {
       if (z > 0.16 && z < 0.82) inBand += 1;
     }
 
-    const target = lowPower ? 36 : 72;
+    const target = IS_MOBILE ? Math.min(20, memoryCount) : Math.min(36, memoryCount);
     if (inBand >= target) return;
 
     for (let i = 0; i < memories.length && inBand < target; i += 1) {
@@ -1927,18 +1981,20 @@ function setupDust(driftImages = []) {
 
   function memorySizeAlpha(z) {
     const t = 1 - z;
-    const h = 34 + t * 54 + t * t * 62;
-    const alpha = Math.min(0.86, 0.46 + t * 0.24 + t * t * 0.12);
+    const mobileBoost = IS_MOBILE ? 1.35 : 1;
+    const h = (34 + t * 54 + t * t * 62) * mobileBoost;
+    const alpha = Math.min(0.92, (0.46 + t * 0.24 + t * t * 0.12) * (IS_MOBILE ? 1.18 : 1));
     return { h, alpha, t };
   }
 
   function makeMemoryParticle() {
+    if (!memorySources.length) refreshMemorySources();
     const particle = {
       kind: "memory",
       x: Math.random() * 1.18 - 0.59,
       y: Math.random() * 1.1 - 0.55,
       z: Math.random() * 0.38 + 0.34,
-      imgIndex: Math.floor(Math.random() * memorySources.length),
+      imgIndex: memorySources.length ? Math.floor(Math.random() * memorySources.length) : 0,
       rot: Math.random() * 0.9 - 0.45,
       rotSpeed: (Math.random() - 0.5) * 0.00012,
       wobble: Math.random() * Math.PI * 2,
@@ -2040,8 +2096,40 @@ function setupDust(driftImages = []) {
       h,
       alpha: baseAlpha,
       rot: mem.rot + Math.sin(mem.wobble) * 0.05,
-      img: memorySources[mem.imgIndex % memorySources.length],
+      img: memorySources.length ? memorySources[mem.imgIndex % memorySources.length] : null,
     };
+  }
+
+  function syncDomPhoto(node, mem, p) {
+    if (!p?.img) {
+      node.style.opacity = "0";
+      return;
+    }
+
+    const src = p.img.currentSrc || p.img.src;
+    if (node.dataset.src !== src) {
+      node.dataset.src = src;
+      node.src = src;
+    }
+
+    const aspect = p.img.naturalWidth / p.img.naturalHeight || 0.78;
+    let drawH = p.h;
+    let drawW = drawH * aspect;
+    const maxW = p.img.naturalWidth;
+    const maxH = p.img.naturalHeight;
+    if (drawW > maxW) {
+      drawW = maxW;
+      drawH = drawW / aspect;
+    }
+    if (drawH > maxH) {
+      drawH = maxH;
+      drawW = drawH * aspect;
+    }
+
+    node.style.width = `${drawW}px`;
+    node.style.height = `${drawH}px`;
+    node.style.opacity = String(p.alpha);
+    node.style.transform = `translate3d(${p.x}px, ${p.y}px, 0) translate(-50%, -50%) rotate(${p.rot}rad)`;
   }
 
   function draw(now) {
@@ -2076,6 +2164,7 @@ function setupDust(driftImages = []) {
     if (journeyFlying() && memorySources.length && drawTick % (lowPower ? 4 : 2) === 0) {
       replenishMemories();
     }
+    if (!memorySources.length && drawTick % 30 === 0) refreshMemorySources();
 
     ctx.setTransform(starDpr, 0, 0, starDpr, 0, 0);
     ctx.clearRect(0, 0, width, height);
@@ -2103,11 +2192,15 @@ function setupDust(driftImages = []) {
 
     const showPhotoDrift =
       memorySources.length &&
-      photoCtx &&
       !sky.classList.contains("memory-revealed") &&
       !sky.classList.contains("finale-map");
 
-    if (showPhotoDrift) {
+    if (showPhotoDrift && useDomPhotos) {
+      for (let i = 0; i < memories.length; i += 1) {
+        const p = advanceMemory(memories[i], width, height, freezeDrift, dt);
+        syncDomPhoto(domNodes[i], memories[i], p);
+      }
+    } else if (showPhotoDrift && useCanvasPhotos) {
       photoCtx.setTransform(photoDpr, 0, 0, photoDpr, 0, 0);
       photoCtx.clearRect(0, 0, width, height);
       photoCtx.globalCompositeOperation = "source-over";
@@ -2145,6 +2238,10 @@ function setupDust(driftImages = []) {
         photoCtx.restore();
       }
       photoCtx.globalAlpha = 1;
+    } else if (useDomPhotos) {
+      domNodes.forEach((node) => {
+        node.style.opacity = "0";
+      });
     } else if (photoCtx && drawTick % 10 === 0) {
       photoCtx.clearRect(0, 0, width, height);
     }

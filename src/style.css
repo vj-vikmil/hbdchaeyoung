@@ -315,6 +315,31 @@ button {
   z-index: 1;
 }
 
+.photo-drift-layer canvas {
+  display: block;
+  height: 100%;
+  width: 100%;
+}
+
+.photo-drift-dom {
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  position: absolute;
+}
+
+.photo-drift-dom img {
+  border: 2px solid rgba(238, 244, 251, 0.72);
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.42);
+  left: 0;
+  object-fit: cover;
+  pointer-events: none;
+  position: absolute;
+  top: 0;
+  transform-origin: center center;
+  will-change: transform, opacity;
+}
+
 #sky.memory-dive.sky-journey .sky-cam {
   filter: none;
 }
@@ -2068,6 +2093,14 @@ body.lang-ko .finale-text-en {
 
   #sky.finale-map .photo-drift-layer {
     opacity: 0;
+  }
+
+  .photo-drift-layer {
+    opacity: 0.78;
+  }
+
+  #sky.memory-dive .photo-drift-layer {
+    opacity: 0.96;
   }
 
   #sky.finale-zoomed .stars-layer,
