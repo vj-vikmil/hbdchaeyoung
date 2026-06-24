@@ -786,6 +786,33 @@ button {
   right: 8vw;
 }
 
+/* Polished experience: strip the videogame/sci-fi HUD (numeric compass,
+   crosshair reticle, vertical readouts) and keep only a quiet, warm
+   atmospheric horizon so the photographs stay the focus. */
+body.polished .ar-compass,
+body.polished .ar-readout {
+  display: none;
+}
+
+body.polished .ar-reticle::before,
+body.polished .ar-reticle::after {
+  display: none;
+}
+
+body.polished .ar-reticle {
+  border-color: rgba(232, 215, 173, 0.05);
+  height: min(74vw, 74vh);
+  opacity: 0.5;
+  width: min(74vw, 74vh);
+  background: radial-gradient(circle at 50% 48%, transparent 62%, rgba(127, 181, 217, 0.04) 100%);
+}
+
+body.polished .ar-horizon {
+  border-color: rgba(232, 215, 173, 0.07);
+  bottom: -26vh;
+  height: 46vh;
+}
+
 .hud {
   align-items: flex-start;
   display: flex;

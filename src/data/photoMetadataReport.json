@@ -1,0 +1,440 @@
+{
+  "generatedAt": "2026-06-24T18:35:00.641Z",
+  "stats": {
+    "totalPhotos": 63,
+    "visibleConstellation": 23,
+    "duplicateGroups": 10,
+    "unassigned": 44,
+    "withoutUsefulDate": 12
+  },
+  "unassigned": [
+    {
+      "src": "/assets/album-01c3ed2f-2b72-4511-9a40-596a5fb10162.jpg",
+      "metadataSource": "exif:DateTimeOriginal",
+      "confidence": 1,
+      "displayDate": "28.09"
+    },
+    {
+      "src": "/assets/album-0835.jpg",
+      "metadataSource": "exif:DateTimeOriginal",
+      "confidence": 1,
+      "displayDate": "01.08"
+    },
+    {
+      "src": "/assets/album-0839-1.jpg",
+      "metadataSource": "exif:DateTimeOriginal",
+      "confidence": 1,
+      "displayDate": "01.08"
+    },
+    {
+      "src": "/assets/album-0880.jpg",
+      "metadataSource": "exif:DateTimeOriginal",
+      "confidence": 1,
+      "displayDate": "04.08"
+    },
+    {
+      "src": "/assets/album-1038.jpg",
+      "metadataSource": "exif:DateTimeOriginal",
+      "confidence": 1,
+      "displayDate": "13.08"
+    },
+    {
+      "src": "/assets/album-1598.jpg",
+      "metadataSource": "exif:DateTimeOriginal",
+      "confidence": 1,
+      "displayDate": "31.08"
+    },
+    {
+      "src": "/assets/album-2167.jpg",
+      "metadataSource": "exif:DateTimeOriginal",
+      "confidence": 1,
+      "displayDate": "20.09"
+    },
+    {
+      "src": "/assets/album-2602.jpg",
+      "metadataSource": "exif:DateTimeOriginal",
+      "confidence": 1,
+      "displayDate": "30.09"
+    },
+    {
+      "src": "/assets/album-2603.jpg",
+      "metadataSource": "exif:DateTimeOriginal",
+      "confidence": 1,
+      "displayDate": "30.09"
+    },
+    {
+      "src": "/assets/album-2604.jpg",
+      "metadataSource": "exif:DateTimeOriginal",
+      "confidence": 1,
+      "displayDate": "30.09"
+    },
+    {
+      "src": "/assets/album-2768.jpg",
+      "metadataSource": "exif:DateTimeOriginal",
+      "confidence": 1,
+      "displayDate": "04.10"
+    },
+    {
+      "src": "/assets/album-2970.jpg",
+      "metadataSource": "exif:DateTimeOriginal",
+      "confidence": 1,
+      "displayDate": "14.10"
+    },
+    {
+      "src": "/assets/album-3366.jpg",
+      "metadataSource": "exif:DateTimeOriginal",
+      "confidence": 1,
+      "displayDate": "25.10"
+    },
+    {
+      "src": "/assets/album-3368.jpg",
+      "metadataSource": "exif:DateTimeOriginal",
+      "confidence": 1,
+      "displayDate": "25.10"
+    },
+    {
+      "src": "/assets/album-3370.jpg",
+      "metadataSource": "exif:DateTimeOriginal",
+      "confidence": 1,
+      "displayDate": "25.10"
+    },
+    {
+      "src": "/assets/album-3902.jpg",
+      "metadataSource": "exif:DateTimeOriginal",
+      "confidence": 1,
+      "displayDate": "08.11"
+    },
+    {
+      "src": "/assets/album-4820.jpg",
+      "metadataSource": "exif:DateTimeOriginal",
+      "confidence": 1,
+      "displayDate": "30.09"
+    },
+    {
+      "src": "/assets/album-4821.jpg",
+      "metadataSource": "exif:DateTimeOriginal",
+      "confidence": 1,
+      "displayDate": "30.09"
+    },
+    {
+      "src": "/assets/album-4824.jpg",
+      "metadataSource": "exif:DateTimeOriginal",
+      "confidence": 1,
+      "displayDate": "30.09"
+    },
+    {
+      "src": "/assets/album-4825.jpg",
+      "metadataSource": "exif:DateTimeOriginal",
+      "confidence": 1,
+      "displayDate": "30.09"
+    },
+    {
+      "src": "/assets/album-4830.jpg",
+      "metadataSource": "exif:DateTimeOriginal",
+      "confidence": 1,
+      "displayDate": "30.09"
+    },
+    {
+      "src": "/assets/album-4831.jpg",
+      "metadataSource": "exif:DateTimeOriginal",
+      "confidence": 1,
+      "displayDate": "30.09"
+    },
+    {
+      "src": "/assets/album-4832.jpg",
+      "metadataSource": "exif:DateTimeOriginal",
+      "confidence": 1,
+      "displayDate": "30.09"
+    },
+    {
+      "src": "/assets/album-4833.jpg",
+      "metadataSource": "exif:DateTimeOriginal",
+      "confidence": 1,
+      "displayDate": "30.09"
+    },
+    {
+      "src": "/assets/album-4834.jpg",
+      "metadataSource": "exif:DateTimeOriginal",
+      "confidence": 1,
+      "displayDate": "30.09"
+    },
+    {
+      "src": "/assets/album-4835.jpg",
+      "metadataSource": "exif:DateTimeOriginal",
+      "confidence": 1,
+      "displayDate": "30.09"
+    },
+    {
+      "src": "/assets/album-72e09271-040c-4caf-9d2c-59918d2dadb4.jpg",
+      "metadataSource": "filesystem",
+      "confidence": 0.2,
+      "displayDate": null
+    },
+    {
+      "src": "/assets/album-things-you-make-me-do.jpg",
+      "metadataSource": "filesystem",
+      "confidence": 0.2,
+      "displayDate": null
+    },
+    {
+      "src": "/assets/ch04-a.jpg",
+      "metadataSource": "exif:DateTimeOriginal",
+      "confidence": 1,
+      "displayDate": "25.10"
+    },
+    {
+      "src": "/assets/ch04-b.jpg",
+      "metadataSource": "exif:DateTimeOriginal",
+      "confidence": 1,
+      "displayDate": "25.10"
+    },
+    {
+      "src": "/assets/ch04-c.jpg",
+      "metadataSource": "exif:DateTimeOriginal",
+      "confidence": 1,
+      "displayDate": "25.10"
+    },
+    {
+      "src": "/assets/ch04-d.jpg",
+      "metadataSource": "exif:DateTimeOriginal",
+      "confidence": 1,
+      "displayDate": "25.10"
+    },
+    {
+      "src": "/assets/ch05-a.jpg",
+      "metadataSource": "exif:DateTimeOriginal",
+      "confidence": 1,
+      "displayDate": "08.11"
+    },
+    {
+      "src": "/assets/ch05-b.jpg",
+      "metadataSource": "exif:DateTimeOriginal",
+      "confidence": 1,
+      "displayDate": "08.11"
+    },
+    {
+      "src": "/assets/ch05-c.jpg",
+      "metadataSource": "exif:DateTimeOriginal",
+      "confidence": 1,
+      "displayDate": "08.11"
+    },
+    {
+      "src": "/assets/ch06-changed.jpg",
+      "metadataSource": "filesystem",
+      "confidence": 0.2,
+      "displayDate": null
+    },
+    {
+      "src": "/assets/ch07-constant.jpg",
+      "metadataSource": "exif:DateTimeOriginal",
+      "confidence": 1,
+      "displayDate": "08.11"
+    },
+    {
+      "src": "/assets/happy-birthday-qr-card.png",
+      "metadataSource": "filesystem",
+      "confidence": 0.2,
+      "displayDate": null
+    },
+    {
+      "src": "/assets/happy-birthday-qr.png",
+      "metadataSource": "filesystem",
+      "confidence": 0.2,
+      "displayDate": null
+    },
+    {
+      "src": "/assets/qr-debug.png",
+      "metadataSource": "filesystem",
+      "confidence": 0.2,
+      "displayDate": null
+    },
+    {
+      "src": "/assets/qr-example-image.png",
+      "metadataSource": "filesystem",
+      "confidence": 0.2,
+      "displayDate": null
+    },
+    {
+      "src": "/assets/qr-example-imageFill.png",
+      "metadataSource": "filesystem",
+      "confidence": 0.2,
+      "displayDate": null
+    },
+    {
+      "src": "/assets/qr-test-hangul-only.png",
+      "metadataSource": "filesystem",
+      "confidence": 0.2,
+      "displayDate": null
+    },
+    {
+      "src": "src/assets/hero.png",
+      "metadataSource": "filesystem",
+      "confidence": 0.2,
+      "displayDate": null
+    }
+  ],
+  "withoutUsefulDate": [
+    {
+      "src": "/assets/03-message-screenshot.png",
+      "metadataSource": "filesystem",
+      "chapterId": "s2"
+    },
+    {
+      "src": "/assets/04-cancelled-screenshot.png",
+      "metadataSource": "filesystem",
+      "chapterId": "s3"
+    },
+    {
+      "src": "/assets/album-72e09271-040c-4caf-9d2c-59918d2dadb4.jpg",
+      "metadataSource": "filesystem",
+      "chapterId": null
+    },
+    {
+      "src": "/assets/album-things-you-make-me-do.jpg",
+      "metadataSource": "filesystem",
+      "chapterId": null
+    },
+    {
+      "src": "/assets/ch06-changed.jpg",
+      "metadataSource": "filesystem",
+      "chapterId": null
+    },
+    {
+      "src": "/assets/happy-birthday-qr-card.png",
+      "metadataSource": "filesystem",
+      "chapterId": null
+    },
+    {
+      "src": "/assets/happy-birthday-qr.png",
+      "metadataSource": "filesystem",
+      "chapterId": null
+    },
+    {
+      "src": "/assets/qr-debug.png",
+      "metadataSource": "filesystem",
+      "chapterId": null
+    },
+    {
+      "src": "/assets/qr-example-image.png",
+      "metadataSource": "filesystem",
+      "chapterId": null
+    },
+    {
+      "src": "/assets/qr-example-imageFill.png",
+      "metadataSource": "filesystem",
+      "chapterId": null
+    },
+    {
+      "src": "/assets/qr-test-hangul-only.png",
+      "metadataSource": "filesystem",
+      "chapterId": null
+    },
+    {
+      "src": "src/assets/hero.png",
+      "metadataSource": "filesystem",
+      "chapterId": null
+    }
+  ],
+  "duplicates": {
+    "group-01": [
+      {
+        "src": "/assets/album-2970.jpg",
+        "isPrimary": true
+      },
+      {
+        "src": "/assets/ch03-meeting.jpg",
+        "isPrimary": false
+      }
+    ],
+    "group-02": [
+      {
+        "src": "/assets/album-3364.jpg",
+        "isPrimary": true
+      },
+      {
+        "src": "/assets/ch04-a.jpg",
+        "isPrimary": false
+      }
+    ],
+    "group-03": [
+      {
+        "src": "/assets/album-3365.jpg",
+        "isPrimary": true
+      },
+      {
+        "src": "/assets/ch04-b.jpg",
+        "isPrimary": false
+      }
+    ],
+    "group-04": [
+      {
+        "src": "/assets/album-3368.jpg",
+        "isPrimary": true
+      },
+      {
+        "src": "/assets/ch04-c.jpg",
+        "isPrimary": false
+      }
+    ],
+    "group-05": [
+      {
+        "src": "/assets/album-3369.jpg",
+        "isPrimary": true
+      },
+      {
+        "src": "/assets/ch04-d.jpg",
+        "isPrimary": false
+      }
+    ],
+    "group-06": [
+      {
+        "src": "/assets/album-3893.jpg",
+        "isPrimary": true
+      },
+      {
+        "src": "/assets/ch05-a.jpg",
+        "isPrimary": false
+      }
+    ],
+    "group-07": [
+      {
+        "src": "/assets/album-3894.jpg",
+        "isPrimary": true
+      },
+      {
+        "src": "/assets/ch05-b.jpg",
+        "isPrimary": false
+      }
+    ],
+    "group-08": [
+      {
+        "src": "/assets/album-3895.jpg",
+        "isPrimary": true
+      },
+      {
+        "src": "/assets/ch05-c.jpg",
+        "isPrimary": false
+      }
+    ],
+    "group-09": [
+      {
+        "src": "/assets/album-3900.jpg",
+        "isPrimary": true
+      },
+      {
+        "src": "/assets/ch07-constant.jpg",
+        "isPrimary": false
+      }
+    ],
+    "group-10": [
+      {
+        "src": "/assets/album-things-you-make-me-do.jpg",
+        "isPrimary": true
+      },
+      {
+        "src": "/assets/ch06-changed.jpg",
+        "isPrimary": false
+      }
+    ]
+  }
+}

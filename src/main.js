@@ -82,6 +82,22 @@ const IS_MOBILE = window.matchMedia("(max-width: 680px), (hover: none) and (poin
 const IS_LOW_POWER = IS_MOBILE || (navigator.hardwareConcurrency || 8) <= 4;
 const VOICE_MOBILE_BOOST = 2.75;
 
+// Master switch for the polished experience layer. Flip to false to fall back
+// to the previous behaviour (busy sci-fi HUD, faster ambient drift, no
+// keyboard/scroll chapter advance).
+const ENABLE_POLISHED_CONSTELLATION = true;
+const reducedMotionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+let prefersReducedMotion = reducedMotionQuery.matches;
+reducedMotionQuery.addEventListener?.("change", (e) => {
+  prefersReducedMotion = e.matches;
+  document.body.classList.toggle("reduced-motion", prefersReducedMotion);
+});
+
+function applyExperienceFlags() {
+  document.body.classList.toggle("polished", ENABLE_POLISHED_CONSTELLATION);
+  document.body.classList.toggle("reduced-motion", prefersReducedMotion);
+}
+
 const audioReactive = {
   ctx: null,
   analyser: null,
@@ -153,6 +169,7 @@ function getMemoryProfile(star) {
 async function init() {
   appReadyPromise = createAppReadyPromise();
   preloadPromise = appReadyPromise;
+  applyExperienceFlags();
 
   let introStarted = false;
 
@@ -174,6 +191,7 @@ async function init() {
     setupMobile();
     setupLangToggle();
     setupModal();
+    setupJourneyScroll();
 
     const driftImages = await preloadAllAssets();
     if (starChime) starChime.src = voiceSrc("/assets/star-chime.mp3");
@@ -521,7 +539,12 @@ function setupJourneyScroll() {
 
   document.addEventListener("keydown", (event) => {
     if (!canAdvanceJourney()) return;
-    if (event.key === "ArrowDown" || event.key === "PageDown" || event.key === " " || event.key === "ArrowRight") {
+    // Don't hijack Space/Enter when a control (lang toggle, chapter dot) is focused.
+    const ae = document.activeElement;
+    const onControl = ae && (ae.tagName === "BUTTON" || ae.getAttribute?.("role") === "button");
+    const advanceKey = event.key === "ArrowDown" || event.key === "PageDown" || event.key === "ArrowRight";
+    const spaceKey = (event.key === " " || event.key === "Enter") && !onControl;
+    if (advanceKey || spaceKey) {
       event.preventDefault();
       advanceJourneyChapter();
     }
@@ -664,8 +687,12 @@ const PARTICLE_AUDIO_GAIN = 0.22;
 const PARTICLE_DIVE_GAIN = 2.4;
 
 function getParticleFlyRate() {
+  if (prefersReducedMotion) return 0;
   const dive = cam.phase === "dive" ? PARTICLE_DIVE_GAIN : 0;
-  return 2.1 + audioReactive.level * PARTICLE_AUDIO_GAIN + dive;
+  // Calmer ambient float when not actively diving through a memory — the field
+  // should feel intentional rather than a constant stream of particles.
+  const idleBase = ENABLE_POLISHED_CONSTELLATION && cam.phase === "idle" ? 1.35 : 2.1;
+  return idleBase + audioReactive.level * PARTICLE_AUDIO_GAIN + dive;
 }
 
 function getDustFlyBoost() {
@@ -961,7 +988,8 @@ function setupLangToggle() {
       $$(".lang-toggle button").forEach((b) => b.classList.remove("active"));
       btn.classList.add("active");
       state.lang = btn.dataset.lang;
-      document.body.className = state.lang === "both" ? "" : `lang-${state.lang}`;
+      document.body.classList.remove("lang-en", "lang-ko");
+      if (state.lang !== "both") document.body.classList.add(`lang-${state.lang}`);
       updateHud();
       updateStarStates();
     });
@@ -1790,8 +1818,9 @@ function beginMemoryDive(star, onRevealed) {
   stopSkyCamera();
 
   const { ox, oy } = starScreenPercent(star.id);
-  const targetFlyZ = IS_MOBILE ? 18 : 22;
-  const targetPushZ = IS_MOBILE ? 230 : 280;
+  const targetFlyZ = prefersReducedMotion ? 0 : IS_MOBILE ? 18 : 22;
+  const targetPushZ = prefersReducedMotion ? 0 : IS_MOBILE ? 230 : 280;
+  const diveMs = prefersReducedMotion ? 220 : DIVE_MS;
   sky.style.setProperty("--flight-origin-x", `${ox}%`);
   sky.style.setProperty("--flight-origin-y", `${oy}%`);
 
@@ -1802,10 +1831,10 @@ function beginMemoryDive(star, onRevealed) {
     oy,
     cruise: 0,
   };
-  cam.diveTo = { flyZ: targetFlyZ, pushZ: targetPushZ, ox, oy, cruise: 0.18 };
+  cam.diveTo = { flyZ: targetFlyZ, pushZ: targetPushZ, ox, oy, cruise: prefersReducedMotion ? 0 : 0.18 };
   cam.phase = "dive";
   cam.diveStart = performance.now();
-  cam.diveDur = DIVE_MS;
+  cam.diveDur = diveMs;
 
   focusedStarId = star.id;
   state.morphing = true;
@@ -1823,7 +1852,7 @@ function beginMemoryDive(star, onRevealed) {
     sky.classList.add("memory-revealed");
     memoryReveal.setAttribute("aria-hidden", "false");
     onRevealed?.();
-  }, DIVE_MS);
+  }, diveMs);
 }
 
 function endMemoryDive(onDone) {
@@ -2462,7 +2491,7 @@ function setupDust(driftImages = []) {
     const height = sky.clientHeight;
     if (!width || !height) return;
 
-    const freezeDrift = sky.classList.contains("memory-revealed");
+    const freezeDrift = sky.classList.contains("memory-revealed") || prefersReducedMotion;
 
     if (!freezeDrift) {
       sortTick += 1;
