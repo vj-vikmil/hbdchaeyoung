@@ -17,19 +17,20 @@
   },
   "path": ["s1", "s2", "s3", "s5", "s4"],
   "driftPhotos": [
-    "/assets/03-message-screenshot.png",
-    "/assets/04-cancelled-screenshot.png",
-    "/assets/ch03-meeting.jpg",
-    "/assets/ch04-a.jpg",
-    "/assets/ch04-b.jpg",
-    "/assets/ch04-c.jpg",
-    "/assets/ch04-d.jpg",
-    "/assets/ch05-a.jpg",
-    "/assets/ch05-b.jpg",
-    "/assets/ch05-c.jpg",
-    "/assets/ch06-changed.jpg",
-    "/assets/ch07-constant.jpg",
-    "/assets/01-flyer.svg"
+    "/assets/album-4820.jpg",
+    "/assets/album-4824.jpg",
+    "/assets/album-4830.jpg",
+    "/assets/album-4831.jpg",
+    "/assets/album-4998.jpg",
+    "/assets/album-5001.jpg",
+    "/assets/album-5018.jpg",
+    "/assets/album-5020.jpg",
+    "/assets/album-2602.jpg",
+    "/assets/album-2167.jpg",
+    "/assets/album-2768.jpg",
+    "/assets/album-2970.jpg",
+    "/assets/album-0748.jpg",
+    "/assets/album-0880.jpg"
   ],
   "helperStars": [
     { "id": "h1", "pos": [0.245, 0.29] },
@@ -85,7 +86,7 @@
         "ko": "그냥 평범했던 밤이, 이후 모든 것의 첫 페이지가 됐어."
       },
       "visualStyle": "normal",
-      "narrativePos": [0.37, 0.67],
+      "narrativePos": [0.22, 0.74],
       "finalePos": [0.245, 0.515]
     },
     {
@@ -99,7 +100,7 @@
         "ko": "우연을 조용히 시작으로 바꿔준 메시지."
       },
       "visualStyle": "normal",
-      "narrativePos": [0.34, 0.34],
+      "narrativePos": [0.26, 0.24],
       "finalePos": [0.41, 0.29]
     },
     {
@@ -109,7 +110,7 @@
       "voiceNote": "/audio/chapter-03.mp3",
       "visual": {
         "type": "memories",
-        "images": ["/assets/04-cancelled-screenshot.png", "/assets/ch03-meeting.jpg"]
+        "images": ["/assets/04-cancelled-screenshot.png", "/assets/album-1586.jpg"]
       },
       "headline": {
         "en": "Cancelled on the 14th.\n\nWe finally met on the 23rd.",
@@ -120,7 +121,7 @@
         "ko": "그냥 남으로 남을 뻔했어. 그렇지 않아서 다행이야."
       },
       "visualStyle": "reconnect",
-      "narrativePos": [0.58, 0.33],
+      "narrativePos": [0.76, 0.22],
       "finalePos": [0.665, 0.283]
     },
     {
@@ -130,7 +131,7 @@
       "voiceNote": "/audio/chapter-05.mp3",
       "visual": {
         "type": "memories",
-        "images": ["/assets/ch05-a.jpg", "/assets/ch05-b.jpg", "/assets/ch05-c.jpg"]
+        "images": ["/assets/album-3364.jpg", "/assets/album-3365.jpg", "/assets/album-3369.jpg"]
       },
       "headline": {
         "en": "But then we actually met.\n\nWe spent so much time together — and even went to Korea together.",
@@ -141,7 +142,7 @@
         "ko": "네 세상이 덜 멀어졌어. 이제 내 안에 함께 있는 곳."
       },
       "visualStyle": "normal",
-      "narrativePos": [0.58, 0.54],
+      "narrativePos": [0.74, 0.52],
       "finalePos": [0.755, 0.305]
     },
     {
@@ -153,10 +154,10 @@
       "visual": {
         "type": "memories",
         "images": [
-          "/assets/ch04-a.jpg",
-          "/assets/ch04-b.jpg",
-          "/assets/ch04-c.jpg",
-          "/assets/ch04-d.jpg"
+          "/assets/album-3893.jpg",
+          "/assets/album-3894.jpg",
+          "/assets/album-3895.jpg",
+          "/assets/album-3900.jpg"
         ]
       },
       "content": {
@@ -164,7 +165,7 @@
         "ko": "한 가지 이유가 아니라 전부. 연기하지 않을 때의 너. 애쓰지 않아도 나오는 말들."
       },
       "visualStyle": "featured",
-      "narrativePos": [0.64, 0.68],
+      "narrativePos": [0.5, 0.8],
       "finalePos": [0.71, 0.665]
     }
   ],

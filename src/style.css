@@ -730,8 +730,8 @@ button {
   border-radius: 50%;
   box-shadow: none;
   cursor: pointer;
-  height: 36px;
-  margin: -18px 0 0 -18px;
+  height: 30px;
+  margin: -15px 0 0 -15px;
   position: absolute;
   transition:
     left 1.9s cubic-bezier(0.4, 0, 0.2, 1),
@@ -739,7 +739,7 @@ button {
     transform 0.25s,
     opacity 0.3s;
   transform-style: preserve-3d;
-  width: 36px;
+  width: 30px;
   z-index: 5;
   outline: none;
 }
@@ -758,14 +758,14 @@ button {
 .finder-ring {
   border: 1px solid rgba(232, 215, 173, 0.12);
   border-radius: 50%;
-  height: 38px;
+  height: 32px;
   left: 50%;
   opacity: 0;
   pointer-events: none;
   position: absolute;
   top: 50%;
   transform: translate(-50%, -50%);
-  width: 38px;
+  width: 32px;
 }
 
 .finder-ring::before,
@@ -794,8 +794,8 @@ button {
   box-shadow:
     0 0 6px 1px rgba(249, 251, 255, 0.55),
     0 0 16px 4px rgba(232, 215, 173, 0.16);
-  height: 12px;
-  width: 12px;
+  height: 9px;
+  width: 9px;
 }
 
 .star-btn::after {
@@ -805,9 +805,9 @@ button {
   border: 0;
   border-radius: 0;
   filter: blur(0.1px);
-  height: 22px;
-  opacity: 0.42;
-  width: 22px;
+  height: 18px;
+  opacity: 0.38;
+  width: 18px;
 }
 
 .star-btn:hover {
@@ -821,8 +821,8 @@ button {
 }
 
 .star-btn:not(.viewed):not(.next)::before {
-  height: 10px;
-  width: 10px;
+  height: 7px;
+  width: 7px;
   box-shadow:
     0 0 6px 1px rgba(255, 248, 231, 0.35),
     0 0 14px 3px rgba(128, 170, 255, 0.12);
@@ -846,8 +846,8 @@ button {
 
 .star-btn.next::before {
   animation: pulse-star 1.5s ease-in-out infinite;
-  height: 16px;
-  width: 16px;
+  height: 12px;
+  width: 12px;
   box-shadow:
     0 0 10px 2px rgba(255, 255, 255, 0.82),
     0 0 22px 6px rgba(232, 215, 173, 0.32),
@@ -856,9 +856,9 @@ button {
 
 .star-btn.next::after {
   animation: pulse-ring 1.5s ease-in-out infinite;
-  height: 30px;
-  opacity: 0.72;
-  width: 30px;
+  height: 24px;
+  opacity: 0.65;
+  width: 24px;
 }
 
 .star-btn.next {
@@ -1032,8 +1032,8 @@ button {
 
 #sky.finale-map .stars-layer,
 #sky.finale-map .lines-layer {
-  transform: scale(0.9);
-  transform-origin: 50% 46%;
+  transform: scale(0.82);
+  transform-origin: 50% 44%;
 }
 
 .constellation-line.finale {
@@ -1964,24 +1964,24 @@ body.lang-ko .finale-text-en {
   }
 
   .star-btn {
-    height: 40px;
-    margin: -20px 0 0 -20px;
-    width: 40px;
+    height: 36px;
+    margin: -18px 0 0 -18px;
+    width: 36px;
   }
 
   .finder-ring {
-    height: 40px;
-    width: 40px;
+    height: 36px;
+    width: 36px;
   }
 
   .star-btn::before {
-    height: 11px;
-    width: 11px;
+    height: 8px;
+    width: 8px;
   }
 
   .star-btn.next::before {
-    height: 15px;
-    width: 15px;
+    height: 11px;
+    width: 11px;
   }
 
   .star-label {
@@ -2098,7 +2098,7 @@ body.lang-ko .finale-text-en {
   }
 
   .photo-drift-layer {
-    opacity: 0.78;
+    opacity: 0.62;
   }
 
   #sky.memory-dive .photo-drift-layer {

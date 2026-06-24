@@ -1265,10 +1265,21 @@ function renderHelperStars() {
 
 function layoutPos(pos, kind = "narrative") {
   if (!pos) return pos;
-  const scale = kind === "finale" ? 0.78 : kind === "helper" ? 0.8 : 0.9;
-  const anchorY = kind === "finale" ? 0.46 : 0.48;
+  const anchorX = 0.5;
+  const anchorY = 0.48;
+
+  if (kind === "narrative") {
+    const spread = 1.24;
+    return [
+      anchorX + (pos[0] - anchorX) * spread,
+      anchorY + (pos[1] - anchorY) * spread,
+    ];
+  }
+
+  const scale = 0.58;
+  const spreadX = 1.18;
   return [
-    0.5 + (pos[0] - 0.5) * scale,
+    anchorX + (pos[0] - anchorX) * scale * spreadX,
     anchorY + (pos[1] - anchorY) * scale,
   ];
 }
@@ -1290,7 +1301,7 @@ function positionHelperStars() {
   (state.data.helperStars ?? []).forEach((helper) => {
     const el = helperEls[helper.id];
     if (!el) return;
-    const pos = layoutPos(helper.pos, "helper");
+    const pos = layoutPos(helper.pos, "finale");
     el.style.left = `${pos[0] * 100}%`;
     el.style.top = `${pos[1] * 100}%`;
   });
@@ -1413,7 +1424,7 @@ function getPoint(id) {
 
   const helper = (state.data.helperStars ?? []).find((h) => h.id === id);
   if (!helper || !skyRect) return { x: 0, y: 0 };
-  const pos = layoutPos(helper.pos, "helper");
+  const pos = layoutPos(helper.pos, "finale");
   return {
     x: pos[0] * skyRect.width,
     y: pos[1] * skyRect.height,
@@ -1988,9 +1999,9 @@ function setupDust(driftImages = []) {
 
   function memorySizeAlpha(z) {
     const t = 1 - z;
-    const mobileBoost = IS_MOBILE ? 1.35 : 1;
-    const h = (34 + t * 54 + t * t * 62) * mobileBoost;
-    const alpha = Math.min(0.92, (0.46 + t * 0.24 + t * t * 0.12) * (IS_MOBILE ? 1.18 : 1));
+    const mobileBoost = IS_MOBILE ? 1.05 : 1;
+    const h = (22 + t * 38 + t * t * 42) * mobileBoost;
+    const alpha = Math.min(0.82, (0.38 + t * 0.22 + t * t * 0.1) * (IS_MOBILE ? 1.1 : 1));
     return { h, alpha, t };
   }
 
