@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="theme-color" content="#09091c" />
+    <title>Our Constellation — 채영</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Noto+Sans+KR:wght@300;400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/src/style.css" />
+  </head>
+  <body>
+    <div id="app">
+      <section id="intro" class="screen active">
+        <div class="intro-stars" aria-hidden="true"></div>
+        <div class="intro-content">
+          <p class="intro-ko"></p>
+          <p class="intro-en"></p>
+          <p class="intro-name"></p>
+          <button type="button" id="intro-btn" class="btn-glow">
+            <span class="btn-ko"></span>
+            <span class="btn-en"></span>
+          </button>
+        </div>
+      </section>
+
+      <section id="sky" class="screen">
+        <div class="sky-bg" aria-hidden="true">
+          <canvas id="dust"></canvas>
+        </div>
+        <svg id="lines" class="lines-layer" aria-hidden="true"></svg>
+        <div id="stars" class="stars-layer"></div>
+        <div class="ar-overlay" aria-hidden="true">
+          <div class="ar-compass">
+            <span>NW</span><span>N</span><span>NE</span><span>SCAN</span><span>E</span>
+          </div>
+          <div class="ar-reticle"></div>
+          <div class="ar-readout ar-readout-left">MEMORY FIELD</div>
+          <div class="ar-readout ar-readout-right">LOCK NEXT STAR</div>
+          <div class="ar-horizon"></div>
+        </div>
+
+        <header class="hud">
+          <div class="progress-text"></div>
+          <div class="lang-toggle" role="group" aria-label="Language">
+            <button type="button" data-lang="both" class="active">EN+KO</button>
+            <button type="button" data-lang="en">EN</button>
+            <button type="button" data-lang="ko">KO</button>
+          </div>
+        </header>
+
+        <div id="hint" class="hint hidden" role="status"></div>
+      </section>
+
+      <dialog id="modal" class="memory-modal">
+        <div class="modal-inner">
+          <button type="button" class="modal-close" aria-label="Close">&times;</button>
+          <p class="modal-date"></p>
+          <h2 class="modal-title-en"></h2>
+          <h3 class="modal-title-ko"></h3>
+
+          <div class="voice-player">
+            <div id="voice-status" class="voice-status" aria-live="polite">
+              <span class="voice-orb" aria-hidden="true"></span>
+              <span>
+                <span class="voice-label-en"></span>
+                <span class="voice-label-ko"></span>
+              </span>
+            </div>
+            <div class="voice-progress"><div class="voice-bar"></div></div>
+            <p class="voice-missing hidden"></p>
+            <audio id="voice-audio" preload="metadata"></audio>
+          </div>
+
+          <div class="modal-visual"></div>
+          <div class="modal-headline"></div>
+          <div class="modal-body">
+            <p class="modal-text-en"></p>
+            <p class="modal-text-ko"></p>
+          </div>
+          <button type="button" class="modal-done">Return to the sky</button>
+        </div>
+      </dialog>
+
+      <section id="finale" class="screen">
+        <div class="finale-shape" aria-hidden="true">채영</div>
+        <div class="finale-content">
+          <button type="button" id="finale-close" class="finale-close" aria-label="Close final message">&times;</button>
+          <p class="finale-kicker">The constellation is complete</p>
+          <p class="finale-text-en"></p>
+          <p class="finale-text-ko"></p>
+          <div class="finale-actions">
+            <button type="button" id="finale-close-secondary" class="finale-action">See the stars</button>
+            <button type="button" id="finale-replay" class="finale-action ghost">Restart</button>
+          </div>
+        </div>
+      </section>
+    </div>
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>

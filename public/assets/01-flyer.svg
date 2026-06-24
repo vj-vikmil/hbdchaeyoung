@@ -1,0 +1,12 @@
+﻿<svg xmlns="http://www.w3.org/2000/svg" width="800" height="600" viewBox="0 0 800 600">
+  <defs>
+    <linearGradient id="g" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#07111f"/>
+      <stop offset="100%" style="stop-color:#020711"/>
+    </linearGradient>
+  </defs>
+  <rect width="800" height="600" fill="url(#g)"/>
+  <text x="400" y="280" text-anchor="middle" fill="#e8d7ad" font-family="sans-serif" font-size="28">The Flyer</text>
+  <text x="400" y="320" text-anchor="middle" fill="#9cabbc" font-family="sans-serif" font-size="16">Replace: assets/01-flyer.jpg</text>
+</svg>
+
