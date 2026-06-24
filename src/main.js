@@ -57,6 +57,7 @@ let skyRect = null;
 let hintTimer = null;
 let currentStar = null;
 let currentPendingDiscoveryId = null;
+let currentModalCompletesFinale = false;
 let bgmStarted = false;
 let voiceFadeRaf = null;
 let postSpeechTimer = null;
@@ -77,6 +78,7 @@ const JOURNEY_TOUCH_THRESHOLD = 14;
 const JOURNEY_COOLDOWN_MS = 800;
 let suppressVoicePauseMix = false;
 let modalTypeTimer = null;
+let voiceRetryArmed = false;
 
 const IS_MOBILE = window.matchMedia("(max-width: 680px), (hover: none) and (pointer: coarse)").matches;
 const IS_LOW_POWER = IS_MOBILE || (navigator.hardwareConcurrency || 8) <= 4;
@@ -1031,10 +1033,28 @@ const MEMORY_CARD_LAYOUTS = [
 
 function memoryImagesFor(star) {
   const v = star?.visual;
-  if (!v) return [];
-  if (v.type === "photo" && v.src) return [v.src];
-  if ((v.type === "memories" || v.type === "gallery") && v.images?.length) return v.images;
-  return [];
+  const manual = [];
+  if (v?.type === "photo" && v.src) manual.push(v.src);
+  if ((v?.type === "memories" || v?.type === "gallery" || v?.type === "synced-gallery") && v.images?.length) {
+    manual.push(...v.images);
+  }
+
+  if (star?.id === "s5" && manual.length) {
+    return manual.filter((src) => src.includes("/assets/korea/")).slice(0, 12);
+  }
+
+  const generated = (state.photoMetadata?.photos ?? [])
+    .filter((photo) => photo.chapterId === star?.id && photo.src && photo.isPrimary !== false)
+    .sort((a, b) => {
+      const rank = { foreground: 0, midground: 1, background: 2 };
+      return (rank[a.layer] ?? 3) - (rank[b.layer] ?? 3) ||
+        (a.timestamp ?? Number.MAX_SAFE_INTEGER) - (b.timestamp ?? Number.MAX_SAFE_INTEGER) ||
+        a.filename.localeCompare(b.filename);
+    })
+    .map((photo) => photo.src);
+
+  const max = star?.id === "s5" ? 12 : 8;
+  return [...new Set([...manual, ...generated])].slice(0, max);
 }
 
 function collectDriftPhotos() {
@@ -1209,18 +1229,15 @@ function renderFloatingMemories(visualEl, star) {
   if (!images.length) return;
 
   const wrap = document.createElement("div");
-  wrap.className = "floating-memories";
-  const layout = MEMORY_CARD_LAYOUTS[Math.min(images.length, MEMORY_CARD_LAYOUTS.length) - 1];
+  wrap.className = "memory-carousel";
+  wrap.tabIndex = 0;
+  wrap.setAttribute("role", "list");
+  wrap.setAttribute("aria-label", `${star.title.en} photos`);
 
   images.forEach((src, i) => {
-    const card = document.createElement("div");
+    const card = document.createElement("figure");
     card.className = "memory-card";
-    const pose = layout[i] ?? layout[layout.length - 1];
-    card.style.setProperty("--rot", `${pose.rot}deg`);
-    card.style.setProperty("--tx", `${pose.tx}%`);
-    card.style.setProperty("--ty", `${pose.ty}%`);
-    card.style.zIndex = String(pose.z);
-    card.style.animationDelay = `${pose.delay}s`;
+    card.setAttribute("role", "listitem");
 
     const img = document.createElement("img");
     img.src = imageSrc(src);
@@ -1228,6 +1245,13 @@ function renderFloatingMemories(visualEl, star) {
     img.loading = i === 0 ? "eager" : "lazy";
     img.onerror = () => { card.classList.add("missing"); };
     card.appendChild(img);
+
+    if (images.length > 1) {
+      const caption = document.createElement("figcaption");
+      caption.textContent = `${i + 1} / ${images.length}`;
+      card.appendChild(caption);
+    }
+
     wrap.appendChild(card);
   });
 
@@ -1357,7 +1381,7 @@ function journeyStarPos(star) {
 
   const expected = expectedStarId();
   if (star.id === expected && !sky.classList.contains("memory-revealed")) {
-    const pull = 0.03 + state.journeyCruise * 0.1;
+    const pull = (IS_MOBILE ? 0.2 : 0.12) + state.journeyCruise * (IS_MOBILE ? 0.1 : 0.08);
     return [
       base[0] + (0.5 - base[0]) * pull,
       base[1] + (0.5 - base[1]) * pull,
@@ -1556,6 +1580,16 @@ function expectedStarId() {
   return state.data.path.find((id) => !state.viewed.has(id));
 }
 
+function commitDiscovery(id) {
+  if (!id || state.viewed.has(id)) return false;
+  state.viewed.add(id);
+  state.pathIndex = state.viewed.size;
+  drawChapterStrokes(id);
+  saveProgress();
+  updateStarStates();
+  return true;
+}
+
 function updateStarStates() {
   const expected = expectedStarId();
   const finale = sky.classList.contains("finale-map");
@@ -1617,6 +1651,7 @@ function onStarClick(id) {
   if (state.morphing || sky.classList.contains("memory-revealed")) return;
   const star = getStar(id);
   if (!star) return;
+  currentModalCompletesFinale = false;
 
   if (sky.classList.contains("finale-map")) {
     if (!state.viewed.has(id)) return;
@@ -1639,7 +1674,12 @@ function onStarClick(id) {
   unlockBgm();
   playStarChime();
   hideHint();
-  if (firstDiscovery) currentPendingDiscoveryId = id;
+  const discoveredNow = firstDiscovery ? commitDiscovery(id) : false;
+  currentPendingDiscoveryId = null;
+  currentModalCompletesFinale =
+    discoveredNow &&
+    id === lastStarId() &&
+    state.viewed.size === state.data.path.length;
   openModal(star, true);
 }
 
@@ -1746,6 +1786,10 @@ function restoreLines() {
 function setupModal() {
   $(".modal-close").addEventListener("click", closeModal);
   $(".modal-done").addEventListener("click", closeModal);
+  $(".modal-inner").addEventListener("pointerdown", (event) => {
+    if (!voiceRetryArmed || !voiceAudio.paused || event.target.closest("button")) return;
+    playVoice();
+  }, { passive: true });
   memoryReveal.addEventListener("click", (e) => {
     if (e.target === memoryReveal || e.target.classList.contains("memory-vignette")) closeModal();
   });
@@ -1796,6 +1840,7 @@ function prepareMemoryContent(star) {
   $(".modal-inner").classList.remove("text-revealed", "modal-featured");
   if (star.featured) $(".modal-inner").classList.add("modal-featured");
   voiceStatus.classList.remove("missing");
+  voiceRetryArmed = false;
   setVoicePlaying(false);
   voiceBar.style.width = "0%";
   resetVoiceCaption();
@@ -2053,9 +2098,11 @@ function playVoice() {
   duckBed(profile);
   setVoiceVol(0);
   voiceAudio.play().then(() => {
+    voiceRetryArmed = false;
     fadeVoiceVolume(voiceTargetVolume, profile.voiceFadeInMs);
     setVoicePlaying(true);
   }).catch(() => {
+    voiceRetryArmed = true;
     setVoicePlaying(false);
     $(".voice-label-en").textContent = "Tap to play voice";
     $(".voice-label-ko").textContent = "음성을 들으려면 터치";
@@ -2065,11 +2112,12 @@ function playVoice() {
 function closeModal() {
   clearPostSpeechHold();
   const profile = memoryProfile ?? getMemoryProfile(currentStar);
-  const pendingId = currentPendingDiscoveryId;
+  const shouldReveal = currentModalCompletesFinale;
   currentPendingDiscoveryId = null;
+  currentModalCompletesFinale = false;
   suppressVoicePauseMix = true;
-  voiceAudio.pause();
-  fadeVoiceVolume(0, Math.min(500, profile.voiceFadeOutMs), () => {
+  if (!shouldReveal) voiceAudio.pause();
+  fadeVoiceVolume(shouldReveal ? voiceTargetVolume : 0, Math.min(500, profile.voiceFadeOutMs), () => {
     leaveMemoryBed();
     suppressVoicePauseMix = false;
   });
@@ -2079,20 +2127,6 @@ function closeModal() {
 
   endMemoryDive(() => {
     journeyAdvanceLock = false;
-    let completedId = null;
-    if (pendingId && !state.viewed.has(pendingId)) {
-      completedId = pendingId;
-      state.viewed.add(pendingId);
-      state.pathIndex = state.viewed.size;
-      drawChapterStrokes(pendingId);
-      saveProgress();
-      updateStarStates();
-    }
-
-    const shouldReveal =
-      completedId === lastStarId() &&
-      state.viewed.size === state.data.path.length;
-
     if (shouldReveal) {
       triggerFinale();
       return;

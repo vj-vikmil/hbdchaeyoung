@@ -47,7 +47,7 @@ body {
 
 body.modal-open {
   overflow: hidden;
-  touch-action: pan-y;
+  touch-action: pan-x pan-y;
 }
 
 #app {
@@ -1759,23 +1759,32 @@ body.polished .ar-horizon {
   width: 100%;
 }
 
+.memory-carousel,
 .floating-memories {
-    align-items: center;
   display: flex;
-  justify-content: center;
+  gap: 0.75rem;
   margin: 0 auto;
   max-width: 100%;
-  min-height: min(44vh, 22rem);
-  padding: 1.25rem 0.5rem 1.75rem;
-  position: relative;
-  width: min(100%, 22rem);
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: 0.45rem 0.35rem 1rem;
+  scroll-padding-inline: 0.35rem;
+  scroll-snap-type: x mandatory;
+  scrollbar-color: rgba(232, 215, 173, 0.42) rgba(255, 255, 255, 0.06);
+  width: min(100%, 34rem);
+  -webkit-overflow-scrolling: touch;
+  touch-action: pan-x;
+}
+
+.memory-carousel:focus-visible {
+  outline: 1px solid rgba(232, 215, 173, 0.44);
+  outline-offset: 0.25rem;
 }
 
 .memory-card {
   --rot: -4deg;
   --tx: 0%;
   --ty: 0%;
-  animation: memory-float 10s ease-in-out infinite;
   aspect-ratio: 4 / 5;
   background:
     linear-gradient(145deg, rgba(255, 255, 255, 0.14), rgba(255, 255, 255, 0.03));
@@ -1783,12 +1792,21 @@ body.polished .ar-horizon {
   box-shadow:
     0 16px 42px rgba(0, 0, 0, 0.42),
     0 0 0 1px rgba(255, 255, 255, 0.1);
-  left: 50%;
+  flex: 0 0 min(78vw, 15.5rem);
+  margin: 0;
   padding: 0.28rem;
-  position: absolute;
-  top: 50%;
-  transform: translate(calc(-50% + var(--tx)), calc(-50% + var(--ty))) rotate(var(--rot));
-  width: min(58%, 13.5rem);
+  position: relative;
+  scroll-snap-align: center;
+  transform: rotate(var(--rot));
+  width: min(78vw, 15.5rem);
+}
+
+.memory-card:nth-child(2n) {
+  --rot: 2.5deg;
+}
+
+.memory-card:nth-child(3n) {
+  --rot: -1.5deg;
 }
 
 .memory-card img {
@@ -1797,6 +1815,19 @@ body.polished .ar-horizon {
   height: 100%;
   object-fit: cover;
   width: 100%;
+}
+
+.memory-card figcaption {
+  background: rgba(1, 6, 14, 0.58);
+  border: 1px solid rgba(232, 215, 173, 0.16);
+  border-radius: 999px;
+  bottom: 0.58rem;
+  color: rgba(255, 248, 231, 0.82);
+  font-size: 0.66rem;
+  letter-spacing: 0.08em;
+  padding: 0.18rem 0.45rem;
+  position: absolute;
+  right: 0.58rem;
 }
 
 .memory-card.missing {
@@ -2331,9 +2362,9 @@ body.lang-ko .finale-text-en {
   }
 
   .star-btn {
-    height: 42px;
-    margin: -21px 0 0 -21px;
-    width: 42px;
+    height: 46px;
+    margin: -23px 0 0 -23px;
+    width: 46px;
   }
 
   .finder-ring {
@@ -2347,14 +2378,44 @@ body.lang-ko .finale-text-en {
   }
 
   .star-btn.next::before {
-    height: 15px;
-    width: 15px;
+    height: 20px;
+    width: 20px;
+    box-shadow:
+      0 0 12px 3px rgba(255, 255, 255, 0.9),
+      0 0 30px 9px rgba(232, 215, 173, 0.48),
+      0 0 58px 16px rgba(127, 181, 217, 0.24);
   }
 
   .star-label {
     font-size: 0.64rem;
     max-width: 8.5rem;
     white-space: normal;
+  }
+
+  .star-btn.next {
+    height: 58px;
+    margin: -29px 0 0 -29px;
+    width: 58px;
+  }
+
+  .star-btn.next .finder-ring {
+    height: 88px;
+    width: 88px;
+  }
+
+  .star-btn.next .finder-ring::before {
+    width: 116px;
+  }
+
+  .star-btn.next .finder-ring::after {
+    height: 116px;
+  }
+
+  .star-btn.next .star-label,
+  .star-btn.next .star-number,
+  .star-btn:hover.next .star-label,
+  .star-btn:active.next .star-label {
+    opacity: 1;
   }
 
   .modal-inner {
@@ -2374,6 +2435,18 @@ body.lang-ko .finale-text-en {
   .modal-gallery img {
     aspect-ratio: 4 / 5;
     max-height: 22vh;
+  }
+
+  .memory-carousel,
+  .floating-memories {
+    gap: 0.55rem;
+    padding-bottom: 0.85rem;
+    width: 100%;
+  }
+
+  .memory-card {
+    flex-basis: min(74vw, 15rem);
+    width: min(74vw, 15rem);
   }
 
   .voice-caption {

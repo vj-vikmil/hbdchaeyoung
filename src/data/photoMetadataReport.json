@@ -1,11 +1,11 @@
 {
-  "generatedAt": "2026-06-24T18:35:00.641Z",
+  "generatedAt": "2026-06-24T18:59:39.311Z",
   "stats": {
-    "totalPhotos": 63,
-    "visibleConstellation": 23,
+    "totalPhotos": 71,
+    "visibleConstellation": 18,
     "duplicateGroups": 10,
-    "unassigned": 44,
-    "withoutUsefulDate": 12
+    "unassigned": 47,
+    "withoutUsefulDate": 13
   },
   "unassigned": [
     {
@@ -81,6 +81,18 @@
       "displayDate": "14.10"
     },
     {
+      "src": "/assets/album-3364.jpg",
+      "metadataSource": "exif:DateTimeOriginal",
+      "confidence": 1,
+      "displayDate": "25.10"
+    },
+    {
+      "src": "/assets/album-3365.jpg",
+      "metadataSource": "exif:DateTimeOriginal",
+      "confidence": 1,
+      "displayDate": "25.10"
+    },
+    {
       "src": "/assets/album-3366.jpg",
       "metadataSource": "exif:DateTimeOriginal",
       "confidence": 1,
@@ -88,6 +100,12 @@
     },
     {
       "src": "/assets/album-3368.jpg",
+      "metadataSource": "exif:DateTimeOriginal",
+      "confidence": 1,
+      "displayDate": "25.10"
+    },
+    {
+      "src": "/assets/album-3369.jpg",
       "metadataSource": "exif:DateTimeOriginal",
       "confidence": 1,
       "displayDate": "25.10"
@@ -308,6 +326,11 @@
       "src": "/assets/happy-birthday-qr.png",
       "metadataSource": "filesystem",
       "chapterId": null
+    },
+    {
+      "src": "/assets/korea/91349A87-E381-4517-96C6-F144626F457B.jpg",
+      "metadataSource": "filesystem",
+      "chapterId": "s5"
     },
     {
       "src": "/assets/qr-debug.png",

@@ -135,7 +135,16 @@
       "voiceNote": "/audio/chapter-05.mp3",
       "visual": {
         "type": "memories",
-        "images": ["/assets/album-3364.jpg", "/assets/album-3365.jpg", "/assets/album-3369.jpg"]
+        "images": [
+          "/assets/korea/IMG_4968.jpg",
+          "/assets/korea/IMG_4977.jpg",
+          "/assets/korea/IMG_4984.jpg",
+          "/assets/korea/IMG_4649.jpg",
+          "/assets/korea/IMG_6878.jpg",
+          "/assets/korea/91349A87-E381-4517-96C6-F144626F457B.jpg",
+          "/assets/korea/IMG_4997.jpg",
+          "/assets/korea/IMG_5021.jpg"
+        ]
       },
       "headline": {
         "en": "But then we actually met.\n\nWe spent so much time together — and even went to Korea together.",
@@ -146,7 +155,7 @@
         "ko": "네 세상이 덜 멀어졌어. 이제 내 안에 함께 있는 곳."
       },
       "visualStyle": "normal",
-      "narrativePos": [0.66, 0.52],
+      "narrativePos": [0.63, 0.5],
       "finalePos": [0.74, 0.48]
     },
     {
@@ -169,7 +178,7 @@
         "ko": "한 가지 이유가 아니라 전부. 연기하지 않을 때의 너. 애쓰지 않아도 나오는 말들."
       },
       "visualStyle": "featured",
-      "narrativePos": [0.52, 0.72],
+      "narrativePos": [0.54, 0.61],
       "finalePos": [0.63, 0.72]
     }
   ],

@@ -255,8 +255,9 @@ function assignChapter(photo, manual) {
   if (srcManual) return { chapterId: srcManual.chapterId, chapterSource: "manual", chapterConfidence: 1 };
 
   const name = photo.filename.toLowerCase();
-  if (name.includes("korea") || isKoreaGps(photo.location)) {
-    return { chapterId: "s5", chapterSource: isKoreaGps(photo.location) ? "gps-region" : "filename", chapterConfidence: 0.88 };
+  const src = photo.src.toLowerCase();
+  if (name.includes("korea") || src.includes("/korea/") || isKoreaGps(photo.location)) {
+    return { chapterId: "s5", chapterSource: isKoreaGps(photo.location) ? "gps-region" : src.includes("/korea/") ? "folder" : "filename", chapterConfidence: 0.88 };
   }
   if (name.includes("message")) return { chapterId: "s2", chapterSource: "filename", chapterConfidence: 0.74 };
   if (name.includes("cancel") || name.includes("meeting") || name.includes("first")) {
@@ -313,6 +314,7 @@ function isEligibleForConstellation(photo) {
   if (!photo.src.startsWith("/assets/")) return false;
   const name = photo.filename.toLowerCase();
   if (name.includes("qr") || name.includes("favicon") || name.includes("hero")) return false;
+  if (photo.chapterId === "s5") return photo.src.toLowerCase().includes("/korea/") || photo.chapterSource === "manual";
   if (name.startsWith("album-")) return true;
   if (name.includes("screenshot")) return true;
   if (/^ch\d+/.test(name)) return true;
