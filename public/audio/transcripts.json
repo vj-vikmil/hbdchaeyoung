@@ -1,0 +1,306 @@
+{
+  "/audio/chapter-01.mp3": {
+    "language": "ko",
+    "duration": 16.33,
+    "segments": [
+      {
+        "start": 0.0,
+        "end": 5.74,
+        "text": "채영아, 그날은 그냥 평범한 밤이었어.\n\n나는 바에서 일했어."
+      },
+      {
+        "start": 5.74,
+        "end": 8.87,
+        "text": "너는 이벤트를 했어."
+      },
+      {
+        "start": 8.87,
+        "end": 16.33,
+        "text": "그때는 몰랐어.\n\n이렇게 될 줄 몰랐어."
+      }
+    ],
+    "full": "채영아, 그날은 그냥 평범한 밤이었어.\n\n나는 바에서 일했어.\n\n너는 이벤트를 했어.\n\n그때는 몰랐어.\n\n이렇게 될 줄 몰랐어."
+  },
+  "/audio/chapter-02.mp3": {
+    "language": "ko",
+    "duration": 10.66,
+    "segments": [
+      {
+        "start": 0.0,
+        "end": 4.65,
+        "text": "한 달 정도 지났어.\n\n아무 일도 없었어."
+      },
+      {
+        "start": 4.65,
+        "end": 10.66,
+        "text": "그리고 네가 메시지를 보냈어.\n\n그게 시작이었어."
+      }
+    ],
+    "full": "한 달 정도 지났어.\n\n아무 일도 없었어.\n\n그리고 네가 메시지를 보냈어.\n\n그게 시작이었어."
+  },
+  "/audio/chapter-03.mp3": {
+    "language": "ko",
+    "duration": 11.23,
+    "segments": [
+      {
+        "start": 0.0,
+        "end": 3.07,
+        "text": "우리는 만나기로 했어."
+      },
+      {
+        "start": 3.07,
+        "end": 7.92,
+        "text": "하지만 못 만났어.\n\n조금 아쉬웠어."
+      },
+      {
+        "start": 7.92,
+        "end": 11.23,
+        "text": "그래도 결국 만났어."
+      }
+    ],
+    "full": "우리는 만나기로 했어.\n\n하지만 못 만났어.\n\n조금 아쉬웠어.\n\n그래도 결국 만났어."
+  },
+  "/audio/chapter-05.mp3": {
+    "language": "ko",
+    "duration": 19.42,
+    "segments": [
+      {
+        "start": 0.0,
+        "end": 3.44,
+        "text": "한국에 같이 가서 좋았어."
+      },
+      {
+        "start": 3.44,
+        "end": 8.25,
+        "text": "네 가족을 만나서 좋았어."
+      },
+      {
+        "start": 8.25,
+        "end": 12.13,
+        "text": "네가 자란 곳을 봐서 좋았어."
+      },
+      {
+        "start": 12.13,
+        "end": 19.42,
+        "text": "특별한 기억이야."
+      }
+    ],
+    "full": "한국에 같이 가서 좋았어.\n\n네 가족을 만나서 좋았어.\n\n네가 자란 곳을 봐서 좋았어.\n\n특별한 기억이야."
+  },
+  "/audio/chapter-06.mp3": {
+    "language": "ko",
+    "duration": 16.42,
+    "segments": [
+      {
+        "start": 0.0,
+        "end": 2.45,
+        "text": "우리는 많이 달라."
+      },
+      {
+        "start": 2.45,
+        "end": 8.24,
+        "text": "그래도 넌 항상 나를 이해하려고 했어."
+      },
+      {
+        "start": 8.24,
+        "end": 14.53,
+        "text": "항상 내 이야기를 들어줬어.\n\n항상 내 편이었어."
+      },
+      {
+        "start": 14.53,
+        "end": 16.42,
+        "text": "고마워."
+      }
+    ],
+    "full": "우리는 많이 달라.\n\n그래도 넌 항상 나를 이해하려고 했어.\n\n항상 내 이야기를 들어줬어.\n\n항상 내 편이었어.\n\n고마워."
+  },
+  "/audio/chapter-07.mp3": {
+    "language": "ko",
+    "duration": 43.27,
+    "segments": [
+      {
+        "start": 0.0,
+        "end": 7.3,
+        "text": "우리 이야기가 앞으로 어떻게 될지는 모르겠어."
+      },
+      {
+        "start": 7.3,
+        "end": 13.3,
+        "text": "우리는 좋은 날도 있었어.\n\n어려운 날도 있었어."
+      },
+      {
+        "start": 13.3,
+        "end": 17.25,
+        "text": "그래도 후회는 없어."
+      },
+      {
+        "start": 17.25,
+        "end": 28.92,
+        "text": "너를 만난 것을.\n\n너를 알게 된 것을.\n\n우리의 모든 추억을."
+      },
+      {
+        "start": 28.92,
+        "end": 36.73,
+        "text": "하지만 한 가지는 확실해.\n\n넌 내 삶에 중요한 사람이야."
+      },
+      {
+        "start": 36.73,
+        "end": 38.97,
+        "text": "그건 변하지 않아."
+      },
+      {
+        "start": 38.97,
+        "end": 43.27,
+        "text": "생일 축하해, 채영아."
+      }
+    ],
+    "full": "우리 이야기가 앞으로 어떻게 될지는 모르겠어.\n\n우리는 좋은 날도 있었어.\n\n어려운 날도 있었어.\n\n그래도 후회는 없어.\n\n너를 만난 것을.\n\n너를 알게 된 것을.\n\n우리의 모든 추억을.\n\n하지만 한 가지는 확실해.\n\n넌 내 삶에 중요한 사람이야.\n\n그건 변하지 않아.\n\n생일 축하해, 채영아."
+  },
+  "/audio/why-i-like-you.mp3": {
+    "language": "en",
+    "duration": 98.71,
+    "segments": [
+      {
+        "start": 0.0,
+        "end": 3.41,
+        "text": "You know, one thing I've always found really impressive about you."
+      },
+      {
+        "start": 3.41,
+        "end": 6.65,
+        "text": "Before I even met you, you'd already done loads."
+      },
+      {
+        "start": 6.65,
+        "end": 11.56,
+        "text": "You had a bangy job in Korea, a comfy life and you even published a book."
+      },
+      {
+        "start": 11.56,
+        "end": 14.02,
+        "text": "Most people would have looked at that and thought,"
+      },
+      {
+        "start": 14.02,
+        "end": 15.61,
+        "text": "yeah, that'll do."
+      },
+      {
+        "start": 15.61,
+        "end": 19.02,
+        "text": "But somehow you decided to live all of that behind"
+      },
+      {
+        "start": 19.02,
+        "end": 22.41,
+        "text": "and move to another country, take a massive risk,"
+      },
+      {
+        "start": 22.41,
+        "end": 27.57,
+        "text": "get a loan, do a master's degree, build a whole new life from scratch."
+      },
+      {
+        "start": 27.57,
+        "end": 30.34,
+        "text": "And somehow you just keep smashing it."
+      },
+      {
+        "start": 30.34,
+        "end": 35.88,
+        "text": "From studying, to doodoo-roo, to becoming a marketing on operations lead,"
+      },
+      {
+        "start": 35.88,
+        "end": 37.7,
+        "text": "you don't really do things halfway."
+      },
+      {
+        "start": 37.7,
+        "end": 40.8,
+        "text": "When you decide you're going to do something, you just do it."
+      },
+      {
+        "start": 40.8,
+        "end": 46.51,
+        "text": "Whether that's work, boxing, losing weight, or sticking to a strict diet."
+      },
+      {
+        "start": 46.51,
+        "end": 48.8,
+        "text": "To be honest, we're quite different in that sense."
+      },
+      {
+        "start": 49.43,
+        "end": 54.42,
+        "text": "There's definitely been times where I've had absolutely no clue what I'm doing."
+      },
+      {
+        "start": 54.42,
+        "end": 58.71,
+        "text": "Times where I've been stressed, insecure, overthinking everything."
+      },
+      {
+        "start": 59.42,
+        "end": 61.0,
+        "text": "I'm just trying to figure out my life."
+      },
+      {
+        "start": 61.63,
+        "end": 65.59,
+        "text": "But somehow, you've always had patience to support me anyway."
+      },
+      {
+        "start": 65.59,
+        "end": 69.0,
+        "text": "You don't always understand why I do things the way I do them."
+      },
+      {
+        "start": 69.0,
+        "end": 71.85,
+        "text": "And to be fair, sometimes I don't understand either."
+      },
+      {
+        "start": 71.85,
+        "end": 73.53,
+        "text": "You don't always agree with me."
+      },
+      {
+        "start": 74.16,
+        "end": 78.11,
+        "text": "But you've always respected that my way is still my way."
+      },
+      {
+        "start": 78.11,
+        "end": 79.86,
+        "text": "I think that's actually quite rare."
+      },
+      {
+        "start": 80.58,
+        "end": 83.73,
+        "text": "And I think that's one of the things I admire most about you."
+      },
+      {
+        "start": 84.21,
+        "end": 88.49,
+        "text": "Out of everything we've shared together, one of my favorite things"
+      },
+      {
+        "start": 88.49,
+        "end": 92.3,
+        "text": "wasn't a trip, or a date, or a specific memory."
+      },
+      {
+        "start": 92.86,
+        "end": 96.1,
+        "text": "It was just getting to know you, the real you."
+      },
+      {
+        "start": 96.1,
+        "end": 98.46,
+        "text": "And I'm really glad I did."
+      }
+    ],
+    "full": "You know, one thing I've always found really impressive about you. Before I even met you, you'd already done loads. You had a bangy job in Korea, a comfy life and you even published a book. Most people would have looked at that and thought, yeah, that'll do. But somehow you decided to live all of that behind and move to another country, take a massive risk, get a loan, do a master's degree, build a whole new life from scratch. And somehow you just keep smashing it. From studying, to doodoo-roo, to becoming a marketing on operations lead, you don't really do things halfway. When you decide you're going to do something, you just do it. Whether that's work, boxing, losing weight, or sticking to a strict diet. To be honest, we're quite different in that sense. There's definitely been times where I've had absolutely no clue what I'm doing. Times where I've been stressed, insecure, overthinking everything. I'm just trying to figure out my life. But somehow, you've always had patience to support me anyway. You don't always understand why I do things the way I do them. And to be fair, sometimes I don't understand either. You don't always agree with me. But you've always respected that my way is still my way. I think that's actually quite rare. And I think that's one of the things I admire most about you. Out of everything we've shared together, one of my favorite things wasn't a trip, or a date, or a specific memory. It was just getting to know you, the real you. And I'm really glad I did."
+  }
+}

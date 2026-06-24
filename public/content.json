@@ -1,49 +1,76 @@
 {
   "herName": { "en": "Chae Young", "ko": "채영", "full": "Chae Young Jang" },
   "intro": {
-    "en": "Look up. I made a sky from twelve moments that led me to you.",
-    "ko": "하늘을 봐. 너에게 이어진 열두 개의 순간으로 만든 별자리야."
+    "en": "Look up. I made a sky from five chapters of our story.",
+    "ko": "하늘을 봐. 우리 이야기 다섯 개의 챕터로 만든 별자리야."
   },
   "ui": {
-    "startHint": { "en": "Scan for the softly pulsing memory star", "ko": "은은하게 뛰는 기억의 별을 찾아봐" },
+    "startHint": { "en": "Find the softly pulsing chapter star", "ko": "은은하게 뛰는 챕터 별을 찾아봐" },
     "wrongOrder": { "en": "Almost. Follow the pulsing guide star.", "ko": "거의 맞아. 빛나는 안내 별을 따라가 봐" },
-    "progress": { "en": "{n} of 12 memories discovered", "ko": "12개 중 {n}개의 기억을 찾았어" },
-    "star12Unlock": { "en": "One last constant", "ko": "마지막으로 변하지 않는 것" },
+    "progress": { "en": "{n} of 5 chapters discovered", "ko": "5개 중 {n}개의 챕터를 찾았어" },
+    "starFinalUnlock": { "en": "One last chapter remains", "ko": "마지막 챕터가 남았어" },
     "tapToBegin": { "en": "Tap to begin", "ko": "터치해서 시작" },
     "close": { "en": "Close", "ko": "닫기" },
     "playVoice": { "en": "Voice note", "ko": "음성 메시지" },
     "voicePlaceholder": { "en": "Add {file} when you're ready", "ko": "준비되면 {file} 파일을 넣어줘" },
     "placeholderImage": { "en": "Replace this with your photo", "ko": "여기에 사진을 넣어줘" }
   },
-  "path": ["s1", "s2", "s3", "s4", "s5", "s6", "s7", "s8", "s9", "s10", "s11", "s12"],
-  "helperStars": [
-    { "id": "h1", "pos": [0.25, 0.22] },
-    { "id": "h2", "pos": [0.18, 0.50] },
-    { "id": "h3", "pos": [0.33, 0.50] },
-    { "id": "h4", "pos": [0.46, 0.25] },
-    { "id": "h5", "pos": [0.46, 0.25] },
-    { "id": "h6", "pos": [0.46, 0.60] },
-    { "id": "h7", "pos": [0.42, 0.42] },
-    { "id": "h8", "pos": [0.46, 0.42] },
-    { "id": "h9", "pos": [0.69, 0.25] },
-    { "id": "h10", "pos": [0.74, 0.34] },
-    { "id": "h11", "pos": [0.69, 0.43] },
-    { "id": "h12", "pos": [0.61, 0.43] },
-    { "id": "h13", "pos": [0.76, 0.33] },
-    { "id": "h14", "pos": [0.76, 0.44] },
-    { "id": "h15", "pos": [0.82, 0.33] },
-    { "id": "h16", "pos": [0.82, 0.44] },
-    { "id": "h17", "pos": [0.62, 0.65] },
-    { "id": "h18", "pos": [0.80, 0.74] },
-    { "id": "h19", "pos": [0.62, 0.83] },
-    { "id": "h20", "pos": [0.56, 0.74] }
+  "path": ["s1", "s2", "s3", "s5", "s4"],
+  "driftPhotos": [
+    "/assets/03-message-screenshot.png",
+    "/assets/04-cancelled-screenshot.png",
+    "/assets/ch03-meeting.jpg",
+    "/assets/ch04-a.jpg",
+    "/assets/ch04-b.jpg",
+    "/assets/ch04-c.jpg",
+    "/assets/ch04-d.jpg",
+    "/assets/ch05-a.jpg",
+    "/assets/ch05-b.jpg",
+    "/assets/ch05-c.jpg",
+    "/assets/ch06-changed.jpg",
+    "/assets/ch07-constant.jpg",
+    "/assets/01-flyer.svg"
   ],
+  "helperStars": [
+    { "id": "h1", "pos": [0.245, 0.29] },
+    { "id": "h2", "pos": [0.358, 0.29] },
+    { "id": "h3", "pos": [0.301, 0.38] },
+    { "id": "h4", "pos": [0.358, 0.515] },
+    { "id": "h5", "pos": [0.41, 0.65] },
+    { "id": "h6", "pos": [0.463, 0.305] },
+    { "id": "h7", "pos": [0.463, 0.65] },
+    { "id": "h8", "pos": [0.41, 0.44] },
+    { "id": "h9", "pos": [0.463, 0.44] },
+    { "id": "h10", "pos": [0.41, 0.545] },
+    { "id": "h11", "pos": [0.463, 0.545] },
+    { "id": "h12", "pos": [0.59, 0.283] },
+    { "id": "h13", "pos": [0.71, 0.358] },
+    { "id": "h14", "pos": [0.665, 0.433] },
+    { "id": "h15", "pos": [0.59, 0.433] },
+    { "id": "h16", "pos": [0.545, 0.358] },
+    { "id": "h17", "pos": [0.755, 0.583] },
+    { "id": "h18", "pos": [0.673, 0.38] },
+    { "id": "h19", "pos": [0.673, 0.478] },
+    { "id": "h20", "pos": [0.755, 0.478] },
+    { "id": "h21", "pos": [0.59, 0.59] },
+    { "id": "h22", "pos": [0.665, 0.59] },
+    { "id": "h23", "pos": [0.665, 0.74] },
+    { "id": "h24", "pos": [0.59, 0.74] },
+    { "id": "h25", "pos": [0.545, 0.665] }
+  ],
+  "chapterStrokes": {
+    "s1": [["h1", "h2"], ["h1", "h3"], ["h2", "h3"], ["h3", "s1"], ["h3", "h4"]],
+    "s2": [["s2", "h5"], ["h6", "h7"], ["h8", "h9"], ["h10", "h11"]],
+    "s3": [["h12", "s3"], ["s3", "h13"], ["h13", "h14"], ["h14", "h15"], ["h15", "h16"], ["h16", "h12"]],
+    "s5": [["s5", "h17"], ["h18", "s5"], ["h19", "h20"]],
+    "s4": [["h21", "h22"], ["h22", "s4"], ["s4", "h23"], ["h23", "h24"], ["h24", "h25"], ["h25", "h21"]]
+  },
   "finaleSegments": [
-    ["s1", "s2"], ["s3", "s4"], ["s3", "s5"],
-    ["h4", "h6"], ["h7", "h8"],
-    ["s8", "h9"], ["h9", "h10"], ["h10", "h11"], ["h11", "h12"], ["h12", "s8"],
-    ["s9", "h15"], ["h15", "h16"], ["h16", "s10"], ["h13", "h15"], ["h14", "h16"],
-    ["h17", "s11"], ["s11", "h18"], ["h18", "s12"], ["s12", "h19"], ["h19", "h20"], ["h20", "h17"]
+    ["h1", "h2"], ["h1", "h3"], ["h2", "h3"], ["h3", "s1"], ["h3", "h4"],
+    ["s2", "h5"], ["h6", "h7"], ["h8", "h9"], ["h10", "h11"],
+    ["h12", "s3"], ["s3", "h13"], ["h13", "h14"], ["h14", "h15"], ["h15", "h16"], ["h16", "h12"],
+    ["s5", "h17"], ["h18", "s5"], ["h19", "h20"],
+    ["h21", "h22"], ["h22", "s4"], ["s4", "h23"], ["h23", "h24"], ["h24", "h25"], ["h25", "h21"]
   ],
   "guideSegments": [],
   "stars": [
@@ -51,174 +78,101 @@
       "id": "s1",
       "date": "07.06",
       "title": { "en": "The Night We Met", "ko": "우리가 만난 밤" },
-      "voiceNote": "audio/star-01.mp3",
-      "visual": { "type": "video", "src": "/assets/01-flyer.mp4", "poster": "/assets/01-flyer.svg", "placeholder": true },
+      "voiceNote": "/audio/chapter-01.mp3",
+      "visual": { "type": "video", "src": "/assets/01-flyer.mp4", "poster": "/assets/01-flyer.svg" },
       "content": {
-        "en": "A completely ordinary night that somehow became the first star in this sky.",
-        "ko": "그냥 평범했던 밤이, 이상하게도 이 하늘의 첫 번째 별이 됐어."
+        "en": "An ordinary night that became the opening page of everything that followed.",
+        "ko": "그냥 평범했던 밤이, 이후 모든 것의 첫 페이지가 됐어."
       },
       "visualStyle": "normal",
-      "narrativePos": [0.17, 0.72],
-      "finalePos": [0.16, 0.22]
+      "narrativePos": [0.37, 0.67],
+      "finalePos": [0.245, 0.515]
     },
     {
       "id": "s2",
-      "date": "",
-      "title": { "en": "The Unknown Month", "ko": "알 수 없던 한 달" },
-      "voiceNote": "audio/star-02.mp3",
-      "content": {
-        "en": "For a while, we were just two people in the same orbit, not knowing what we would become.",
-        "ko": "한동안 우리는 같은 궤도에 있던 두 사람이었어. 무엇이 될지도 모른 채."
-      },
-      "visualStyle": "faint",
-      "narrativePos": [0.74, 0.22],
-      "finalePos": [0.34, 0.22]
-    },
-    {
-      "id": "s3",
       "date": "11.07",
       "title": { "en": "The Message", "ko": "그 메시지" },
-      "voiceNote": "audio/star-03.mp3",
-      "visual": { "type": "photo", "src": "/assets/03-message.svg", "placeholder": true },
+      "voiceNote": "/audio/chapter-02.mp3",
+      "visual": { "type": "memories", "images": ["/assets/03-message-screenshot.png"] },
       "content": {
         "en": "The message that quietly turned coincidence into a beginning.",
         "ko": "우연을 조용히 시작으로 바꿔준 메시지."
       },
       "visualStyle": "normal",
-      "narrativePos": [0.34, 0.39],
-      "finalePos": [0.25, 0.31]
+      "narrativePos": [0.34, 0.34],
+      "finalePos": [0.41, 0.29]
     },
     {
-      "id": "s4",
-      "date": "14.07",
-      "title": { "en": "The Almost", "ko": "거의 만날 뻔한 날" },
-      "voiceNote": "audio/star-04.mp3",
-      "visual": { "type": "photo", "src": "/assets/04-cancelled.svg", "placeholder": true },
+      "id": "s3",
+      "date": "14.07 → 23.07",
+      "title": { "en": "The One That Almost Never Happened", "ko": "거의 일어나지 않을 뻔한 것" },
+      "voiceNote": "/audio/chapter-03.mp3",
+      "visual": {
+        "type": "memories",
+        "images": ["/assets/04-cancelled-screenshot.png", "/assets/ch03-meeting.jpg"]
+      },
       "headline": {
-        "en": "We were supposed to meet.\n\nWe didn't.",
-        "ko": "만나기로 했었어.\n\n그런데 만나지 못했어."
+        "en": "Cancelled on the 14th.\n\nWe finally met on the 23rd.",
+        "ko": "14일엔 취소됐어.\n\n23일에야 드디어 만났어."
       },
       "content": {
-        "en": "It is strange how close we came to staying strangers.",
-        "ko": "그냥 남으로 남을 뻔했다는 게, 지금 생각하면 참 이상해."
+        "en": "We were so close to staying strangers. I'm glad we didn't.",
+        "ko": "그냥 남으로 남을 뻔했어. 그렇지 않아서 다행이야."
       },
-      "visualStyle": "broken",
-      "narrativePos": [0.82, 0.58],
-      "finalePos": [0.18, 0.48]
+      "visualStyle": "reconnect",
+      "narrativePos": [0.58, 0.33],
+      "finalePos": [0.665, 0.283]
     },
     {
       "id": "s5",
-      "date": "23.07",
-      "title": { "en": "We Finally Met", "ko": "드디어 만난 날" },
-      "voiceNote": "audio/star-05.mp3",
-      "visual": { "type": "photo", "src": "/assets/05-meeting.svg", "placeholder": true },
-      "content": {
-        "en": "Thankfully, the almost became real.",
-        "ko": "다행히, 거의였던 일이 진짜가 됐어."
-      },
-      "visualStyle": "reconnect",
-      "narrativePos": [0.48, 0.18],
-      "finalePos": [0.34, 0.48]
-    },
-    {
-      "id": "s6",
-      "date": "",
-      "title": { "en": "The Moment It Felt Different", "ko": "달라졌다고 느낀 순간" },
-      "voiceNote": "audio/star-06.mp3",
-      "content": {
-        "en": "The moment I realized this was not just another passing story.",
-        "ko": "이게 그냥 스쳐 지나가는 이야기가 아니라는 걸 알게 된 순간."
-      },
-      "visualStyle": "normal",
-      "narrativePos": [0.61, 0.70],
-      "finalePos": [0.42, 0.25]
-    },
-    {
-      "id": "s7",
-      "date": "",
-      "title": { "en": "The Small Things", "ko": "작은 것들" },
-      "voiceNote": "audio/star-07.mp3",
-      "content": {
-        "en": "The details nobody else would notice, but I remember because they were yours.",
-        "ko": "다른 사람은 모를 작은 것들. 네 것이어서 내가 기억하는 것들."
-      },
-      "visualStyle": "normal",
-      "narrativePos": [0.24, 0.26],
-      "finalePos": [0.42, 0.60]
-    },
-    {
-      "id": "s8",
-      "date": "",
-      "title": { "en": "The Adventures", "ko": "우리의 모험들" },
-      "voiceNote": "audio/star-08.mp3",
-      "visual": { "type": "photo", "src": "/assets/07-adventures.svg", "placeholder": true },
-      "content": {
-        "en": "All the places, plans, jokes, detours, and tiny adventures that became ours.",
-        "ko": "우리 것이 된 장소들, 계획들, 농담들, 돌아간 길들, 작은 모험들."
-      },
-      "visualStyle": "normal",
-      "narrativePos": [0.88, 0.24],
-      "finalePos": [0.61, 0.25]
-    },
-    {
-      "id": "s9",
       "date": "",
       "title": { "en": "Korea", "ko": "한국" },
-      "voiceNote": "audio/star-09.mp3",
-      "visual": { "type": "photo", "src": "/assets/09-korea.svg", "placeholder": true },
+      "voiceNote": "/audio/chapter-05.mp3",
+      "visual": {
+        "type": "memories",
+        "images": ["/assets/ch05-a.jpg", "/assets/ch05-b.jpg", "/assets/ch05-c.jpg"]
+      },
+      "headline": {
+        "en": "But then we actually met.\n\nWe spent so much time together — and even went to Korea together.",
+        "ko": "하지만 결국 우리는 만났어.\n\n많은 시간을 함께 보냈고, 함께 한국에도 갔어."
+      },
       "content": {
-        "en": "A place where your world became less distant from mine.",
-        "ko": "네 세상이 내 세상에서 조금 덜 멀어졌던 곳."
+        "en": "Your world became less distant. A place I now carry with me.",
+        "ko": "네 세상이 덜 멀어졌어. 이제 내 안에 함께 있는 곳."
       },
       "visualStyle": "normal",
-      "narrativePos": [0.38, 0.76],
-      "finalePos": [0.82, 0.25]
+      "narrativePos": [0.58, 0.54],
+      "finalePos": [0.755, 0.305]
     },
     {
-      "id": "s10",
+      "id": "s4",
       "date": "",
-      "title": { "en": "Your World", "ko": "너의 세상" },
-      "voiceNote": "audio/star-10.mp3",
-      "visual": { "type": "photo", "src": "/assets/10-her-world.svg", "placeholder": true },
-      "content": {
-        "en": "Family, hometown, culture, the things you love. Your world became part of mine.",
-        "ko": "가족, 고향, 문화, 네가 사랑하는 것들. 너의 세상이 내 세상의 일부가 됐어."
+      "title": { "en": "Why I Like You", "ko": "네가 좋은 이유" },
+      "voiceNote": "/audio/why-i-like-you.mp3",
+      "featured": true,
+      "visual": {
+        "type": "memories",
+        "images": [
+          "/assets/ch04-a.jpg",
+          "/assets/ch04-b.jpg",
+          "/assets/ch04-c.jpg",
+          "/assets/ch04-d.jpg"
+        ]
       },
-      "visualStyle": "normal",
-      "narrativePos": [0.68, 0.46],
-      "finalePos": [0.82, 0.52]
-    },
-    {
-      "id": "s11",
-      "date": "",
-      "title": { "en": "The Chapter We Are In Now", "ko": "지금 우리가 있는 챕터" },
-      "voiceNote": "audio/star-11.mp3",
       "content": {
-        "en": "This is not exactly where I thought the story would be. But it is where we are.",
-        "ko": "내가 생각했던 방향과는 조금 달라. 그래도 지금 우리는 여기 있어."
+        "en": "Not one reason — all of them. The way you are when nobody is performing. The things you say without trying.",
+        "ko": "한 가지 이유가 아니라 전부. 연기하지 않을 때의 너. 애쓰지 않아도 나오는 말들."
       },
-      "visualStyle": "normal",
-      "narrativePos": [0.13, 0.43],
-      "finalePos": [0.74, 0.65]
-    },
-    {
-      "id": "s12",
-      "date": "",
-      "title": { "en": "The Constant", "ko": "변하지 않는 것" },
-      "voiceNote": "audio/star-12.mp3",
-      "content": {
-        "en": "The part of this story that stays, no matter where the next page begins.",
-        "ko": "다음 페이지가 어디서 시작되든, 이 이야기 안에 남아 있을 것."
-      },
-      "visualStyle": "finale",
-      "narrativePos": [0.52, 0.55],
-      "finalePos": [0.74, 0.83]
+      "visualStyle": "featured",
+      "narrativePos": [0.64, 0.68],
+      "finalePos": [0.71, 0.665]
     }
   ],
   "finale": {
     "shape": "채영",
+    "shapeLatin": "CHAEYOUNG",
     "message": {
-      "en": "Our story hasn’t always followed the path I expected.\n\nSome chapters were easy, some were complicated, and some almost never happened at all.\n\nBut whatever happens next, you’ve become a part of my life and my story.\n\nThat won’t change.\n\nHappy Birthday, Chae Young.",
+      "en": "Our story hasn't always followed the path I expected.\n\nSome chapters were easy, some were complicated, and some almost never happened at all.\n\nBut whatever happens next, you've become a part of my life and my story.\n\nThat won't change.\n\nHappy Birthday, Chae Young.",
       "ko": "우리 이야기는 늘 내가 예상한 길을 따라가지는 않았어.\n\n쉬웠던 챕터도 있었고, 복잡했던 챕터도 있었고, 거의 일어나지 않을 뻔한 순간도 있었어.\n\n하지만 앞으로 무슨 일이 생기든, 너는 내 삶과 내 이야기의 일부가 됐어.\n\n그건 변하지 않을 거야.\n\n생일 축하해, 채영."
     }
   }

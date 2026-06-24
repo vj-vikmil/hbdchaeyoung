@@ -1,0 +1,108 @@
+{
+  "mix": "neww.mp3 (ch1-3) + descript (ch3 end, ch5-7) \u2014 dry natural",
+  "pace": {
+    "old": {
+      "tempo": 1.02,
+      "min_silence": 0.62,
+      "gap": 0.22,
+      "thresh": "-42dB"
+    },
+    "descript": {
+      "tempo": 1.05,
+      "min_silence": 0.5,
+      "gap": 0.17,
+      "thresh": "-40dB"
+    },
+    "why": {
+      "tempo": 1.0,
+      "min_silence": 0.68,
+      "gap": 0.24,
+      "thresh": "-38dB"
+    }
+  },
+  "processing": "per-source cleanup; single loudnorm on full-story only",
+  "sources": {
+    "old": "D:\\CURSOR\\chae\\shared album\\neww.mp3",
+    "descript": "D:\\CURSOR\\chae\\A Simple Night of Memories.mp3",
+    "why": "D:\\CURSOR\\chae\\shared album\\why i like you.mp3"
+  },
+  "chapters": [
+    {
+      "chapter": 1,
+      "file": "chapter-01.mp3",
+      "label": "The Night We Met",
+      "segments": [
+        {
+          "src": "old",
+          "file": "neww.mp3",
+          "start": 0.68,
+          "end": 20.902676,
+          "duration": 20.22,
+          "note": "Chae Young opening (old)"
+        }
+      ],
+      "output_duration": 16.33
+    },
+    {
+      "chapter": 2,
+      "file": "chapter-02.mp3",
+      "label": "The Message",
+      "segments": [
+        {
+          "src": "old",
+          "file": "neww.mp3",
+          "start": 20.75,
+          "end": 34.831111,
+          "duration": 14.08,
+          "note": "message chapter (old)"
+        }
+      ],
+      "output_duration": 10.66
+    },
+    {
+      "chapter": 3,
+      "file": "chapter-03.mp3",
+      "label": "The One That Almost Never Happened",
+      "segments": [
+        {
+          "src": "descript",
+          "file": "A Simple Night of Memories.mp3",
+          "start": 30.76,
+          "end": 43.44,
+          "duration": 12.68,
+          "note": "full chapter single take (descript)"
+        }
+      ],
+      "output_duration": 11.23
+    },
+    {
+      "chapter": 5,
+      "file": "chapter-05.mp3",
+      "label": "Korea",
+      "segments": [
+        {
+          "src": "descript",
+          "file": "A Simple Night of Memories.mp3",
+          "start": 43.44,
+          "end": 65.46,
+          "duration": 22.02,
+          "note": "Korea chapter (descript)"
+        }
+      ],
+      "output_duration": 19.42
+    },
+    {
+      "chapter": 5,
+      "file": "why-i-like-you.mp3",
+      "label": "Why I Like You",
+      "segments": [
+        {
+          "src": "why",
+          "file": "why i like you.mp3",
+          "note": "English chapter (separate)"
+        }
+      ],
+      "output_duration": 98.71
+    }
+  ]
+}

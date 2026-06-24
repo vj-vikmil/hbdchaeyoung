@@ -1,0 +1,47 @@
+{
+  "file": "/audio/full-story.mp3",
+  "duration": 160.353,
+  "gap_s": 1.0,
+  "chapters": [
+    {
+      "id": "s1",
+      "file": "chapter-01.mp3",
+      "transcript": "/audio/chapter-01.mp3",
+      "start": 0.0,
+      "end": 16.33,
+      "duration": 16.33
+    },
+    {
+      "id": "s2",
+      "file": "chapter-02.mp3",
+      "transcript": "/audio/chapter-02.mp3",
+      "start": 17.33,
+      "end": 27.99,
+      "duration": 10.66
+    },
+    {
+      "id": "s3",
+      "file": "chapter-03.mp3",
+      "transcript": "/audio/chapter-03.mp3",
+      "start": 28.99,
+      "end": 40.22,
+      "duration": 11.23
+    },
+    {
+      "id": "s5",
+      "file": "chapter-05.mp3",
+      "transcript": "/audio/chapter-05.mp3",
+      "start": 41.22,
+      "end": 60.64,
+      "duration": 19.42
+    },
+    {
+      "id": "s4",
+      "file": "why-i-like-you.mp3",
+      "transcript": "/audio/why-i-like-you.mp3",
+      "start": 61.64,
+      "end": 160.35,
+      "duration": 98.71
+    }
+  ]
+}

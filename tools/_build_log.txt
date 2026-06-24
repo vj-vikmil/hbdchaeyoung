@@ -1,0 +1,15 @@
+﻿py : Traceback (most recent call last):
+At C:\Users\pc\AppData\Local\Temp\ps-script-98a43ec0-2800-4e19-aff5-d54653075387.ps1:94 char:41
++ ... sers\pc\chaeyoung-constellation; py tools\build_voice.py 2>&1 | Out-F ...
++                                      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (Traceback (most recent call last)::String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+  File "C:\Users\pc\chaeyoung-constellation\tools\build_voice.py", line 540, in <module>
+    main()
+  File "C:\Users\pc\chaeyoung-constellation\tools\build_voice.py", line 505, in main
+    print(
+  File "C:\Users\pc\AppData\Local\Programs\Python\Python311\Lib\encodings\cp1252.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'charmap' codec can't encode characters in position 48-50: character maps to <undefined>

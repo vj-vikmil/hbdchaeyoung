@@ -1,0 +1,33 @@
+name: Deploy to vikmil.com
+
+on:
+  push:
+    branches: [main, master]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+      - run: npm run build
+
+      - uses: peaceiris/actions-gh-pages@v4
+        with:
+          deploy_key: ${{ secrets.VIKMIL_DEPLOY_KEY }}
+          external_repository: vj-vikmil/vj-vikmil
+          publish_branch: main
+          publish_dir: ./dist
+          destination_dir: hbdchaeyoung
+          keep_files: true
+          commit_message: "deploy: hbdchaeyoung from ${{ github.sha }}"

@@ -2,9 +2,17 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-    <meta name="theme-color" content="#09091c" />
-    <title>Our Constellation — 채영</title>
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover, interactive-widget=resizes-content" />
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="theme-color" content="#01040a" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="constellation" />
+    <!--BUILD-->
+    <title>Our Constellation · 채영</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -21,17 +29,20 @@
           <p class="intro-ko"></p>
           <p class="intro-en"></p>
           <p class="intro-name"></p>
-          <button type="button" id="intro-btn" class="btn-glow">
-            <span class="btn-ko"></span>
+          <div class="intro-tap" id="intro-btn" tabindex="0" role="button" aria-label="Tap to begin">
             <span class="btn-en"></span>
-          </button>
+            <span class="btn-ko"></span>
+          </div>
         </div>
       </section>
 
       <section id="sky" class="screen">
-        <div class="sky-bg" aria-hidden="true">
-          <canvas id="dust"></canvas>
+        <div class="sky-cam" id="sky-cam">
+          <div class="sky-bg" aria-hidden="true">
+            <canvas id="dust"></canvas>
+          </div>
         </div>
+        <canvas id="photo-drift" class="photo-drift-layer" aria-hidden="true"></canvas>
         <svg id="lines" class="lines-layer" aria-hidden="true"></svg>
         <div id="stars" class="stars-layer"></div>
         <div class="ar-overlay" aria-hidden="true">
@@ -54,37 +65,39 @@
         </header>
 
         <div id="hint" class="hint hidden" role="status"></div>
-      </section>
 
-      <dialog id="modal" class="memory-modal">
-        <div class="modal-inner">
-          <button type="button" class="modal-close" aria-label="Close">&times;</button>
-          <p class="modal-date"></p>
-          <h2 class="modal-title-en"></h2>
-          <h3 class="modal-title-ko"></h3>
+        <div id="memory-reveal" class="memory-reveal" aria-hidden="true" role="dialog" aria-modal="true">
+          <div class="memory-vignette" aria-hidden="true"></div>
+          <div class="modal-inner">
+            <button type="button" class="modal-close" aria-label="Close">&times;</button>
+            <p class="modal-date"></p>
+            <h2 class="modal-title-en"></h2>
+            <h3 class="modal-title-ko"></h3>
 
-          <div class="voice-player">
-            <div id="voice-status" class="voice-status" aria-live="polite">
-              <span class="voice-orb" aria-hidden="true"></span>
-              <span>
-                <span class="voice-label-en"></span>
-                <span class="voice-label-ko"></span>
-              </span>
+            <div class="voice-player">
+              <div id="voice-status" class="voice-status" aria-live="polite">
+                <span class="voice-orb" aria-hidden="true"></span>
+                <span>
+                  <span class="voice-label-en"></span>
+                  <span class="voice-label-ko"></span>
+                </span>
+              </div>
+              <div class="voice-progress"><div class="voice-bar"></div></div>
+              <p class="voice-caption hidden" aria-live="polite"></p>
+              <p class="voice-missing hidden"></p>
+              <audio id="voice-audio" preload="metadata" playsinline webkit-playsinline></audio>
             </div>
-            <div class="voice-progress"><div class="voice-bar"></div></div>
-            <p class="voice-missing hidden"></p>
-            <audio id="voice-audio" preload="metadata"></audio>
-          </div>
 
-          <div class="modal-visual"></div>
-          <div class="modal-headline"></div>
-          <div class="modal-body">
-            <p class="modal-text-en"></p>
-            <p class="modal-text-ko"></p>
+            <div class="modal-visual"></div>
+            <div class="modal-headline"></div>
+            <div class="modal-body">
+              <p class="modal-text-en"></p>
+              <p class="modal-text-ko"></p>
+            </div>
+            <button type="button" class="modal-done">Keep flying through the sky</button>
           </div>
-          <button type="button" class="modal-done">Return to the sky</button>
         </div>
-      </dialog>
+      </section>
 
       <section id="finale" class="screen">
         <div class="finale-shape" aria-hidden="true">채영</div>
@@ -100,6 +113,9 @@
         </div>
       </section>
     </div>
+    <audio id="bgm" src="/assets/bgm.mp3" preload="auto" loop muted autoplay playsinline></audio>
+    <audio id="night-air" src="/assets/night-air.mp3" preload="auto" loop muted autoplay playsinline></audio>
+    <audio id="star-chime" src="/assets/star-chime.mp3" preload="auto" playsinline></audio>
     <script type="module" src="/src/main.js"></script>
   </body>
 </html>
