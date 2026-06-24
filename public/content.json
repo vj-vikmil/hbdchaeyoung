@@ -5,8 +5,10 @@
     "ko": "하늘을 봐. 우리 이야기 다섯 개의 챕터로 만든 별자리야."
   },
   "ui": {
-    "startHint": { "en": "Find the softly pulsing chapter star", "ko": "은은하게 뛰는 챕터 별을 찾아봐" },
-    "wrongOrder": { "en": "Almost. Follow the pulsing guide star.", "ko": "거의 맞아. 빛나는 안내 별을 따라가 봐" },
+    "startHint": { "en": "Scroll to fly into the first memory", "ko": "스크롤해서 첫 번째 기억으로 들어가 봐" },
+    "scrollHint": { "en": "Scroll to continue through the sky", "ko": "스크롤해서 하늘을 계속 날아가 봐" },
+    "finaleTapHint": { "en": "Tap any star to revisit a memory", "ko": "별을 터치해서 기억을 다시 들어봐" },
+    "wrongOrder": { "en": "Keep scrolling forward through the story", "ko": "이야기를 따라 스크롤해서 앞으로 가 봐" },
     "progress": { "en": "{n} of 5 chapters discovered", "ko": "5개 중 {n}개의 챕터를 찾았어" },
     "starFinalUnlock": { "en": "One last chapter remains", "ko": "마지막 챕터가 남았어" },
     "tapToBegin": { "en": "Tap to begin", "ko": "터치해서 시작" },

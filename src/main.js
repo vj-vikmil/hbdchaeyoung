@@ -1,5 +1,5 @@
 const STORAGE_KEY = "chaeyoung-constellation-v12";
-const BASE = import.meta.env.BASE_URL;
+const BASE = (typeof import.meta !== "undefined" && import.meta.env?.BASE_URL) || "/hbdchaeyoung/";
 
 function cacheBust() {
   return document.querySelector('meta[name="build"]')?.content || String(Date.now());
@@ -62,7 +62,14 @@ let memoryDiveTimer = null;
 let focusedStarId = null;
 let memoryProfile = null;
 const DIVE_MS = 1150;
-let modalTypeTimer = null;
+let journeyScrollReady = false;
+let journeyTouchY = 0;
+let journeyTouchAccum = 0;
+let journeyAdvanceLock = false;
+let journeyAdvanceCooldown = 0;
+const JOURNEY_SCROLL_THRESHOLD = 16;
+const JOURNEY_TOUCH_THRESHOLD = 14;
+const JOURNEY_COOLDOWN_MS = 800;
 let suppressVoicePauseMix = false;
 
 const IS_MOBILE = window.matchMedia("(max-width: 680px), (hover: none) and (pointer: coarse)").matches;
@@ -180,7 +187,6 @@ async function init() {
     if (preview === "sky" || state.pathIndex > 0 || state.viewed.size > 0) {
       showSky();
       restoreLines();
-      updateStarStates();
     }
   } catch (err) {
     console.error("init failed:", err);
@@ -419,6 +425,124 @@ async function beginExperience() {
   if (!assetCache.ready) return;
   unlockBgm();
   showSky();
+}
+
+function beginJourneyMode() {
+  sky.classList.add("sky-journey");
+  startJourneyCruise();
+  setupJourneyScroll();
+  updateStarStates();
+  if (!state.viewed.size && !sky.classList.contains("finale-map")) {
+    showHint(state.data.ui.startHint);
+  }
+}
+
+function canAdvanceJourney() {
+  if (!sky.classList.contains("active")) return false;
+  if (sky.classList.contains("finale-map")) return false;
+  if (sky.classList.contains("memory-revealed")) return false;
+  if (state.morphing || journeyAdvanceLock) return false;
+  if (performance.now() - journeyAdvanceCooldown < JOURNEY_COOLDOWN_MS) return false;
+  return Boolean(expectedStarId());
+}
+
+function revealChapter(id) {
+  const star = getStar(id);
+  if (!star) return;
+
+  journeyAdvanceLock = true;
+  journeyAdvanceCooldown = performance.now();
+  journeyTouchAccum = 0;
+  const firstDiscovery = !state.viewed.has(id);
+
+  unlockBgm();
+  playStarChime();
+  hideHint();
+  openModal(star, true);
+
+  if (firstDiscovery) {
+    state.viewed.add(id);
+    state.pathIndex = state.viewed.size;
+    setTimeout(() => drawChapterStrokes(id), DIVE_MS + 420);
+    saveProgress();
+    updateStarStates();
+  }
+}
+
+function advanceJourneyChapter() {
+  if (!canAdvanceJourney()) return;
+  const id = expectedStarId();
+  if (!id) return;
+  revealChapter(id);
+}
+
+function setupJourneyScroll() {
+  if (journeyScrollReady) return;
+  journeyScrollReady = true;
+
+  let wheelTimer = null;
+
+  const onWheel = (event) => {
+    if (!canAdvanceJourney()) return;
+    event.preventDefault();
+    event.stopPropagation();
+    const delta = Math.abs(event.deltaY);
+    if (delta < 3) return;
+    journeyTouchAccum += delta;
+    if (journeyTouchAccum >= JOURNEY_SCROLL_THRESHOLD) {
+      journeyTouchAccum = 0;
+      advanceJourneyChapter();
+      return;
+    }
+    clearTimeout(wheelTimer);
+    wheelTimer = setTimeout(() => { journeyTouchAccum = 0; }, 350);
+  };
+
+  const onTouch = (event) => {
+    if (!canAdvanceJourney()) return;
+    if (!event.touches.length) return;
+    const y = event.touches[0].clientY;
+    if (journeyTouchY !== 0) {
+      const delta = journeyTouchY - y;
+      if (Math.abs(delta) > 2) {
+        journeyTouchAccum += Math.abs(delta);
+        if (journeyTouchAccum >= JOURNEY_TOUCH_THRESHOLD) {
+          journeyTouchAccum = 0;
+          journeyTouchY = y;
+          advanceJourneyChapter();
+          return;
+        }
+      }
+    }
+    journeyTouchY = y;
+  };
+
+  const endTouch = () => {
+    journeyTouchY = 0;
+    journeyTouchAccum = 0;
+  };
+
+  document.addEventListener("wheel", onWheel, { passive: false });
+  document.addEventListener("touchmove", onTouch, { passive: false });
+  document.addEventListener("touchstart", () => { journeyTouchY = 0; journeyTouchAccum = 0; }, { passive: true });
+  document.addEventListener("touchend", endTouch, { passive: true });
+  document.addEventListener("touchcancel", endTouch, { passive: true });
+
+  document.addEventListener("keydown", (event) => {
+    if (!canAdvanceJourney()) return;
+    if (event.key === "ArrowDown" || event.key === "PageDown" || event.key === " " || event.key === "ArrowRight") {
+      event.preventDefault();
+      advanceJourneyChapter();
+    }
+  }, { passive: false });
+
+  // Safety: auto-unlock if stuck for 10s
+  setInterval(() => {
+    if (journeyAdvanceLock && !sky.classList.contains("memory-revealed") && !state.morphing) {
+      journeyAdvanceLock = false;
+      journeyTouchAccum = 0;
+    }
+  }, 10000);
 }
 
 function setupMobile() {
@@ -833,9 +957,10 @@ function showSky() {
   requestAnimationFrame(() => {
     skyRect = sky.getBoundingClientRect();
     if (dustCanvas._resize) dustCanvas._resize();
-    positionStars(false);
+    positionStars(state.morphing || sky.classList.contains("finale-map"));
     positionHelperStars();
-    updateStarStates();
+    if (!sky.classList.contains("finale-map")) beginJourneyMode();
+    else updateStarStates();
   });
 }
 
@@ -1319,21 +1444,29 @@ function expectedStarId() {
 
 function updateStarStates() {
   const expected = expectedStarId();
-  Object.entries(starEls).forEach(([id, el]) => {
-    el.classList.remove("next", "wrong", "locked");
-    el.classList.toggle("viewed", state.viewed.has(id));
-    el.classList.toggle("locked", id !== expected && !state.viewed.has(id));
+  const finale = sky.classList.contains("finale-map");
 
-    if (id === expected && !state.morphing) el.classList.add("next");
-    if (id === lastStarId()) el.classList.toggle("unlocked", state.pathIndex >= state.data.path.length - 1 || state.viewed.has(id));
+  Object.entries(starEls).forEach(([id, el]) => {
+    el.classList.remove("next", "wrong", "locked", "journey-current", "finale-tappable");
+    el.classList.toggle("viewed", state.viewed.has(id));
+
+    if (finale) {
+      el.classList.toggle("finale-tappable", state.viewed.has(id));
+      return;
+    }
+
+    el.classList.toggle("journey-current", id === expected && !state.morphing);
+    if (id === lastStarId()) {
+      el.classList.toggle("unlocked", state.pathIndex >= state.data.path.length - 1 || state.viewed.has(id));
+    }
 
     const star = getStar(id);
     const label = el.querySelector(".star-label");
     if (label) label.textContent = state.lang === "ko" ? star.title.ko : star.title.en;
   });
 
-  if (expected === "s1" && state.pathIndex === 0) {
-    showHint(state.data.ui.startHint);
+  if (finale) {
+    showHint(state.data.ui.finaleTapHint);
   } else if (expected === lastStarId() && state.pathIndex === state.data.path.length - 1) {
     showHint(state.data.ui.starFinalUnlock);
   } else {
@@ -1358,34 +1491,13 @@ function hideHint() {
 }
 
 function onStarClick(id) {
-  if (state.morphing) return;
-
-  const expected = expectedStarId();
-  if (id !== expected && !state.viewed.has(id)) {
-    starEls[id]?.classList.add("wrong");
-    setTimeout(() => starEls[id]?.classList.remove("wrong"), 400);
-    showHint(state.data.ui.wrongOrder);
-    return;
-  }
-
-  const star = getStar(id);
-  const firstDiscovery = !state.viewed.has(id);
+  if (!sky.classList.contains("finale-map")) return;
+  if (state.morphing || sky.classList.contains("memory-revealed")) return;
+  if (!state.viewed.has(id)) return;
 
   unlockBgm();
   playStarChime();
-  openModal(star, true);
-
-  if (firstDiscovery) {
-    state.viewed.add(id);
-    state.pathIndex = state.viewed.size;
-    setTimeout(() => drawChapterStrokes(id), DIVE_MS + 420);
-    saveProgress();
-    updateStarStates();
-  }
-
-  if (firstDiscovery && state.pathIndex === state.data.path.length) {
-    saveProgress();
-  }
+  openModal(getStar(id), true);
 }
 
 function activateStrokeNode(id) {
@@ -1817,7 +1929,14 @@ function closeModal() {
   currentStar = null;
 
   endMemoryDive(() => {
-    if (shouldReveal) triggerFinale();
+    journeyAdvanceLock = false;
+    if (shouldReveal) {
+      triggerFinale();
+      return;
+    }
+    if (!sky.classList.contains("finale-map") && expectedStarId()) {
+      showHint(state.data.ui.scrollHint);
+    }
   });
 }
 
@@ -1866,6 +1985,7 @@ async function triggerFinale(skipAnimation = false) {
 
   await sleep(skipAnimation ? 0 : 400);
   shapeEl.classList.add("name-revealed");
+  updateStarStates();
 }
 
 async function drawGuideLines(animated) {
@@ -1893,9 +2013,9 @@ function setupDust(driftImages = []) {
   const useDomPhotos = IS_MOBILE && !!photoDomHost;
   const useCanvasPhotos = !useDomPhotos && !!photoCtx;
   const usePhotos = driftImages.length > 0 && (useDomPhotos || useCanvasPhotos);
-  const starCount = lowPower ? 420 : 760;
-  const memoryCount = usePhotos ? (IS_MOBILE ? 26 : 36) : 0;
-  const maxPhotoSources = IS_MOBILE ? 12 : 7;
+  const starCount = lowPower ? (IS_MOBILE ? 560 : 920) : IS_MOBILE ? 780 : 1280;
+  const memoryCount = usePhotos ? (IS_MOBILE ? 42 : 58) : 0;
+  const maxPhotoSources = IS_MOBILE ? 14 : 10;
   let memorySources = [];
   const pointer = { x: 0, y: 0 };
   let dustActive = false;
@@ -1939,18 +2059,32 @@ function setupDust(driftImages = []) {
   }
 
   function makeSpaceStar() {
-    const warm = Math.random() > 0.86;
-    const blue = !warm && Math.random() > 0.72;
+    const roll = Math.random();
+    const warm = roll > 0.9;
+    const purple = !warm && roll > 0.72;
+    const blue = !warm && !purple && roll > 0.42;
+    const radius = Math.pow(Math.random(), 0.62) * 1.15;
+    const arm = Math.random() * Math.PI * 2;
+    const spiral = arm + radius * 3.1;
+    const diskX = Math.cos(spiral) * radius * 0.92;
+    const diskY = Math.sin(spiral) * radius * 0.58;
+    const hue = warm
+      ? "255, 214, 168"
+      : purple
+        ? "176, 132, 255"
+        : blue
+          ? "148, 188, 255"
+          : "236, 242, 255";
     return {
       kind: "star",
-      x: Math.random() * 2 - 1,
-      y: Math.random() * 2 - 1,
-      z: Math.random() * 0.95 + 0.05,
-      hue: warm ? "255, 219, 176" : blue ? "196, 215, 255" : "242, 246, 255",
+      x: diskX + (Math.random() - 0.5) * 0.08,
+      y: diskY + (Math.random() - 0.5) * 0.06,
+      z: Math.random() * 0.94 + 0.06,
+      hue,
       mag: Math.random(),
       twinkle: Math.random() * Math.PI * 2,
-      twinkleSpeed: Math.random() * 0.0009 + 0.00018,
-      twinkleDepth: Math.random() * 0.34 + 0.06,
+      twinkleSpeed: Math.random() * 0.0011 + 0.00014,
+      twinkleDepth: Math.random() * 0.28 + 0.04,
     };
   }
 
@@ -2063,8 +2197,8 @@ function setupDust(driftImages = []) {
     }
 
     const pulse = 1 - star.twinkleDepth / 2 + Math.sin(star.twinkle + performance.now() * star.twinkleSpeed) * (star.twinkleDepth + audioReactive.level * 0.12);
-    const radius = Math.max(0.35, Math.min(2.1, (0.35 + (1 - star.z) * 1.3 + star.mag * 0.7) * pulse));
-    const alpha = Math.min(0.88, 0.12 + (1 - star.z) * 0.5 + star.mag * 0.25);
+    const radius = Math.max(0.22, Math.min(1.65, (0.22 + (1 - star.z) * 0.95 + star.mag * 0.45) * pulse));
+    const alpha = Math.min(0.78, 0.08 + (1 - star.z) * 0.42 + star.mag * 0.18);
     return { x, y, radius, alpha, hue: star.hue, glow: radius > 1.35 && star.z < 0.68 };
   }
 
@@ -2192,7 +2326,7 @@ function setupDust(driftImages = []) {
       const p = advanceStar(stars[i], width, height, freezeDrift, dt);
       if (!p) continue;
 
-      if (p.glow && !skipGlow) {
+      if (p.glow && !skipGlow && p.radius > 0.75) {
         const glow = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.radius * 4);
         glow.addColorStop(0, `rgba(${p.hue}, ${p.alpha * 0.7})`);
         glow.addColorStop(1, `rgba(${p.hue}, 0)`);

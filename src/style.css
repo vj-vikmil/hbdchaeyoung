@@ -263,15 +263,55 @@ button {
 
 #sky {
   background:
-    radial-gradient(ellipse at 50% 42%, rgba(17, 43, 69, 0.72), transparent 38rem),
-    radial-gradient(ellipse at 70% 92%, rgba(27, 53, 74, 0.62), transparent 28rem),
-    linear-gradient(180deg, #01030a 0%, #040b16 48%, #071426 100%);
+    radial-gradient(ellipse 90% 55% at 58% 36%, rgba(96, 58, 148, 0.24), transparent 58%),
+    radial-gradient(ellipse 70% 48% at 24% 68%, rgba(34, 72, 132, 0.3), transparent 54%),
+    radial-gradient(ellipse 120% 90% at 50% 52%, rgba(10, 18, 42, 0.92), #010208 72%),
+    radial-gradient(ellipse at 50% 42%, rgba(17, 43, 69, 0.55), transparent 38rem),
+    linear-gradient(180deg, #010208 0%, #030812 42%, #06101f 100%);
   overflow: hidden;
+  touch-action: none;
   perspective: 820px;
   perspective-origin: 50% 44%;
   --flight-scale: 1;
   --flight-origin-x: 50%;
   --flight-origin-y: 50%;
+}
+
+/* ensure touch events pass through all sky layers */
+#sky .sky-cam,
+#sky .sky-bg,
+#sky canvas,
+#sky .photo-drift-layer,
+#sky .lines-layer {
+  touch-action: none;
+}
+
+#sky .modal,
+#sky .modal *,
+#sky .hud,
+#sky .hud *,
+#sky .hint {
+  touch-action: manipulation;
+}
+
+#sky::after {
+  content: "";
+  inset: -25%;
+  opacity: 0.55;
+  pointer-events: none;
+  position: absolute;
+  z-index: 0;
+  background:
+    conic-gradient(
+      from 205deg at 48% 50%,
+      transparent 0deg,
+      rgba(132, 96, 196, 0.07) 42deg,
+      transparent 88deg,
+      rgba(88, 140, 220, 0.06) 156deg,
+      transparent 228deg,
+      rgba(196, 148, 220, 0.05) 300deg,
+      transparent 360deg
+    );
 }
 
 #sky::before {
@@ -360,6 +400,45 @@ button {
 #sky.memory-dive .photo-drift-layer {
   filter: none;
   opacity: 0.92;
+}
+
+#sky.sky-journey:not(.finale-map) .stars-layer .star-btn {
+  pointer-events: none !important;
+  cursor: default;
+}
+
+#sky.sky-journey:not(.finale-map) .star-btn.journey-current {
+  opacity: 1;
+  z-index: 10;
+}
+
+#sky.sky-journey:not(.finale-map) .star-btn.journey-current::before {
+  animation: pulse-star 2.4s ease-in-out infinite;
+  height: 8px;
+  width: 8px;
+  box-shadow:
+    0 0 8px 2px rgba(255, 255, 255, 0.68),
+    0 0 18px 5px rgba(176, 132, 255, 0.24);
+}
+
+#sky.sky-journey:not(.finale-map) .star-btn.journey-current::after {
+  height: 16px;
+  opacity: 0.42;
+  width: 16px;
+}
+
+#sky.sky-journey:not(.finale-map) .star-btn.viewed {
+  opacity: 0.82;
+}
+
+#sky.finale-map .star-btn.finale-tappable {
+  pointer-events: auto;
+  cursor: pointer;
+  opacity: 1;
+}
+
+#sky.finale-map .star-btn.finale-tappable:hover {
+  transform: translateZ(var(--star-depth, 0)) scale(1.14);
 }
 
 #sky.sky-journey .stars-layer .star-btn {
@@ -476,8 +555,10 @@ button {
   position: absolute;
   inset: -20%;
   background:
-    radial-gradient(ellipse at 38% 28%, rgba(185, 205, 225, 0.08), transparent 32rem),
-    radial-gradient(ellipse at 58% 52%, rgba(232, 215, 173, 0.045), transparent 28rem);
+    radial-gradient(ellipse 82% 54% at 60% 36%, rgba(118, 72, 178, 0.16), transparent 56%),
+    radial-gradient(ellipse 68% 46% at 20% 70%, rgba(42, 82, 148, 0.18), transparent 52%),
+    radial-gradient(ellipse at 38% 28%, rgba(185, 205, 225, 0.07), transparent 32rem),
+    radial-gradient(ellipse at 58% 52%, rgba(232, 215, 173, 0.04), transparent 28rem);
   opacity: 1;
   animation: none;
 }
@@ -523,6 +604,14 @@ button {
   perspective: 900px;
   transform-style: preserve-3d;
   z-index: 7;
+}
+
+#sky.sky-journey:not(.finale-map) .stars-layer {
+  pointer-events: none;
+}
+
+#sky.finale-map .stars-layer {
+  pointer-events: auto;
 }
 
 .ar-overlay {
@@ -730,8 +819,8 @@ button {
   border-radius: 50%;
   box-shadow: none;
   cursor: pointer;
-  height: 30px;
-  margin: -15px 0 0 -15px;
+  height: 24px;
+  margin: -12px 0 0 -12px;
   position: absolute;
   transition:
     left 1.9s cubic-bezier(0.4, 0, 0.2, 1),
@@ -739,7 +828,7 @@ button {
     transform 0.25s,
     opacity 0.3s;
   transform-style: preserve-3d;
-  width: 30px;
+  width: 24px;
   z-index: 5;
   outline: none;
 }
@@ -758,14 +847,14 @@ button {
 .finder-ring {
   border: 1px solid rgba(232, 215, 173, 0.12);
   border-radius: 50%;
-  height: 32px;
+  height: 26px;
   left: 50%;
   opacity: 0;
   pointer-events: none;
   position: absolute;
   top: 50%;
   transform: translate(-50%, -50%);
-  width: 32px;
+  width: 26px;
 }
 
 .finder-ring::before,
@@ -792,10 +881,10 @@ button {
   background:
     radial-gradient(circle, #ffffff 0 22%, rgba(249, 251, 255, 0.95) 23% 38%, rgba(232, 215, 173, 0.28) 48%, transparent 72%);
   box-shadow:
-    0 0 6px 1px rgba(249, 251, 255, 0.55),
-    0 0 16px 4px rgba(232, 215, 173, 0.16);
-  height: 9px;
-  width: 9px;
+    0 0 5px 1px rgba(249, 251, 255, 0.5),
+    0 0 12px 3px rgba(232, 215, 173, 0.14);
+  height: 7px;
+  width: 7px;
 }
 
 .star-btn::after {
@@ -805,9 +894,9 @@ button {
   border: 0;
   border-radius: 0;
   filter: blur(0.1px);
-  height: 18px;
-  opacity: 0.38;
-  width: 18px;
+  height: 14px;
+  opacity: 0.34;
+  width: 14px;
 }
 
 .star-btn:hover {
@@ -1964,24 +2053,24 @@ body.lang-ko .finale-text-en {
   }
 
   .star-btn {
-    height: 36px;
-    margin: -18px 0 0 -18px;
-    width: 36px;
+    height: 28px;
+    margin: -14px 0 0 -14px;
+    width: 28px;
   }
 
   .finder-ring {
-    height: 36px;
-    width: 36px;
+    height: 30px;
+    width: 30px;
   }
 
   .star-btn::before {
-    height: 8px;
-    width: 8px;
+    height: 6px;
+    width: 6px;
   }
 
   .star-btn.next::before {
-    height: 11px;
-    width: 11px;
+    height: 9px;
+    width: 9px;
   }
 
   .star-label {
